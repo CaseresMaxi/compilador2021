@@ -1,0 +1,294 @@
+Terminals unused in grammar
+
+   CONST_FLOAT
+   ELSE_T
+   IF_T
+   OP_DISTINTO
+   OP_COMP
+   OP_MAYORIGUAL
+   OP_MAYOR
+   OP_MENOR
+   OP_MENORIGUAL
+   LLAVE_C
+   LLAVE_A
+   PARENT_C
+   PARENT_A
+   OP_AS
+   WHILE_T
+   SEPARADOR_T
+   FLOAT_T
+   INTEGER_T
+   DIM_T
+   AS_T
+   TOKEN_PUT
+   GET_T
+   CONST_T
+   TOKEN_AND
+   TOKEN_OR
+   MAX_TOKEN
+   ID_T
+   WRITE_T
+   ENDDEC_T
+   DECVAR_T
+
+
+Grammar
+
+    0 $accept: programa $end
+
+    1 programa: grammar SEP_LINEA
+    2         | grammar SEP_LINEA "\\n" grammar SEP_LINEA
+
+    3 grammar: expr
+
+    4 expr: expr OP_SUM expr
+    5     | expr OP_MENOS expr
+    6     | expr OP_MUL expr
+    7     | expr OP_DIVISION expr
+    8     | CONST_STRING
+    9     | CONST_INT
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+CONST_INT (258) 9
+CONST_FLOAT (259)
+CONST_STRING (260) 8
+ELSE_T (261)
+IF_T (262)
+OP_DISTINTO (263)
+OP_COMP (264)
+OP_MAYORIGUAL (265)
+OP_MAYOR (266)
+OP_MENOR (267)
+OP_MENORIGUAL (268)
+LLAVE_C (269)
+LLAVE_A (270)
+PARENT_C (271)
+PARENT_A (272)
+OP_DIVISION (273) 7
+OP_AS (274)
+OP_SUM (275) 4
+OP_MUL (276) 6
+WHILE_T (277)
+SEP_LINEA (278) 1 2
+SEPARADOR_T (279)
+FLOAT_T (280)
+INTEGER_T (281)
+DIM_T (282)
+AS_T (283)
+TOKEN_PUT (284)
+GET_T (285)
+CONST_T (286)
+TOKEN_AND (287)
+TOKEN_OR (288)
+MAX_TOKEN (289)
+ID_T (290)
+WRITE_T (291)
+ENDDEC_T (292)
+DECVAR_T (293)
+OP_MENOS (294) 5
+"\\n" (295) 2
+
+
+Nonterminals, with rules where they appear
+
+$accept (41)
+    on left: 0
+programa (42)
+    on left: 1 2, on right: 0
+grammar (43)
+    on left: 3, on right: 1 2
+expr (44)
+    on left: 4 5 6 7 8 9, on right: 3 4 5 6 7
+
+
+state 0
+
+    0 $accept: . programa $end
+
+    CONST_INT     shift, and go to state 1
+    CONST_STRING  shift, and go to state 2
+
+    programa  go to state 3
+    grammar   go to state 4
+    expr      go to state 5
+
+
+state 1
+
+    9 expr: CONST_INT .
+
+    $default  reduce using rule 9 (expr)
+
+
+state 2
+
+    8 expr: CONST_STRING .
+
+    $default  reduce using rule 8 (expr)
+
+
+state 3
+
+    0 $accept: programa . $end
+
+    $end  shift, and go to state 6
+
+
+state 4
+
+    1 programa: grammar . SEP_LINEA
+    2         | grammar . SEP_LINEA "\\n" grammar SEP_LINEA
+
+    SEP_LINEA  shift, and go to state 7
+
+
+state 5
+
+    3 grammar: expr .
+    4 expr: expr . OP_SUM expr
+    5     | expr . OP_MENOS expr
+    6     | expr . OP_MUL expr
+    7     | expr . OP_DIVISION expr
+
+    OP_DIVISION  shift, and go to state 8
+    OP_SUM       shift, and go to state 9
+    OP_MUL       shift, and go to state 10
+    OP_MENOS     shift, and go to state 11
+
+    $default  reduce using rule 3 (grammar)
+
+
+state 6
+
+    0 $accept: programa $end .
+
+    $default  accept
+
+
+state 7
+
+    1 programa: grammar SEP_LINEA .
+    2         | grammar SEP_LINEA . "\\n" grammar SEP_LINEA
+
+    "\\n"  shift, and go to state 12
+
+    $default  reduce using rule 1 (programa)
+
+
+state 8
+
+    7 expr: expr OP_DIVISION . expr
+
+    CONST_INT     shift, and go to state 1
+    CONST_STRING  shift, and go to state 2
+
+    expr  go to state 13
+
+
+state 9
+
+    4 expr: expr OP_SUM . expr
+
+    CONST_INT     shift, and go to state 1
+    CONST_STRING  shift, and go to state 2
+
+    expr  go to state 14
+
+
+state 10
+
+    6 expr: expr OP_MUL . expr
+
+    CONST_INT     shift, and go to state 1
+    CONST_STRING  shift, and go to state 2
+
+    expr  go to state 15
+
+
+state 11
+
+    5 expr: expr OP_MENOS . expr
+
+    CONST_INT     shift, and go to state 1
+    CONST_STRING  shift, and go to state 2
+
+    expr  go to state 16
+
+
+state 12
+
+    2 programa: grammar SEP_LINEA "\\n" . grammar SEP_LINEA
+
+    CONST_INT     shift, and go to state 1
+    CONST_STRING  shift, and go to state 2
+
+    grammar  go to state 17
+    expr     go to state 5
+
+
+state 13
+
+    4 expr: expr . OP_SUM expr
+    5     | expr . OP_MENOS expr
+    6     | expr . OP_MUL expr
+    7     | expr . OP_DIVISION expr
+    7     | expr OP_DIVISION expr .
+
+    $default  reduce using rule 7 (expr)
+
+
+state 14
+
+    4 expr: expr . OP_SUM expr
+    4     | expr OP_SUM expr .
+    5     | expr . OP_MENOS expr
+    6     | expr . OP_MUL expr
+    7     | expr . OP_DIVISION expr
+
+    OP_DIVISION  shift, and go to state 8
+    OP_MUL       shift, and go to state 10
+
+    $default  reduce using rule 4 (expr)
+
+
+state 15
+
+    4 expr: expr . OP_SUM expr
+    5     | expr . OP_MENOS expr
+    6     | expr . OP_MUL expr
+    6     | expr OP_MUL expr .
+    7     | expr . OP_DIVISION expr
+
+    $default  reduce using rule 6 (expr)
+
+
+state 16
+
+    4 expr: expr . OP_SUM expr
+    5     | expr . OP_MENOS expr
+    5     | expr OP_MENOS expr .
+    6     | expr . OP_MUL expr
+    7     | expr . OP_DIVISION expr
+
+    OP_DIVISION  shift, and go to state 8
+    OP_MUL       shift, and go to state 10
+
+    $default  reduce using rule 5 (expr)
+
+
+state 17
+
+    2 programa: grammar SEP_LINEA "\\n" grammar . SEP_LINEA
+
+    SEP_LINEA  shift, and go to state 18
+
+
+state 18
+
+    2 programa: grammar SEP_LINEA "\\n" grammar SEP_LINEA .
+
+    $default  reduce using rule 2 (programa)
