@@ -53,6 +53,8 @@ extern FILE* yyin;
 %token ENDDEC_T
 %token DECVAR_T
 %token OP_ASIG
+%token OP_AVG
+%token COMA
 
 %left OP_SUM OP_MENOS
 %left OP_MUL OP_DIVISION
@@ -65,14 +67,26 @@ programa: 	 grammar SEP_LINEA
 			;
 grammar: expr|asig  {printf("La expresion es valida\n");};
 
-asig: ID_T OP_ASIG expr
+//asig: ID_T OP_ASIG expr
+
+asig: avg
+
+//ejercicio lunes 19
+avg: ID_T OP_ASIG OP_AVG PARENT_A parametro PARENT_C {printf("SOY UNA AVG\n");}
+dato: ID_T | expr {printf("SOY UNA DATO\n");}
+parametro: dato | dato COMA parametro
+
 
 expr:expr OP_SUM expr  {printf("SOY UNA SUMA\n");}
 	|expr OP_MENOS expr {printf("SOY UNA SUMA\n");}
 	|termino
 	;
-	termino: termino OP_MUL factor {printf(" termino OP_MUL factor\n");}| termino OP_DIVISION factor {printf(" termino OP_DIVISION factor\n");}| factor;
-	factor: PARENT_A expr PARENT_C  {printf(" PARENT_A expr PARENT_C\n");}| CONST_INT  {printf(" CONST_INT\n");}
+
+
+termino: termino OP_MUL factor {printf(" termino OP_MUL factor\n");}| termino OP_DIVISION factor {printf(" termino OP_DIVISION factor\n");}| factor;
+
+
+factor: PARENT_A expr PARENT_C  {printf(" PARENT_A expr PARENT_C\n");}| CONST_INT  {printf(" CONST_INT\n");}
 
 %%
 

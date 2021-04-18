@@ -26,6 +26,7 @@ COMILLA_D		["]
 
 CONST_INT 		{DIGITO}+
 CONST_FLOAT 	{DIGITO}+"."{DIGITO}+
+OP_AVG			"avg"|"AVG"
 CONST_STRING	{COMILLA_D}.({LETRA}|!|\ |{DIGITO}|>|<)+.{COMILLA_D}
 ELSE_T			"else"|"ELSE"
 IF_T			"if"|"IF"
@@ -45,6 +46,7 @@ OP_AS			":"
 OP_SUM			"+"
 OP_MUL			"*"
 OP_MENOS		"-"
+COMA			","
 WHILE_T			"while"|"WHILE"
 SEP_LINEA		";"
 WRITE_T			"write"|"WRITE"
@@ -74,13 +76,15 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 {OP_MENORIGUAL}		return OP_MENORIGUAL;
 {LLAVE_C}			return LLAVE_C;
 {LLAVE_A}			return LLAVE_A;
-{PARENT_C}			return PARENT_C;
-{PARENT_A}			return PARENT_A;
+{PARENT_C}			{printf("LEX-- ENTRE A TOKEN PARENT_C\n"); return PARENT_C;}
+{PARENT_A}			{printf("LEX-- ENTRE A TOKEN PARENT_A\n"); return PARENT_A;}
 {OP_DIVISION}		return OP_DIVISION;
 {OP_SUM}			{printf("LEX-- ENTRE A TOKEN OP_SUM\n"); return OP_SUM;}
 {OP_MENOS}			{printf("LEX-- ENTRE A TOKEN OP_MENOS\n"); return OP_MENOS;}
 {OP_AS}				return OP_AS;
+{OP_AVG}			{printf("LEX-- ENTRE A TOKEN OP_AVG\n"); return OP_AVG;}
 {OP_MUL}			return OP_MUL;
+{COMA}				return COMA;
 {WHILE_T}			return WHILE_T;
 {SEP_LINEA}			return SEP_LINEA;
 {WRITE_T}			return WRITE_T;

@@ -40,25 +40,33 @@ Grammar
     3 grammar: expr
     4        | asig
 
-    5 asig: ID_T OP_ASIG expr
+    5 asig: avg
 
-    6 expr: expr OP_SUM expr
-    7     | expr OP_MENOS expr
-    8     | termino
+    6 avg: ID_T OP_ASIG OP_AVG PARENT_A parametro PARENT_C
 
-    9 termino: termino OP_MUL factor
-   10        | termino OP_DIVISION factor
-   11        | factor
+    7 dato: ID_T
+    8     | expr
 
-   12 factor: PARENT_A expr PARENT_C
-   13       | CONST_INT
+    9 parametro: dato
+   10          | dato COMA parametro
+
+   11 expr: expr OP_SUM expr
+   12     | expr OP_MENOS expr
+   13     | termino
+
+   14 termino: termino OP_MUL factor
+   15        | termino OP_DIVISION factor
+   16        | factor
+
+   17 factor: PARENT_A expr PARENT_C
+   18       | CONST_INT
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-CONST_INT (258) 13
+CONST_INT (258) 18
 CONST_FLOAT (259)
 CONST_STRING (260)
 ELSE_T (261)
@@ -71,13 +79,13 @@ OP_MENOR (267)
 OP_MENORIGUAL (268)
 LLAVE_C (269)
 LLAVE_A (270)
-PARENT_C (271) 12
-PARENT_A (272) 12
-OP_DIVISION (273) 10
+PARENT_C (271) 6 17
+PARENT_A (272) 6 17
+OP_DIVISION (273) 15
 OP_AS (274)
-OP_SUM (275) 6
-OP_MENOS (276) 7
-OP_MUL (277) 9
+OP_SUM (275) 11
+OP_MENOS (276) 12
+OP_MUL (277) 14
 WHILE_T (278)
 SEP_LINEA (279) 1 2
 SEPARADOR_T (280)
@@ -91,30 +99,38 @@ CONST_T (287)
 TOKEN_AND (288)
 TOKEN_OR (289)
 MAX_TOKEN (290)
-ID_T (291) 5
+ID_T (291) 6 7
 WRITE_T (292)
 ENDDEC_T (293)
 DECVAR_T (294)
-OP_ASIG (295) 5
-"\\n" (296) 2
+OP_ASIG (295) 6
+OP_AVG (296) 6
+COMA (297) 10
+"\\n" (298) 2
 
 
 Nonterminals, with rules where they appear
 
-$accept (42)
+$accept (44)
     on left: 0
-programa (43)
+programa (45)
     on left: 1 2, on right: 0
-grammar (44)
+grammar (46)
     on left: 3 4, on right: 1 2
-asig (45)
+asig (47)
     on left: 5, on right: 4
-expr (46)
-    on left: 6 7 8, on right: 3 5 6 7 12
-termino (47)
-    on left: 9 10 11, on right: 8 9 10
-factor (48)
-    on left: 12 13, on right: 9 10 11
+avg (48)
+    on left: 6, on right: 5
+dato (49)
+    on left: 7 8, on right: 9 10
+parametro (50)
+    on left: 9 10, on right: 6 10
+expr (51)
+    on left: 11 12 13, on right: 3 8 11 12 17
+termino (52)
+    on left: 14 15 16, on right: 13 14 15
+factor (53)
+    on left: 17 18, on right: 14 15 16
 
 
 state 0
@@ -128,42 +144,43 @@ state 0
     programa  go to state 4
     grammar   go to state 5
     asig      go to state 6
-    expr      go to state 7
-    termino   go to state 8
-    factor    go to state 9
+    avg       go to state 7
+    expr      go to state 8
+    termino   go to state 9
+    factor    go to state 10
 
 
 state 1
 
-   13 factor: CONST_INT .
+   18 factor: CONST_INT .
 
-    $default  reduce using rule 13 (factor)
+    $default  reduce using rule 18 (factor)
 
 
 state 2
 
-   12 factor: PARENT_A . expr PARENT_C
+   17 factor: PARENT_A . expr PARENT_C
 
     CONST_INT  shift, and go to state 1
     PARENT_A   shift, and go to state 2
 
-    expr     go to state 10
-    termino  go to state 8
-    factor   go to state 9
+    expr     go to state 11
+    termino  go to state 9
+    factor   go to state 10
 
 
 state 3
 
-    5 asig: ID_T . OP_ASIG expr
+    6 avg: ID_T . OP_ASIG OP_AVG PARENT_A parametro PARENT_C
 
-    OP_ASIG  shift, and go to state 11
+    OP_ASIG  shift, and go to state 12
 
 
 state 4
 
     0 $accept: programa . $end
 
-    $end  shift, and go to state 12
+    $end  shift, and go to state 13
 
 
 state 5
@@ -171,7 +188,7 @@ state 5
     1 programa: grammar . SEP_LINEA
     2         | grammar . SEP_LINEA "\\n" grammar SEP_LINEA
 
-    SEP_LINEA  shift, and go to state 13
+    SEP_LINEA  shift, and go to state 14
 
 
 state 6
@@ -183,112 +200,104 @@ state 6
 
 state 7
 
-    3 grammar: expr .
-    6 expr: expr . OP_SUM expr
-    7     | expr . OP_MENOS expr
+    5 asig: avg .
 
-    OP_SUM    shift, and go to state 14
-    OP_MENOS  shift, and go to state 15
-
-    $default  reduce using rule 3 (grammar)
+    $default  reduce using rule 5 (asig)
 
 
 state 8
 
-    8 expr: termino .
-    9 termino: termino . OP_MUL factor
-   10        | termino . OP_DIVISION factor
+    3 grammar: expr .
+   11 expr: expr . OP_SUM expr
+   12     | expr . OP_MENOS expr
 
-    OP_DIVISION  shift, and go to state 16
-    OP_MUL       shift, and go to state 17
+    OP_SUM    shift, and go to state 15
+    OP_MENOS  shift, and go to state 16
 
-    $default  reduce using rule 8 (expr)
+    $default  reduce using rule 3 (grammar)
 
 
 state 9
 
-   11 termino: factor .
+   13 expr: termino .
+   14 termino: termino . OP_MUL factor
+   15        | termino . OP_DIVISION factor
 
-    $default  reduce using rule 11 (termino)
+    OP_DIVISION  shift, and go to state 17
+    OP_MUL       shift, and go to state 18
+
+    $default  reduce using rule 13 (expr)
 
 
 state 10
 
-    6 expr: expr . OP_SUM expr
-    7     | expr . OP_MENOS expr
-   12 factor: PARENT_A expr . PARENT_C
+   16 termino: factor .
 
-    PARENT_C  shift, and go to state 18
-    OP_SUM    shift, and go to state 14
-    OP_MENOS  shift, and go to state 15
+    $default  reduce using rule 16 (termino)
 
 
 state 11
 
-    5 asig: ID_T OP_ASIG . expr
+   11 expr: expr . OP_SUM expr
+   12     | expr . OP_MENOS expr
+   17 factor: PARENT_A expr . PARENT_C
 
-    CONST_INT  shift, and go to state 1
-    PARENT_A   shift, and go to state 2
-
-    expr     go to state 19
-    termino  go to state 8
-    factor   go to state 9
+    PARENT_C  shift, and go to state 19
+    OP_SUM    shift, and go to state 15
+    OP_MENOS  shift, and go to state 16
 
 
 state 12
+
+    6 avg: ID_T OP_ASIG . OP_AVG PARENT_A parametro PARENT_C
+
+    OP_AVG  shift, and go to state 20
+
+
+state 13
 
     0 $accept: programa $end .
 
     $default  accept
 
 
-state 13
+state 14
 
     1 programa: grammar SEP_LINEA .
     2         | grammar SEP_LINEA . "\\n" grammar SEP_LINEA
 
-    "\\n"  shift, and go to state 20
+    "\\n"  shift, and go to state 21
 
     $default  reduce using rule 1 (programa)
 
 
-state 14
-
-    6 expr: expr OP_SUM . expr
-
-    CONST_INT  shift, and go to state 1
-    PARENT_A   shift, and go to state 2
-
-    expr     go to state 21
-    termino  go to state 8
-    factor   go to state 9
-
-
 state 15
 
-    7 expr: expr OP_MENOS . expr
+   11 expr: expr OP_SUM . expr
 
     CONST_INT  shift, and go to state 1
     PARENT_A   shift, and go to state 2
 
     expr     go to state 22
-    termino  go to state 8
-    factor   go to state 9
+    termino  go to state 9
+    factor   go to state 10
 
 
 state 16
 
-   10 termino: termino OP_DIVISION . factor
+   12 expr: expr OP_MENOS . expr
 
     CONST_INT  shift, and go to state 1
     PARENT_A   shift, and go to state 2
 
-    factor  go to state 23
+    expr     go to state 23
+    termino  go to state 9
+    factor   go to state 10
 
 
 state 17
 
-    9 termino: termino OP_MUL . factor
+   15 termino: termino OP_DIVISION . factor
 
     CONST_INT  shift, and go to state 1
     PARENT_A   shift, and go to state 2
@@ -298,24 +307,29 @@ state 17
 
 state 18
 
-   12 factor: PARENT_A expr PARENT_C .
+   14 termino: termino OP_MUL . factor
 
-    $default  reduce using rule 12 (factor)
+    CONST_INT  shift, and go to state 1
+    PARENT_A   shift, and go to state 2
+
+    factor  go to state 25
 
 
 state 19
 
-    5 asig: ID_T OP_ASIG expr .
-    6 expr: expr . OP_SUM expr
-    7     | expr . OP_MENOS expr
+   17 factor: PARENT_A expr PARENT_C .
 
-    OP_SUM    shift, and go to state 14
-    OP_MENOS  shift, and go to state 15
-
-    $default  reduce using rule 5 (asig)
+    $default  reduce using rule 17 (factor)
 
 
 state 20
+
+    6 avg: ID_T OP_ASIG OP_AVG . PARENT_A parametro PARENT_C
+
+    PARENT_A  shift, and go to state 26
+
+
+state 21
 
     2 programa: grammar SEP_LINEA "\\n" . grammar SEP_LINEA
 
@@ -323,54 +337,135 @@ state 20
     PARENT_A   shift, and go to state 2
     ID_T       shift, and go to state 3
 
-    grammar  go to state 25
+    grammar  go to state 27
     asig     go to state 6
-    expr     go to state 7
-    termino  go to state 8
-    factor   go to state 9
-
-
-state 21
-
-    6 expr: expr . OP_SUM expr
-    6     | expr OP_SUM expr .
-    7     | expr . OP_MENOS expr
-
-    $default  reduce using rule 6 (expr)
+    avg      go to state 7
+    expr     go to state 8
+    termino  go to state 9
+    factor   go to state 10
 
 
 state 22
 
-    6 expr: expr . OP_SUM expr
-    7     | expr . OP_MENOS expr
-    7     | expr OP_MENOS expr .
+   11 expr: expr . OP_SUM expr
+   11     | expr OP_SUM expr .
+   12     | expr . OP_MENOS expr
 
-    $default  reduce using rule 7 (expr)
+    $default  reduce using rule 11 (expr)
 
 
 state 23
 
-   10 termino: termino OP_DIVISION factor .
+   11 expr: expr . OP_SUM expr
+   12     | expr . OP_MENOS expr
+   12     | expr OP_MENOS expr .
 
-    $default  reduce using rule 10 (termino)
+    $default  reduce using rule 12 (expr)
 
 
 state 24
 
-    9 termino: termino OP_MUL factor .
+   15 termino: termino OP_DIVISION factor .
 
-    $default  reduce using rule 9 (termino)
+    $default  reduce using rule 15 (termino)
 
 
 state 25
 
-    2 programa: grammar SEP_LINEA "\\n" grammar . SEP_LINEA
+   14 termino: termino OP_MUL factor .
 
-    SEP_LINEA  shift, and go to state 26
+    $default  reduce using rule 14 (termino)
 
 
 state 26
 
+    6 avg: ID_T OP_ASIG OP_AVG PARENT_A . parametro PARENT_C
+
+    CONST_INT  shift, and go to state 1
+    PARENT_A   shift, and go to state 2
+    ID_T       shift, and go to state 28
+
+    dato       go to state 29
+    parametro  go to state 30
+    expr       go to state 31
+    termino    go to state 9
+    factor     go to state 10
+
+
+state 27
+
+    2 programa: grammar SEP_LINEA "\\n" grammar . SEP_LINEA
+
+    SEP_LINEA  shift, and go to state 32
+
+
+state 28
+
+    7 dato: ID_T .
+
+    $default  reduce using rule 7 (dato)
+
+
+state 29
+
+    9 parametro: dato .
+   10          | dato . COMA parametro
+
+    COMA  shift, and go to state 33
+
+    $default  reduce using rule 9 (parametro)
+
+
+state 30
+
+    6 avg: ID_T OP_ASIG OP_AVG PARENT_A parametro . PARENT_C
+
+    PARENT_C  shift, and go to state 34
+
+
+state 31
+
+    8 dato: expr .
+   11 expr: expr . OP_SUM expr
+   12     | expr . OP_MENOS expr
+
+    OP_SUM    shift, and go to state 15
+    OP_MENOS  shift, and go to state 16
+
+    $default  reduce using rule 8 (dato)
+
+
+state 32
+
     2 programa: grammar SEP_LINEA "\\n" grammar SEP_LINEA .
 
     $default  reduce using rule 2 (programa)
+
+
+state 33
+
+   10 parametro: dato COMA . parametro
+
+    CONST_INT  shift, and go to state 1
+    PARENT_A   shift, and go to state 2
+    ID_T       shift, and go to state 28
+
+    dato       go to state 29
+    parametro  go to state 35
+    expr       go to state 31
+    termino    go to state 9
+    factor     go to state 10
+
+
+state 34
+
+    6 avg: ID_T OP_ASIG OP_AVG PARENT_A parametro PARENT_C .
+
+    $default  reduce using rule 6 (avg)
+
+
+state 35
+
+   10 parametro: dato COMA parametro .
+
+    $default  reduce using rule 10 (parametro)
