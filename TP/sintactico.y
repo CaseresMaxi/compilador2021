@@ -62,10 +62,13 @@ extern FILE* yyin;
 
 %%
 
-programa: 	 grammar SEP_LINEA
-			|grammar SEP_LINEA "\\n"grammar SEP_LINEA
-			;
-grammar: expr|asig|while  {printf("La expresion es valida\n");};
+programa: 	sentencia {printf("La expresion es valida\n");};
+
+sentencia: sentencia grammar SEP_LINEA
+
+sentencia: grammar SEP_LINEA
+
+grammar: expr|asig|while 
 
 while: WHILE_T PARENT_A CONST_INT PARENT_C LLAVE_A programa LLAVE_C {printf("WHILE EXITOSO\n");};
 

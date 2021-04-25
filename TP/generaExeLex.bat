@@ -1,8 +1,8 @@
-"C:\GnuWin32\bin\flex" Lexico2.l
+"E:\Lenguajes\GnuWin32\bin\flex" Lexico2.l
 pause
-"C:\GnuWin32\bin\bison" -dyv sintactico.y
+"E:\Lenguajes\GnuWin32\bin\bison" -dyv sintactico.y
 pause
-C:\MinGW\bin\gcc.exe lex.yy.c y.tab.c -o TPFinal.exe
+E:\Lenguajes\MinGW\bin\gcc.exe lex.yy.c y.tab.c -o TPFinal.exe
 pause
 pause
 
