@@ -1,6 +1,6 @@
-E:\Lenguajes\GnuWin32\bin\flex.exe lexico1.l
+F:\GnuWin32\bin\flex lexico1.l
 pause
-E:\Lenguajes\MinGW\bin\gcc.exe lex.yy.c -o Ejecutable1.exe
+C:\MinGW\bin\gcc.exe lex.yy.c -o Ejecutable1.exe
 pause
 pause
 Ejecutable1.exe codigo1.txt
