@@ -1,9 +1,17 @@
 DECVAR
 a1,b1: FLOAT;
-variable1 : STRING;
+-/ Esto es un comentario /- -/ Esto es un comentario /-
+variable1-/ Esto es un comentario en linea/- : STRING;
 entero1,entero2: INTEGER;
 ENDDEC
+-/ -/ Esto es un comentario anidado /-/-
 write id;
+
+WHILE cont IN (1,2,5,5+9,id2)
+DO
+	id:=1+2;
+ENDWHILE;
+
 write "hola";
 read id;
 2+2;

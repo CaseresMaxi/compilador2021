@@ -57,6 +57,9 @@ extern FILE* yyin;
 %token OP_ASIG
 %token OP_AVG
 %token COMA
+%token IN_T
+%token DO_T
+%token ENDWHILE_T
 
 %left OP_SUM OP_MENOS
 %left OP_MUL OP_DIVISION
@@ -75,18 +78,25 @@ grammar : expr
 		| while
 		| write
 		| read
+		| ciclo_especial
 		; 
 
 while: WHILE_T PARENT_A CONST_INT PARENT_C LLAVE_A programa LLAVE_C {printf("WHILE EXITOSO\n");}
 	 ;
 
-asig: ID_T OP_ASIG expr
-	;
-
 write: WRITE_T CONST_STRING {printf(" Soy un write\n");}
 	   |WRITE_T expr {printf(" Soy un write\n");}
 
 read: READ_T ID_T {printf(" Soy un reads\n");}
+
+ciclo_especial: WHILE_T ID_T IN_T PARENT_A lista_expresion PARENT_C DO_T sentencia ENDWHILE_T {printf("SOY UN CICLO ESPECIAL\n");}
+
+lista_expresion: expr
+			   | lista_expresion COMA expr
+			   ;
+
+asig: ID_T OP_ASIG expr
+	;
 
 expr: expr OP_SUM expr  {printf("SOY UNA SUMA\n");}
 	| expr OP_MENOS expr {printf("SOY UNA RESTA\n");}

@@ -41,6 +41,11 @@ LLAVE_C			"}"
 LLAVE_A			"{"
 PARENT_C		")"
 PARENT_A		"("
+
+COMENTARIO      "-""/"(.)*"/""-"
+COMENTARIO_A    "-""/"
+COMENTARIO_C	"/""-"
+
 OP_DIVISION		"/"
 OP_AS			":"
 OP_SUM			"+"
@@ -56,9 +61,15 @@ FLOAT_T			"Float"|"float"|"FLOAT"
 INTEGER_T		"Integer"|"integer"|"INTEGER"
 STRING_T 		"String"|"string"|"STRING"
 DECVAR_T		"decvar"|"DECVAR"
+IN_T 			"in"|"In"|"IN"
+DO_T 			"do"|"Do"|"DO"
+ENDWHILE_T 		"endwhile"|"Endwhile"|"ENDWHILE"
 ID_T			{LETRA}.({LETRA}|{DIGITO})*
 
 %%
+{COMENTARIO}		{printf("LEX-- ENTRE A COMENTARIO\n");}
+{COMENTARIO_A}		{printf("LEX-- ENTRE A COMENTARIO_A\n");}
+{COMENTARIO_C}		{printf("LEX-- ENTRE A COMENTARIO_C\n");}
 {CONST_STRING}		{printf("LEX-- ENTRE A CONST_STRING\n");
 					 if(strlen(yytext)<=30){
 						printf("Longitud del string %d\n",strlen(yytext));
@@ -70,6 +81,9 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 {CONST_FLOAT}		return CONST_FLOAT;
 {ELSE_T}			return ELSE_T;
 {IF_T}				return IF_T;
+{IN_T}				return IN_T;
+{DO_T}				return DO_T;
+{ENDWHILE_T} 		return ENDWHILE_T;
 {OP_DISTINTO}		return OP_DISTINTO;
 {OP_COMP}			return OP_COMP;
 {OP_MAYORIGUAL}		return OP_MAYORIGUAL;
