@@ -1,3 +1,8 @@
+DECVAR
+a1,b1: FLOAT;
+variable1 : STRING;
+entero1,entero2: INTEGER;
+ENDDEC
 2+2;
 3*3;
 id:=9+5;

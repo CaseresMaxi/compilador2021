@@ -53,6 +53,7 @@ WRITE_T			"write"|"WRITE"
 ENDDEC_T		"enddec"|"ENDDEC"
 FLOAT_T			"Float"|"float"|"FLOAT"
 INTEGER_T		"Integer"|"integer"|"INTEGER"
+STRING_T 		"String"|"string"|"STRING"
 DECVAR_T		"decvar"|"DECVAR"
 ID_T			{LETRA}.({LETRA}|{DIGITO})*
 
@@ -90,13 +91,15 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 {WRITE_T}			return WRITE_T;
 {ENDDEC_T}			return ENDDEC_T;
 {FLOAT_T}			return FLOAT_T;
-{OP_ASIG}			{printf("LEX-- ENTRE A TOKEN OP_ASIG\n"); return OP_ASIG;}
 {INTEGER_T}			return INTEGER_T;
+{STRING_T} 			return STRING_T;
+{OP_ASIG}			{printf("LEX-- ENTRE A TOKEN OP_ASIG\n"); return OP_ASIG;}
 {DECVAR_T}			return DECVAR_T;
 {ID_T}				{printf("LEX-- ENTRE A TOKEN ID_T\n"); return ID_T;}
-.					{printf("LEX-- NO SE ENCONTRO TOKEN \n");errorLexico();}
 "\n"
 "\t"
+" "
+.					{printf("LEX-- NO SE ENCONTRO TOKEN \n");errorLexico();}
 
 %%
 
