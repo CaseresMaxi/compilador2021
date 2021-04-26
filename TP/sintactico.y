@@ -69,30 +69,48 @@ sentencia: sentencia grammar SEP_LINEA
 
 sentencia: grammar SEP_LINEA
 
-grammar: expr|asig|while 
+grammar : expr
+		|asig
+		|while
+		; 
 
-while: WHILE_T PARENT_A CONST_INT PARENT_C LLAVE_A programa LLAVE_C {printf("WHILE EXITOSO\n");};
+while: WHILE_T PARENT_A CONST_INT PARENT_C LLAVE_A programa LLAVE_C {printf("WHILE EXITOSO\n");}
+	 ;
 
 asig: ID_T OP_ASIG expr
-
-expr:expr OP_SUM expr  {printf("SOY UNA SUMA\n");}
-	|expr OP_MENOS expr {printf("SOY UNA RESTA\n");}
-	|termino
 	;
 
-termino: termino OP_MUL factor {printf(" termino OP_MUL factor\n");}| termino OP_DIVISION factor {printf(" termino OP_DIVISION factor\n");}| factor;
+expr: expr OP_SUM expr  {printf("SOY UNA SUMA\n");}
+	| expr OP_MENOS expr {printf("SOY UNA RESTA\n");}
+	| termino
+	;
 
-factor: PARENT_A expr PARENT_C  {printf(" PARENT_A expr PARENT_C\n");}| CONST_INT  {printf(" CONST_INT\n");} | ID_T {printf(" ID_T\n");}
+termino : termino OP_MUL factor {printf(" termino OP_MUL factor\n");}
+		| termino OP_DIVISION factor {printf(" termino OP_DIVISION factor\n");}
+		| factor
+		;
+
+factor	: PARENT_A expr PARENT_C  {printf(" PARENT_A expr PARENT_C\n");}
+		| CONST_INT  {printf(" CONST_INT\n");} 
+		| ID_T {printf(" ID_T\n");}
+		;
 
 bloque_declaracion: DECVAR_T declaracion ENDDEC_T
 
-declaracion: linea_declaracion | declaracion linea_declaracion
+declaracion : linea_declaracion
+			| declaracion linea_declaracion
+			;
 
 linea_declaracion: var_declaracion OP_AS tipo_variable SEP_LINEA
 
-var_declaracion: ID_T | var_declaracion COMA ID_T
+var_declaracion : ID_T 
+				| var_declaracion COMA ID_T
+				;
 
-tipo_variable: FLOAT_T | INTEGER_T | STRING_T
+tipo_variable: FLOAT_T 
+			 | INTEGER_T 
+			 | STRING_T
+			 ;
 
 %%
 
