@@ -8,19 +8,20 @@
 
 0 - Constantes
 
-4 - Variables numericas
+0 - Variables numericas
+
+0 - ENTRADA SALIDA
+
+0 - Declaracion de variables
+
+3 - Comentarios
 
 1 - Condiciones
 
 1 - IF
 
-2 - ENTRADA SALIDA
-
 1 - While
 
-5 - Declaracion de variables
-
-3 - Comentarios
 
 - Ciclo especial
 
@@ -30,8 +31,4 @@
 1 - Maxi Caseres
 1 - Agus
 
-5 - Facu
-
 3 - Dani
-
-2 - Maxi Formaioni
