@@ -60,6 +60,9 @@ extern FILE* yyin;
 %token IN_T
 %token DO_T
 %token ENDWHILE_T
+%token OR_T
+%token AND_T
+%token NOT_T
 
 %left OP_SUM OP_MENOS
 %left OP_MUL OP_DIVISION
@@ -73,23 +76,26 @@ sentencia: sentencia grammar SEP_LINEA
 
 sentencia: grammar SEP_LINEA
 
-grammar : expr
-		| asig
-		| while
-		| write
-		| read
-		| ciclo_especial
+grammar : asig
+		| while {printf("SOY UN WHILE\n");}
+		| write {printf(" Soy un write\n");}
+		| read {printf(" Soy un reads\n");}
+		| ciclo_especial {printf("SOY UN CICLO ESPECIAL\n");}
+		| if {printf("SOY UN IF\n");}
 		; 
 
-while: WHILE_T PARENT_A CONST_INT PARENT_C LLAVE_A programa LLAVE_C {printf("WHILE EXITOSO\n");}
+while: WHILE_T cond_final LLAVE_A sentencia LLAVE_C
 	 ;
 
-write: WRITE_T CONST_STRING {printf(" Soy un write\n");}
-	   |WRITE_T expr {printf(" Soy un write\n");}
+if: IF_T cond_final LLAVE_A sentencia LLAVE_C
 
-read: READ_T ID_T {printf(" Soy un reads\n");}
+write : WRITE_T CONST_STRING 
+	  | WRITE_T expr 
+	  ;
 
-ciclo_especial: WHILE_T ID_T IN_T PARENT_A lista_expresion PARENT_C DO_T sentencia ENDWHILE_T {printf("SOY UN CICLO ESPECIAL\n");}
+read: READ_T ID_T 
+
+ciclo_especial: WHILE_T ID_T IN_T PARENT_A lista_expresion PARENT_C DO_T sentencia ENDWHILE_T;
 
 lista_expresion: expr
 			   | lista_expresion COMA expr
@@ -97,6 +103,14 @@ lista_expresion: expr
 
 asig: ID_T OP_ASIG expr
 	;
+
+cond_final: PARENT_A cond_final OR_AND cond_final PARENT_C | cond | NOT_T cond
+
+cond: PARENT_A expr COMPARADOR termino PARENT_C
+
+COMPARADOR : OP_DISTINTO|OP_COMP|OP_MAYORIGUAL|OP_MAYOR|OP_MENOR|OP_MENORIGUAL
+
+OR_AND: OR_T | AND_T
 
 expr: expr OP_SUM expr  {printf("SOY UNA SUMA\n");}
 	| expr OP_MENOS expr {printf("SOY UNA RESTA\n");}

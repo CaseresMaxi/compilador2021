@@ -14,21 +14,14 @@
 
 0 - Declaracion de variables
 
-3 - Comentarios
+0 - Comentarios
 
-1 - Condiciones
+0 - Condiciones
 
-1 - IF
+0 - IF
 
-1 - While
+0 - While
 
-
-- Ciclo especial
+0 - Ciclo especial
 
 - Generar el archivo de tabla de simbolos ts.txt
-
-
-1 - Maxi Caseres
-1 - Agus
-
-3 - Dani

@@ -37,6 +37,9 @@ OP_MAYOR		">"
 OP_MENOR		"<"
 OP_MENORIGUAL	"<""="
 OP_ASIG			":="
+OR_T			"OR"|"||"
+AND_T			"AND"|"&&"
+NOT_T 			"NOT"|"!"
 LLAVE_C			"}"
 LLAVE_A			"{"
 PARENT_C		")"
@@ -83,6 +86,9 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 {IF_T}				return IF_T;
 {IN_T}				return IN_T;
 {DO_T}				return DO_T;
+{AND_T}				return AND_T;
+{OR_T}				return OR_T;
+{NOT_T}				return NOT_T;
 {ENDWHILE_T} 		return ENDWHILE_T;
 {OP_DISTINTO}		return OP_DISTINTO;
 {OP_COMP}			return OP_COMP;
