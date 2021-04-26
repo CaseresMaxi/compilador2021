@@ -1,9 +1,8 @@
-#ASIGNACIONES DE TEMAS
-
-Asignaciones de temas pendientes
-0 ya está terminado
-Sin número lo vemos entre todos
-Números repetidos dependen entre sí
+<!-- ASIGNACIONES DE TEMAS -->
+***Asignaciones de temas pendientes
+***0 ya está terminado
+***Sin número lo vemos entre todos
+***Números repetidos dependen entre sí
 
 0 - Asignaciones simples
 
@@ -28,8 +27,11 @@ Números repetidos dependen entre sí
 - Generar el archivo de tabla de simbolos ts.txt
 
 
-1 - Maxi
+1 - Maxi Caseres
+1 - Agus
 
 5 - Facu
 
 3 - Dani
+
+2 - Maxi Formaioni
