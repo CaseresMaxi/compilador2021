@@ -1,7 +1,6 @@
 Terminals unused in grammar
 
    CONST_FLOAT
-   CONST_STRING
    ELSE_T
    IF_T
    OP_DISTINTO
@@ -22,7 +21,6 @@ Terminals unused in grammar
    TOKEN_AND
    TOKEN_OR
    MAX_TOKEN
-   WRITE_T
    ENDDEC_T
    DECVAR_T
    OP_AVG
@@ -41,30 +39,38 @@ Gramática
     4 grammar: expr
     5        | asig
     6        | while
+    7        | write
+    8        | read
 
-    7 while: WHILE_T PARENT_A CONST_INT PARENT_C LLAVE_A programa LLAVE_C
+    9 while: WHILE_T PARENT_A CONST_INT PARENT_C LLAVE_A programa LLAVE_C
 
-    8 asig: ID_T OP_ASIG expr
+   10 asig: ID_T OP_ASIG expr
 
-    9 expr: expr OP_SUM expr
-   10     | expr OP_MENOS expr
-   11     | termino
+   11 write: WRITE_T CONST_STRING
+   12      | WRITE_T expr
 
-   12 termino: termino OP_MUL factor
-   13        | termino OP_DIVISION factor
-   14        | factor
+   13 read: READ_T ID_T
 
-   15 factor: PARENT_A expr PARENT_C
-   16       | CONST_INT
+   14 expr: expr OP_SUM expr
+   15     | expr OP_MENOS expr
+   16     | termino
+
+   17 termino: termino OP_MUL factor
+   18        | termino OP_DIVISION factor
+   19        | factor
+
+   20 factor: PARENT_A expr PARENT_C
+   21       | CONST_INT
+   22       | ID_T
 
 
 Terminales con las reglas donde aparecen
 
 $end (0) 0
 error (256)
-CONST_INT (258) 7 16
+CONST_INT (258) 9 21
 CONST_FLOAT (259)
-CONST_STRING (260)
+CONST_STRING (260) 11
 ELSE_T (261)
 IF_T (262)
 OP_DISTINTO (263)
@@ -73,16 +79,16 @@ OP_MAYORIGUAL (265)
 OP_MAYOR (266)
 OP_MENOR (267)
 OP_MENORIGUAL (268)
-LLAVE_C (269) 7
-LLAVE_A (270) 7
-PARENT_C (271) 7 15
-PARENT_A (272) 7 15
-OP_DIVISION (273) 13
+LLAVE_C (269) 9
+LLAVE_A (270) 9
+PARENT_C (271) 9 20
+PARENT_A (272) 9 20
+OP_DIVISION (273) 18
 OP_AS (274)
-OP_SUM (275) 9
-OP_MENOS (276) 10
-OP_MUL (277) 12
-WHILE_T (278) 7
+OP_SUM (275) 14
+OP_MENOS (276) 15
+OP_MUL (277) 17
+WHILE_T (278) 9
 SEP_LINEA (279) 2 3
 SEPARADOR_T (280)
 FLOAT_T (281)
@@ -95,35 +101,40 @@ CONST_T (287)
 TOKEN_AND (288)
 TOKEN_OR (289)
 MAX_TOKEN (290)
-ID_T (291) 8
-WRITE_T (292)
-ENDDEC_T (293)
-DECVAR_T (294)
-OP_ASIG (295) 8
-OP_AVG (296)
-COMA (297)
+ID_T (291) 10 13 22
+WRITE_T (292) 11 12
+READ_T (293) 13
+ENDDEC_T (294)
+DECVAR_T (295)
+OP_ASIG (296) 10
+OP_AVG (297)
+COMA (298)
 
 
 No terminales con las reglas donde aparecen
 
-$accept (43)
+$accept (44)
     en la izquierda: 0
-programa (44)
-    en la izquierda: 1, en la derecha: 0 7
-sentencia (45)
+programa (45)
+    en la izquierda: 1, en la derecha: 0 9
+sentencia (46)
     en la izquierda: 2 3, en la derecha: 1 2
-grammar (46)
-    en la izquierda: 4 5 6, en la derecha: 2 3
-while (47)
-    en la izquierda: 7, en la derecha: 6
-asig (48)
-    en la izquierda: 8, en la derecha: 5
-expr (49)
-    en la izquierda: 9 10 11, en la derecha: 4 8 9 10 15
-termino (50)
-    en la izquierda: 12 13 14, en la derecha: 11 12 13
-factor (51)
-    en la izquierda: 15 16, en la derecha: 12 13 14
+grammar (47)
+    en la izquierda: 4 5 6 7 8, en la derecha: 2 3
+while (48)
+    en la izquierda: 9, en la derecha: 6
+asig (49)
+    en la izquierda: 10, en la derecha: 5
+write (50)
+    en la izquierda: 11 12, en la derecha: 7
+read (51)
+    en la izquierda: 13, en la derecha: 8
+expr (52)
+    en la izquierda: 14 15 16, en la derecha: 4 10 12 14 15 20
+termino (53)
+    en la izquierda: 17 18 19, en la derecha: 16 17 18
+factor (54)
+    en la izquierda: 20 21 22, en la derecha: 17 18 19
 
 
 estado 0
@@ -134,58 +145,88 @@ estado 0
     PARENT_A   desplazar e ir al estado 2
     WHILE_T    desplazar e ir al estado 3
     ID_T       desplazar e ir al estado 4
+    WRITE_T    desplazar e ir al estado 5
+    READ_T     desplazar e ir al estado 6
 
-    programa   ir al estado 5
-    sentencia  ir al estado 6
-    grammar    ir al estado 7
-    while      ir al estado 8
-    asig       ir al estado 9
-    expr       ir al estado 10
-    termino    ir al estado 11
-    factor     ir al estado 12
+    programa   ir al estado 7
+    sentencia  ir al estado 8
+    grammar    ir al estado 9
+    while      ir al estado 10
+    asig       ir al estado 11
+    write      ir al estado 12
+    read       ir al estado 13
+    expr       ir al estado 14
+    termino    ir al estado 15
+    factor     ir al estado 16
 
 
 estado 1
 
-   16 factor: CONST_INT .
+   21 factor: CONST_INT .
 
-    $default  reduce usando la regla 16 (factor)
+    $default  reduce usando la regla 21 (factor)
 
 
 estado 2
 
-   15 factor: PARENT_A . expr PARENT_C
+   20 factor: PARENT_A . expr PARENT_C
 
     CONST_INT  desplazar e ir al estado 1
     PARENT_A   desplazar e ir al estado 2
+    ID_T       desplazar e ir al estado 17
 
-    expr     ir al estado 13
-    termino  ir al estado 11
-    factor   ir al estado 12
+    expr     ir al estado 18
+    termino  ir al estado 15
+    factor   ir al estado 16
 
 
 estado 3
 
-    7 while: WHILE_T . PARENT_A CONST_INT PARENT_C LLAVE_A programa LLAVE_C
+    9 while: WHILE_T . PARENT_A CONST_INT PARENT_C LLAVE_A programa LLAVE_C
 
-    PARENT_A  desplazar e ir al estado 14
+    PARENT_A  desplazar e ir al estado 19
 
 
 estado 4
 
-    8 asig: ID_T . OP_ASIG expr
+   10 asig: ID_T . OP_ASIG expr
+   22 factor: ID_T .
 
-    OP_ASIG  desplazar e ir al estado 15
+    OP_ASIG  desplazar e ir al estado 20
+
+    $default  reduce usando la regla 22 (factor)
 
 
 estado 5
 
-    0 $accept: programa . $end
+   11 write: WRITE_T . CONST_STRING
+   12      | WRITE_T . expr
 
-    $end  desplazar e ir al estado 16
+    CONST_INT     desplazar e ir al estado 1
+    CONST_STRING  desplazar e ir al estado 21
+    PARENT_A      desplazar e ir al estado 2
+    ID_T          desplazar e ir al estado 17
+
+    expr     ir al estado 22
+    termino  ir al estado 15
+    factor   ir al estado 16
 
 
 estado 6
+
+   13 read: READ_T . ID_T
+
+    ID_T  desplazar e ir al estado 23
+
+
+estado 7
+
+    0 $accept: programa . $end
+
+    $end  desplazar e ir al estado 24
+
+
+estado 8
 
     1 programa: sentencia .
     2 sentencia: sentencia . grammar SEP_LINEA
@@ -194,264 +235,324 @@ estado 6
     PARENT_A   desplazar e ir al estado 2
     WHILE_T    desplazar e ir al estado 3
     ID_T       desplazar e ir al estado 4
+    WRITE_T    desplazar e ir al estado 5
+    READ_T     desplazar e ir al estado 6
 
     $default  reduce usando la regla 1 (programa)
 
-    grammar  ir al estado 17
-    while    ir al estado 8
-    asig     ir al estado 9
-    expr     ir al estado 10
-    termino  ir al estado 11
-    factor   ir al estado 12
+    grammar  ir al estado 25
+    while    ir al estado 10
+    asig     ir al estado 11
+    write    ir al estado 12
+    read     ir al estado 13
+    expr     ir al estado 14
+    termino  ir al estado 15
+    factor   ir al estado 16
 
 
-estado 7
+estado 9
 
     3 sentencia: grammar . SEP_LINEA
 
-    SEP_LINEA  desplazar e ir al estado 18
+    SEP_LINEA  desplazar e ir al estado 26
 
 
-estado 8
+estado 10
 
     6 grammar: while .
 
     $default  reduce usando la regla 6 (grammar)
 
 
-estado 9
+estado 11
 
     5 grammar: asig .
 
     $default  reduce usando la regla 5 (grammar)
 
 
-estado 10
-
-    4 grammar: expr .
-    9 expr: expr . OP_SUM expr
-   10     | expr . OP_MENOS expr
-
-    OP_SUM    desplazar e ir al estado 19
-    OP_MENOS  desplazar e ir al estado 20
-
-    $default  reduce usando la regla 4 (grammar)
-
-
-estado 11
-
-   11 expr: termino .
-   12 termino: termino . OP_MUL factor
-   13        | termino . OP_DIVISION factor
-
-    OP_DIVISION  desplazar e ir al estado 21
-    OP_MUL       desplazar e ir al estado 22
-
-    $default  reduce usando la regla 11 (expr)
-
-
 estado 12
 
-   14 termino: factor .
+    7 grammar: write .
 
-    $default  reduce usando la regla 14 (termino)
+    $default  reduce usando la regla 7 (grammar)
 
 
 estado 13
 
-    9 expr: expr . OP_SUM expr
-   10     | expr . OP_MENOS expr
-   15 factor: PARENT_A expr . PARENT_C
+    8 grammar: read .
 
-    PARENT_C  desplazar e ir al estado 23
-    OP_SUM    desplazar e ir al estado 19
-    OP_MENOS  desplazar e ir al estado 20
+    $default  reduce usando la regla 8 (grammar)
 
 
 estado 14
 
-    7 while: WHILE_T PARENT_A . CONST_INT PARENT_C LLAVE_A programa LLAVE_C
+    4 grammar: expr .
+   14 expr: expr . OP_SUM expr
+   15     | expr . OP_MENOS expr
 
-    CONST_INT  desplazar e ir al estado 24
+    OP_SUM    desplazar e ir al estado 27
+    OP_MENOS  desplazar e ir al estado 28
+
+    $default  reduce usando la regla 4 (grammar)
 
 
 estado 15
 
-    8 asig: ID_T OP_ASIG . expr
+   16 expr: termino .
+   17 termino: termino . OP_MUL factor
+   18        | termino . OP_DIVISION factor
 
-    CONST_INT  desplazar e ir al estado 1
-    PARENT_A   desplazar e ir al estado 2
+    OP_DIVISION  desplazar e ir al estado 29
+    OP_MUL       desplazar e ir al estado 30
 
-    expr     ir al estado 25
-    termino  ir al estado 11
-    factor   ir al estado 12
+    $default  reduce usando la regla 16 (expr)
 
 
 estado 16
+
+   19 termino: factor .
+
+    $default  reduce usando la regla 19 (termino)
+
+
+estado 17
+
+   22 factor: ID_T .
+
+    $default  reduce usando la regla 22 (factor)
+
+
+estado 18
+
+   14 expr: expr . OP_SUM expr
+   15     | expr . OP_MENOS expr
+   20 factor: PARENT_A expr . PARENT_C
+
+    PARENT_C  desplazar e ir al estado 31
+    OP_SUM    desplazar e ir al estado 27
+    OP_MENOS  desplazar e ir al estado 28
+
+
+estado 19
+
+    9 while: WHILE_T PARENT_A . CONST_INT PARENT_C LLAVE_A programa LLAVE_C
+
+    CONST_INT  desplazar e ir al estado 32
+
+
+estado 20
+
+   10 asig: ID_T OP_ASIG . expr
+
+    CONST_INT  desplazar e ir al estado 1
+    PARENT_A   desplazar e ir al estado 2
+    ID_T       desplazar e ir al estado 17
+
+    expr     ir al estado 33
+    termino  ir al estado 15
+    factor   ir al estado 16
+
+
+estado 21
+
+   11 write: WRITE_T CONST_STRING .
+
+    $default  reduce usando la regla 11 (write)
+
+
+estado 22
+
+   12 write: WRITE_T expr .
+   14 expr: expr . OP_SUM expr
+   15     | expr . OP_MENOS expr
+
+    OP_SUM    desplazar e ir al estado 27
+    OP_MENOS  desplazar e ir al estado 28
+
+    $default  reduce usando la regla 12 (write)
+
+
+estado 23
+
+   13 read: READ_T ID_T .
+
+    $default  reduce usando la regla 13 (read)
+
+
+estado 24
 
     0 $accept: programa $end .
 
     $default  aceptar
 
 
-estado 17
+estado 25
 
     2 sentencia: sentencia grammar . SEP_LINEA
 
-    SEP_LINEA  desplazar e ir al estado 26
+    SEP_LINEA  desplazar e ir al estado 34
 
 
-estado 18
+estado 26
 
     3 sentencia: grammar SEP_LINEA .
 
     $default  reduce usando la regla 3 (sentencia)
 
 
-estado 19
+estado 27
 
-    9 expr: expr OP_SUM . expr
-
-    CONST_INT  desplazar e ir al estado 1
-    PARENT_A   desplazar e ir al estado 2
-
-    expr     ir al estado 27
-    termino  ir al estado 11
-    factor   ir al estado 12
-
-
-estado 20
-
-   10 expr: expr OP_MENOS . expr
+   14 expr: expr OP_SUM . expr
 
     CONST_INT  desplazar e ir al estado 1
     PARENT_A   desplazar e ir al estado 2
+    ID_T       desplazar e ir al estado 17
 
-    expr     ir al estado 28
-    termino  ir al estado 11
-    factor   ir al estado 12
-
-
-estado 21
-
-   13 termino: termino OP_DIVISION . factor
-
-    CONST_INT  desplazar e ir al estado 1
-    PARENT_A   desplazar e ir al estado 2
-
-    factor  ir al estado 29
+    expr     ir al estado 35
+    termino  ir al estado 15
+    factor   ir al estado 16
 
 
-estado 22
+estado 28
 
-   12 termino: termino OP_MUL . factor
+   15 expr: expr OP_MENOS . expr
 
     CONST_INT  desplazar e ir al estado 1
     PARENT_A   desplazar e ir al estado 2
+    ID_T       desplazar e ir al estado 17
 
-    factor  ir al estado 30
-
-
-estado 23
-
-   15 factor: PARENT_A expr PARENT_C .
-
-    $default  reduce usando la regla 15 (factor)
+    expr     ir al estado 36
+    termino  ir al estado 15
+    factor   ir al estado 16
 
 
-estado 24
+estado 29
 
-    7 while: WHILE_T PARENT_A CONST_INT . PARENT_C LLAVE_A programa LLAVE_C
+   18 termino: termino OP_DIVISION . factor
 
-    PARENT_C  desplazar e ir al estado 31
+    CONST_INT  desplazar e ir al estado 1
+    PARENT_A   desplazar e ir al estado 2
+    ID_T       desplazar e ir al estado 17
 
-
-estado 25
-
-    8 asig: ID_T OP_ASIG expr .
-    9 expr: expr . OP_SUM expr
-   10     | expr . OP_MENOS expr
-
-    OP_SUM    desplazar e ir al estado 19
-    OP_MENOS  desplazar e ir al estado 20
-
-    $default  reduce usando la regla 8 (asig)
+    factor  ir al estado 37
 
 
-estado 26
+estado 30
+
+   17 termino: termino OP_MUL . factor
+
+    CONST_INT  desplazar e ir al estado 1
+    PARENT_A   desplazar e ir al estado 2
+    ID_T       desplazar e ir al estado 17
+
+    factor  ir al estado 38
+
+
+estado 31
+
+   20 factor: PARENT_A expr PARENT_C .
+
+    $default  reduce usando la regla 20 (factor)
+
+
+estado 32
+
+    9 while: WHILE_T PARENT_A CONST_INT . PARENT_C LLAVE_A programa LLAVE_C
+
+    PARENT_C  desplazar e ir al estado 39
+
+
+estado 33
+
+   10 asig: ID_T OP_ASIG expr .
+   14 expr: expr . OP_SUM expr
+   15     | expr . OP_MENOS expr
+
+    OP_SUM    desplazar e ir al estado 27
+    OP_MENOS  desplazar e ir al estado 28
+
+    $default  reduce usando la regla 10 (asig)
+
+
+estado 34
 
     2 sentencia: sentencia grammar SEP_LINEA .
 
     $default  reduce usando la regla 2 (sentencia)
 
 
-estado 27
+estado 35
 
-    9 expr: expr . OP_SUM expr
-    9     | expr OP_SUM expr .
-   10     | expr . OP_MENOS expr
+   14 expr: expr . OP_SUM expr
+   14     | expr OP_SUM expr .
+   15     | expr . OP_MENOS expr
 
-    $default  reduce usando la regla 9 (expr)
-
-
-estado 28
-
-    9 expr: expr . OP_SUM expr
-   10     | expr . OP_MENOS expr
-   10     | expr OP_MENOS expr .
-
-    $default  reduce usando la regla 10 (expr)
+    $default  reduce usando la regla 14 (expr)
 
 
-estado 29
+estado 36
 
-   13 termino: termino OP_DIVISION factor .
+   14 expr: expr . OP_SUM expr
+   15     | expr . OP_MENOS expr
+   15     | expr OP_MENOS expr .
 
-    $default  reduce usando la regla 13 (termino)
-
-
-estado 30
-
-   12 termino: termino OP_MUL factor .
-
-    $default  reduce usando la regla 12 (termino)
+    $default  reduce usando la regla 15 (expr)
 
 
-estado 31
+estado 37
 
-    7 while: WHILE_T PARENT_A CONST_INT PARENT_C . LLAVE_A programa LLAVE_C
+   18 termino: termino OP_DIVISION factor .
 
-    LLAVE_A  desplazar e ir al estado 32
+    $default  reduce usando la regla 18 (termino)
 
 
-estado 32
+estado 38
 
-    7 while: WHILE_T PARENT_A CONST_INT PARENT_C LLAVE_A . programa LLAVE_C
+   17 termino: termino OP_MUL factor .
+
+    $default  reduce usando la regla 17 (termino)
+
+
+estado 39
+
+    9 while: WHILE_T PARENT_A CONST_INT PARENT_C . LLAVE_A programa LLAVE_C
+
+    LLAVE_A  desplazar e ir al estado 40
+
+
+estado 40
+
+    9 while: WHILE_T PARENT_A CONST_INT PARENT_C LLAVE_A . programa LLAVE_C
 
     CONST_INT  desplazar e ir al estado 1
     PARENT_A   desplazar e ir al estado 2
     WHILE_T    desplazar e ir al estado 3
     ID_T       desplazar e ir al estado 4
+    WRITE_T    desplazar e ir al estado 5
+    READ_T     desplazar e ir al estado 6
 
-    programa   ir al estado 33
-    sentencia  ir al estado 6
-    grammar    ir al estado 7
-    while      ir al estado 8
-    asig       ir al estado 9
-    expr       ir al estado 10
-    termino    ir al estado 11
-    factor     ir al estado 12
-
-
-estado 33
-
-    7 while: WHILE_T PARENT_A CONST_INT PARENT_C LLAVE_A programa . LLAVE_C
-
-    LLAVE_C  desplazar e ir al estado 34
+    programa   ir al estado 41
+    sentencia  ir al estado 8
+    grammar    ir al estado 9
+    while      ir al estado 10
+    asig       ir al estado 11
+    write      ir al estado 12
+    read       ir al estado 13
+    expr       ir al estado 14
+    termino    ir al estado 15
+    factor     ir al estado 16
 
 
-estado 34
+estado 41
 
-    7 while: WHILE_T PARENT_A CONST_INT PARENT_C LLAVE_A programa LLAVE_C .
+    9 while: WHILE_T PARENT_A CONST_INT PARENT_C LLAVE_A programa . LLAVE_C
 
-    $default  reduce usando la regla 7 (while)
+    LLAVE_C  desplazar e ir al estado 42
+
+
+estado 42
+
+    9 while: WHILE_T PARENT_A CONST_INT PARENT_C LLAVE_A programa LLAVE_C .
+
+    $default  reduce usando la regla 9 (while)
