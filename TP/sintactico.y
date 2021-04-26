@@ -55,6 +55,8 @@ extern FILE* yyin;
 %token OP_ASIG
 %token OP_AVG
 %token COMA
+%token OR_T
+%token AND_T
 
 %left OP_SUM OP_MENOS
 %left OP_MUL OP_DIVISION
@@ -68,11 +70,19 @@ sentencia: sentencia grammar SEP_LINEA
 
 sentencia: grammar SEP_LINEA
 
-grammar: expr|asig|while 
+grammar: expr {printf("SOY UNA exprecion\n");};|asig|while|OR_AND_E|cond {printf("SOY UNA cond\n");};
 
 while: WHILE_T PARENT_A CONST_INT PARENT_C LLAVE_A programa LLAVE_C {printf("WHILE EXITOSO\n");};
 
 asig: ID_T OP_ASIG expr
+
+comparador : OP_DISTINTO|OP_COMP|OP_MAYORIGUAL|OP_MAYOR|OP_MENOR|OP_MENORIGUAL
+
+cond: PARENT_A expr comparador termino PARENT_C {printf("SOY UNA CONDICION\n");};
+
+OR_AND: OR_T | AND_T
+
+OR_AND_E: PARENT_A cond OR_AND OR_AND_E PARENT_C | cond
 
 expr:expr OP_SUM expr  {printf("SOY UNA SUMA\n");}
 	|expr OP_MENOS expr {printf("SOY UNA SUMA\n");}
@@ -83,7 +93,7 @@ expr:expr OP_SUM expr  {printf("SOY UNA SUMA\n");}
 termino: termino OP_MUL factor {printf(" termino OP_MUL factor\n");}| termino OP_DIVISION factor {printf(" termino OP_DIVISION factor\n");}| factor;
 
 
-factor: PARENT_A expr PARENT_C  {printf(" PARENT_A expr PARENT_C\n");}| CONST_INT  {printf(" CONST_INT\n");}
+factor: PARENT_A expr PARENT_C  {printf(" PARENT_A expr PARENT_C\n");}| CONST_INT  {printf(" CONST_INT\n");} | | ID_T  {printf(" ID_T\n");}
 
 %%
 

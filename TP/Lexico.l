@@ -31,12 +31,14 @@ CONST_STRING	{COMILLA_D}.({LETRA}|!|\ |{DIGITO}|>|<)+.{COMILLA_D}
 ELSE_T			"else"|"ELSE"
 IF_T			"if"|"IF"
 OP_DISTINTO		"!""="
-OP_COMP			"=""="
+OP_COMP			"=="
 OP_MAYORIGUAL	">""="
 OP_MAYOR		">"
 OP_MENOR		"<"
 OP_MENORIGUAL	"<""="
 OP_ASIG			":="
+OR_T			"|"
+AND_T			"&&"
 LLAVE_C			"}"
 LLAVE_A			"{"
 PARENT_C		")"
@@ -68,8 +70,10 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 						errorLexico();}}
 {ELSE_T}			return ELSE_T;
 {IF_T}				return IF_T;
+{AND_T}				return AND_T;
+{OR_T}				return OR_T;
 {OP_DISTINTO}		return OP_DISTINTO;
-{OP_COMP}			return OP_COMP;
+{OP_COMP}			{printf("LEX-- ENTRE A TOKEN OP_COMP\n"); return OP_COMP;}
 {OP_MAYORIGUAL}		return OP_MAYORIGUAL;
 {OP_MAYOR}			return OP_MAYOR;
 {OP_MENOR}			return OP_MENOR;
@@ -94,9 +98,11 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 {INTEGER_T}			return INTEGER_T;
 {DECVAR_T}			return DECVAR_T;
 {ID_T}				{printf("LEX-- ENTRE A TOKEN ID_T\n"); return ID_T;}
-.					{printf("LEX-- NO SE ENCONTRO TOKEN \n");errorLexico();}
 "\n"
 "\t"
+" "
+.					{printf("LEX-- NO SE ENCONTRO TOKEN \n");errorLexico();}
+
 
 %%
 
