@@ -1,8 +1,8 @@
 <!-- ASIGNACIONES DE TEMAS -->
-***Asignaciones de temas pendientes
-***0 ya está terminado
-***Sin número lo vemos entre todos
-***Números repetidos dependen entre sí
+##Asignaciones de temas pendientes
+<br>0 ya está terminado</br>
+<br>Sin número lo vemos entre todos</br>
+<br>Números repetidos dependen entre sí</br>
 
 0 - Asignaciones simples
 
