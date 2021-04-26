@@ -86,7 +86,7 @@ termino: termino OP_MUL factor {printf(" termino OP_MUL factor\n");}| termino OP
 
 factor: PARENT_A expr PARENT_C  {printf(" PARENT_A expr PARENT_C\n");}| CONST_INT  {printf(" CONST_INT\n");}
 
-write: WRITE_T (CONST_STRING|expresion)
+write: WRITE_T (CONST_STRING|ID_T)
 
 read: READ_T ID_T
 
