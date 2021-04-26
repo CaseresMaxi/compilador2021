@@ -50,6 +50,7 @@ COMA			","
 WHILE_T			"while"|"WHILE"
 SEP_LINEA		";"
 WRITE_T			"write"|"WRITE"
+READ_T			"read"|"READ"
 ENDDEC_T		"enddec"|"ENDDEC"
 FLOAT_T			"Float"|"float"|"FLOAT"
 INTEGER_T		"Integer"|"integer"|"INTEGER"
@@ -88,6 +89,7 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 {WHILE_T}			return WHILE_T;
 {SEP_LINEA}			return SEP_LINEA;
 {WRITE_T}			return WRITE_T;
+{READ_T}			return READ_T;
 {ENDDEC_T}			return ENDDEC_T;
 {FLOAT_T}			return FLOAT_T;
 {OP_ASIG}			{printf("LEX-- ENTRE A TOKEN OP_ASIG\n"); return OP_ASIG;}

@@ -50,6 +50,7 @@ extern FILE* yyin;
 %token MAX_TOKEN	
 %token ID_T			
 %token WRITE_T
+%token READ_T
 %token ENDDEC_T
 %token DECVAR_T
 %token OP_ASIG
@@ -84,6 +85,10 @@ termino: termino OP_MUL factor {printf(" termino OP_MUL factor\n");}| termino OP
 
 
 factor: PARENT_A expr PARENT_C  {printf(" PARENT_A expr PARENT_C\n");}| CONST_INT  {printf(" CONST_INT\n");}
+
+write: WRITE_T (CONST_STRING|expresion)
+
+read: READ_T ID_T
 
 %%
 
