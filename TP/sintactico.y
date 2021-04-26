@@ -51,6 +51,7 @@ extern FILE* yyin;
 %token MAX_TOKEN	
 %token ID_T			
 %token WRITE_T
+%token READ_T
 %token ENDDEC_T
 %token DECVAR_T
 %token OP_ASIG
@@ -70,8 +71,10 @@ sentencia: sentencia grammar SEP_LINEA
 sentencia: grammar SEP_LINEA
 
 grammar : expr
-		|asig
-		|while
+		| asig
+		| while
+		| write
+		| read
 		; 
 
 while: WHILE_T PARENT_A CONST_INT PARENT_C LLAVE_A programa LLAVE_C {printf("WHILE EXITOSO\n");}
@@ -79,6 +82,11 @@ while: WHILE_T PARENT_A CONST_INT PARENT_C LLAVE_A programa LLAVE_C {printf("WHI
 
 asig: ID_T OP_ASIG expr
 	;
+
+write: WRITE_T CONST_STRING {printf(" Soy un write\n");}
+	   |WRITE_T expr {printf(" Soy un write\n");}
+
+read: READ_T ID_T {printf(" Soy un reads\n");}
 
 expr: expr OP_SUM expr  {printf("SOY UNA SUMA\n");}
 	| expr OP_MENOS expr {printf("SOY UNA RESTA\n");}

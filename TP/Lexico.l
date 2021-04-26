@@ -50,6 +50,7 @@ COMA			","
 WHILE_T			"while"|"WHILE"
 SEP_LINEA		";"
 WRITE_T			"write"|"WRITE"
+READ_T			"read"|"READ"
 ENDDEC_T		"enddec"|"ENDDEC"
 FLOAT_T			"Float"|"float"|"FLOAT"
 INTEGER_T		"Integer"|"integer"|"INTEGER"
@@ -58,8 +59,6 @@ DECVAR_T		"decvar"|"DECVAR"
 ID_T			{LETRA}.({LETRA}|{DIGITO})*
 
 %%
-{CONST_INT}			{printf("LEX-- ENTRE A TOKEN ENTERO\n"); return CONST_INT;}
-{CONST_FLOAT}		return CONST_FLOAT;
 {CONST_STRING}		{printf("LEX-- ENTRE A CONST_STRING\n");
 					 if(strlen(yytext)<=30){
 						printf("Longitud del string %d\n",strlen(yytext));
@@ -67,6 +66,8 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 					 else{
 						printf("LEX-- longitud de la cadena mayor a 30\n");
 						errorLexico();}}
+{CONST_INT}			{printf("LEX-- ENTRE A TOKEN ENTERO\n"); return CONST_INT;}
+{CONST_FLOAT}		return CONST_FLOAT;
 {ELSE_T}			return ELSE_T;
 {IF_T}				return IF_T;
 {OP_DISTINTO}		return OP_DISTINTO;
@@ -88,7 +89,8 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 {COMA}				return COMA;
 {WHILE_T}			return WHILE_T;
 {SEP_LINEA}			return SEP_LINEA;
-{WRITE_T}			return WRITE_T;
+{WRITE_T}			{printf("LEX-- ENTRE A WRITE\n"); return WRITE_T;};
+{READ_T}			{printf("LEX-- ENTRE A WRITE\n"); return READ_T;};
 {ENDDEC_T}			return ENDDEC_T;
 {FLOAT_T}			return FLOAT_T;
 {INTEGER_T}			return INTEGER_T;
