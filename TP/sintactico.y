@@ -29,7 +29,7 @@ extern FILE* yyin;
 %token LLAVE_C		
 %token LLAVE_A		
 %token PARENT_C		
-%token PARENT_A		
+%token PARENT_A	
 %token OP_DIVISION	
 %token OP_AS		
 %token OP_SUM
@@ -61,6 +61,8 @@ extern FILE* yyin;
 %right OP_ASIG
 
 %%
+
+
 
 programa: 	sentencia {printf("La expresion es valida\n");};
 

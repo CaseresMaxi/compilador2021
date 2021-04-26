@@ -41,11 +41,16 @@ LLAVE_C			"}"
 LLAVE_A			"{"
 PARENT_C		")"
 PARENT_A		"("
+
+COMENTARIO      "-""/"(.)*"/""-"
+COMENTARIO_A    "-""/"
+COMENTARIO_C	"/""-"
 OP_DIVISION		"/"
 OP_AS			":"
 OP_SUM			"+"
 OP_MUL			"*"
 OP_MENOS		"-"
+
 COMA			","
 WHILE_T			"while"|"WHILE"
 SEP_LINEA		";"
@@ -66,6 +71,8 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 					 else{
 						printf("LEX-- longitud de la cadena mayor a 30\n");
 						errorLexico();}}
+
+
 {ELSE_T}			return ELSE_T;
 {IF_T}				return IF_T;
 {OP_DISTINTO}		return OP_DISTINTO;
@@ -84,6 +91,9 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 {OP_AS}				return OP_AS;
 {OP_AVG}			{printf("LEX-- ENTRE A TOKEN OP_AVG\n"); return OP_AVG;}
 {OP_MUL}			return OP_MUL;
+{COMENTARIO}		{printf("LEX-- ENTRE A COMENTARIO\n");}
+{COMENTARIO_A}		{printf("LEX-- ENTRE A COMENTARIO_A\n");}
+{COMENTARIO_C}		{printf("LEX-- ENTRE A COMENTARIO_C\n");}
 {COMA}				return COMA;
 {WHILE_T}			return WHILE_T;
 {SEP_LINEA}			return SEP_LINEA;
@@ -94,10 +104,11 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 {INTEGER_T}			return INTEGER_T;
 {DECVAR_T}			return DECVAR_T;
 {ID_T}				{printf("LEX-- ENTRE A TOKEN ID_T\n"); return ID_T;}
-.					{printf("LEX-- NO SE ENCONTRO TOKEN \n");errorLexico();}
+
 "\n"
 "\t"
-
+" "
+.					{printf("LEX-- NO SE ENCONTRO TOKEN \n");errorLexico();}
 %%
 
 //
