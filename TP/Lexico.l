@@ -37,6 +37,9 @@ OP_MAYOR		">"
 OP_MENOR		"<"
 OP_MENORIGUAL	"<""="
 OP_ASIG			":="
+OR_T			"OR"|"||"
+AND_T			"AND"|"&&"
+NOT_T 			"NOT"|"!"
 LLAVE_C			"}"
 LLAVE_A			"{"
 PARENT_C		")"
@@ -45,6 +48,7 @@ PARENT_A		"("
 COMENTARIO      "-""/"(.)*"/""-"
 COMENTARIO_A    "-""/"
 COMENTARIO_C	"/""-"
+
 OP_DIVISION		"/"
 OP_AS			":"
 OP_SUM			"+"
@@ -55,15 +59,21 @@ COMA			","
 WHILE_T			"while"|"WHILE"
 SEP_LINEA		";"
 WRITE_T			"write"|"WRITE"
+READ_T			"read"|"READ"
 ENDDEC_T		"enddec"|"ENDDEC"
 FLOAT_T			"Float"|"float"|"FLOAT"
 INTEGER_T		"Integer"|"integer"|"INTEGER"
+STRING_T 		"String"|"string"|"STRING"
 DECVAR_T		"decvar"|"DECVAR"
+IN_T 			"in"|"In"|"IN"
+DO_T 			"do"|"Do"|"DO"
+ENDWHILE_T 		"endwhile"|"Endwhile"|"ENDWHILE"
 ID_T			{LETRA}.({LETRA}|{DIGITO})*
 
 %%
-{CONST_INT}			{printf("LEX-- ENTRE A TOKEN ENTERO\n"); return CONST_INT;}
-{CONST_FLOAT}		return CONST_FLOAT;
+{COMENTARIO}		{printf("LEX-- ENTRE A COMENTARIO\n");}
+{COMENTARIO_A}		{printf("LEX-- ENTRE A COMENTARIO_A\n");}
+{COMENTARIO_C}		{printf("LEX-- ENTRE A COMENTARIO_C\n");}
 {CONST_STRING}		{printf("LEX-- ENTRE A CONST_STRING\n");
 					 if(strlen(yytext)<=30){
 						printf("Longitud del string %d\n",strlen(yytext));
@@ -71,10 +81,16 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 					 else{
 						printf("LEX-- longitud de la cadena mayor a 30\n");
 						errorLexico();}}
-
-
+{CONST_INT}			{printf("LEX-- ENTRE A TOKEN ENTERO\n"); return CONST_INT;}
+{CONST_FLOAT}		return CONST_FLOAT;
 {ELSE_T}			return ELSE_T;
 {IF_T}				return IF_T;
+{IN_T}				return IN_T;
+{DO_T}				return DO_T;
+{AND_T}				return AND_T;
+{OR_T}				return OR_T;
+{NOT_T}				return NOT_T;
+{ENDWHILE_T} 		return ENDWHILE_T;
 {OP_DISTINTO}		return OP_DISTINTO;
 {OP_COMP}			return OP_COMP;
 {OP_MAYORIGUAL}		return OP_MAYORIGUAL;
@@ -97,11 +113,13 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 {COMA}				return COMA;
 {WHILE_T}			return WHILE_T;
 {SEP_LINEA}			return SEP_LINEA;
-{WRITE_T}			return WRITE_T;
+{WRITE_T}			{printf("LEX-- ENTRE A WRITE\n"); return WRITE_T;};
+{READ_T}			{printf("LEX-- ENTRE A WRITE\n"); return READ_T;};
 {ENDDEC_T}			return ENDDEC_T;
 {FLOAT_T}			return FLOAT_T;
-{OP_ASIG}			{printf("LEX-- ENTRE A TOKEN OP_ASIG\n"); return OP_ASIG;}
 {INTEGER_T}			return INTEGER_T;
+{STRING_T} 			return STRING_T;
+{OP_ASIG}			{printf("LEX-- ENTRE A TOKEN OP_ASIG\n"); return OP_ASIG;}
 {DECVAR_T}			return DECVAR_T;
 {ID_T}				{printf("LEX-- ENTRE A TOKEN ID_T\n"); return ID_T;}
 
