@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <conio.h>
 
+#include "funciones.h"
+
 extern int yylex();
 extern void yyerror();
 extern char* yytext;
@@ -10,14 +12,23 @@ extern int yylineno;
 
 extern FILE* yyin;
 
+tabla tablaSimbolos;
+
 
 %}
 
+%union{
+  
+  int intVal;
+  char* dataType;
+  char* strVal;
+  float floatVal;
+  char charVal; 
+}
 
-
-%token CONST_INT 	
-%token CONST_FLOAT 	
-%token CONST_STRING	
+%token <strVal>CONST_INT 	
+%token <strVal>CONST_FLOAT 	
+%token <strVal>CONST_STRING	
 %token ELSE_T			
 %token IF_T			
 %token OP_DISTINTO	
@@ -49,7 +60,7 @@ extern FILE* yyin;
 %token TOKEN_AND	
 %token TOKEN_OR		
 %token MAX_TOKEN	
-%token ID_T			
+%token <strVal>ID_T			
 %token WRITE_T
 %token READ_T
 %token ENDDEC_T
@@ -91,13 +102,15 @@ while: WHILE_T cond_final LLAVE_A sentencia LLAVE_C
 
 if: IF_T cond_final LLAVE_A sentencia LLAVE_C
 
-write : WRITE_T CONST_STRING 
+write : WRITE_T CONST_STRING {
+		insertar($2,ES_STRING,&tablaSimbolos,NO_ES_CONSTANTE);}
 	  | WRITE_T expr 
 	  ;
 
-read: READ_T ID_T 
+read: READ_T ID_T {insertar($2,SIN_VALOR,&tablaSimbolos,NO_ES_CONSTANTE);}
 
-ciclo_especial: WHILE_T ID_T IN_T PARENT_A lista_expresion PARENT_C DO_T sentencia ENDWHILE_T;
+ciclo_especial: WHILE_T ID_T IN_T PARENT_A lista_expresion PARENT_C DO_T sentencia ENDWHILE_T
+				{insertar($2,SIN_VALOR,&tablaSimbolos,NO_ES_CONSTANTE);};
 
 lista_expresion: expr
 			   | lista_expresion COMA expr
@@ -125,7 +138,8 @@ termino : termino OP_MUL factor {printf(" termino OP_MUL factor\n");}
 		;
 
 factor	: PARENT_A expr PARENT_C  {printf(" PARENT_A expr PARENT_C\n");}
-		| CONST_INT  {printf(" CONST_INT\n");} 
+		| CONST_INT  {printf(" CONST_INT\n");
+					  insertar($1,CON_VALOR,&tablaSimbolos,NO_ES_CONSTANTE);} 
 		| ID_T {printf(" ID_T\n");}
 		;
 
@@ -156,7 +170,9 @@ void main(int argc, char* argv[]){
 		printf("No se pudo abrir el archivo %s\n",argv[1]);
 		exit(1);
 	}
+	crearTabla(&tablaSimbolos);
 	yyparse();
+	vaciar_lista(&tablaSimbolos);
 	printf("No hubo errores!\n");
 	fclose(yyin);
 	exit(1);
