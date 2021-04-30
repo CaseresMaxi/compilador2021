@@ -13,8 +13,6 @@ extern FILE* yyin;
 
 %}
 
-
-
 %token CONST_INT 	
 %token CONST_FLOAT 	
 %token CONST_STRING	
@@ -34,7 +32,9 @@ extern FILE* yyin;
 %token OP_AS		
 %token OP_SUM
 %token OP_MENOS		
-%token OP_MUL		
+%token OP_MUL	
+%token OP_MOD		
+%token OP_DIV	
 %token WHILE_T		
 %token SEP_LINEA	
 %token SEPARADOR_T	
@@ -66,6 +66,7 @@ extern FILE* yyin;
 
 %left OP_SUM OP_MENOS
 %left OP_MUL OP_DIVISION
+%left OP_MOD OP_DIV
 %right OP_ASIG
 
 %%
@@ -88,6 +89,8 @@ while: WHILE_T cond_final LLAVE_A sentencia LLAVE_C
 	 ;
 
 if: IF_T cond_final LLAVE_A sentencia LLAVE_C
+	|IF_T cond_final LLAVE_A sentencia LLAVE_C ELSE_T LLAVE_A sentencia LLAVE_C
+	;
 
 write : WRITE_T CONST_STRING 
 	  | WRITE_T expr 
@@ -104,7 +107,7 @@ lista_expresion: expr
 asig: ID_T OP_ASIG expr
 	;
 
-cond_final: PARENT_A cond_final OR_AND cond_final PARENT_C | cond | NOT_T cond
+cond_final: PARENT_A cond_final OR_AND cond_final PARENT_C | cond | NOT_T cond | PARENT_A cond_final PARENT_C
 
 cond: PARENT_A expr COMPARADOR termino PARENT_C
 
@@ -119,8 +122,15 @@ expr: expr OP_SUM expr  {printf("SOY UNA SUMA\n");}
 
 termino : termino OP_MUL factor {printf(" termino OP_MUL factor\n");}
 		| termino OP_DIVISION factor {printf(" termino OP_DIVISION factor\n");}
+//		| termino OP_MOD factor {printf(" termino OP_MOD factor\n");}
+//		| termino OP_DIV factor {printf(" termino OP_DIV factor\n");}
 		| factor
+		| termino_moddiv
 		;
+
+termino_moddiv: termino_moddiv OP_MOD factor {printf(" termino OP_MOD factor\n");}
+		|termino_moddiv OP_DIV factor {printf(" termino OP_DIV factor\n");}
+		| factor
 
 factor	: PARENT_A expr PARENT_C  {printf(" PARENT_A expr PARENT_C\n");}
 		| CONST_INT  {printf(" CONST_INT\n");} 

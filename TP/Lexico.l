@@ -22,12 +22,13 @@ int errorLexico(void);
 DIGITO 			[0-9]
 LETRA			[a-zA-Z]
 COMILLA_D		["]
-
+CARACTER 		[a-z,A-Z,0-9,=,>,<,!,:,+,-,*,/]
+ESPACIO		[" "]
 
 CONST_INT 		{DIGITO}+
 CONST_FLOAT 	{DIGITO}+"."{DIGITO}+
 OP_AVG			"avg"|"AVG"
-CONST_STRING	{COMILLA_D}.({LETRA}|!|\ |{DIGITO}|>|<)+.{COMILLA_D}
+CONST_STRING	{COMILLA_D}.({CARACTER}|{ESPACIO})+.{COMILLA_D}
 ELSE_T			"else"|"ELSE"
 IF_T			"if"|"IF"
 OP_DISTINTO		"!""="
@@ -54,6 +55,8 @@ OP_AS			":"
 OP_SUM			"+"
 OP_MUL			"*"
 OP_MENOS		"-"
+OP_MOD			"MOD"|"mod"
+OP_DIV			"DIV"|"div"
 COMA			","
 WHILE_T			"while"|"WHILE"
 SEP_LINEA		";"
@@ -106,6 +109,8 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 {OP_AS}				return OP_AS;
 {OP_AVG}			{printf("LEX-- ENTRE A TOKEN OP_AVG\n"); return OP_AVG;}
 {OP_MUL}			return OP_MUL;
+{OP_MOD}			{printf("LEX-- ENTRE A TOKEN OP_MOD\n"); return OP_MOD;}
+{OP_DIV}			{printf("LEX-- ENTRE A TOKEN OP_DIV\n"); return OP_DIV;}
 {COMA}				return COMA;
 {WHILE_T}			return WHILE_T;
 {SEP_LINEA}			return SEP_LINEA;
