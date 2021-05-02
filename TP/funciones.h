@@ -1,19 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define CON_VALOR 1
-#define SIN_VALOR 0
-#define ES_STRING 2
-#define ES_CONSTANTE 3
-#define NO_ES_CONSTANTE 5
-
-
 
 typedef struct tupla{
 	char* lexema;
 	char* tipo;
 	char* valor;
-	char constante[3];
+	int   longitud;
 	struct tupla* siguiente;
 
 }tuplaTabla;
@@ -22,118 +15,102 @@ typedef struct tupla{
 typedef  tuplaTabla* tabla;
 
 
+void crear_Tabla(tabla* tabla_p);
 
+void vaciar_Tabla(tabla* tabla_p);
 
-int insertar(char* , int ,tabla*  , int );
+int insertar_id (tabla* tabla_p, char* lexema_p);
 
-int enlistar_en_orden(tabla* ,tuplaTabla* );
+int insertar_string (tabla* tabla_p, char* lexema_p);
 
-int vaciar_lista(tabla* l);
+int insertar_numero (tabla* tabla_p, char* lexema_p);
 
-void crearTabla(tabla* lista);
+int enlistar_en_orden(tabla* tabla_p,tuplaTabla* );
 
 void eliminarCaracter(char *str, char garbage);
 
-int mi_strlen(char* cadena);
 
 
 
-void crearTabla(tabla* lista){
-	*lista = NULL;
-
+void crear_Tabla(tabla* tabla_p){
+	*tabla_p = NULL;
 }
 
 
 
-int vaciar_lista(tabla* l)
+void vaciar_Tabla(tabla* tabla_p)
 {
     tuplaTabla* viejo;
+    char aux[30];
+    int i;
     FILE* pf = fopen("ts.txt","w+");
     if(!pf){
     	printf("No se pudo abrir el archivo;\n");
-    	return 0;
+    	return;
     }
 
-   	fprintf(pf,"%s","LEXEMA\t\t\t\t\t\tVALOR\t\t\t\t\t\tCONSTANTE\n");
+   	printf("\n\nTABLA DE SIMBOLOS:\n\n");
+   	fprintf(pf,"\nTABLA DE SIMBOLOS:\n\n");
 
-    while(*l)
+   	for(i=0;i<85;i++){
+   		printf("_");
+   		fprintf(pf,"_");
+   	}
+
+   	printf("\n");
+   	fprintf(pf,"\n");
+
+   	printf("|%-32s|%-8s|%-32s|%-8s|\n", "LEXEMA", "TIPO", "VALOR", "LONGITUD");
+   	fprintf(pf,"|%-32s|%-8s|%-32s|%-8s|\n", "LEXEMA", "TIPO", "VALOR", "LONGITUD");
+
+   	for(i=0;i<85;i++){
+   		printf("-");
+   		fprintf(pf,"-");
+   	}
+   	printf("\n");
+   	fprintf(pf,"\n");
+
+    while(*tabla_p)
     {
-        viejo=*l;
-        *l=viejo->siguiente;
-        fprintf(pf,"%s\t\t\t\t%s\t\t\t\t\t\t%s\n", viejo->lexema, viejo->valor, viejo->constante);
+        viejo=*tabla_p;
+        *tabla_p=viejo->siguiente;
+        printf("|%-32s|%-8s|%-32s|%-8s|\n", viejo->lexema, "", !(viejo->valor)?"-":viejo->valor, viejo->longitud == 0?"":itoa(viejo->longitud,aux,10));
+        fprintf(pf,"|%-32s|%-8s|%-32s|%-8s|\n", viejo->lexema, "", !(viejo->valor)?"-":viejo->valor, viejo->longitud == 0?"":itoa(viejo->longitud,aux,10));
 
         free(viejo);
     }
-    fclose(pf);
-    return 1;
 
+    for(i=0;i<85;i++){
+   		printf("-");
+   		fprintf(pf,"-");
+   	}
+
+   	printf("\n");
+
+    fclose(pf);
 }
 
-
-int insertar(char* lexemaE, int tipo,tabla*  tablaSimbolos, int constante){
-
-	tuplaTabla* nuevo;
+int insertar_id (tabla* tabla_p, char* lexema_p){
 	int resultado = 0;
-	nuevo = (tuplaTabla*) malloc(sizeof(tuplaTabla));
+	tuplaTabla* nuevo = (tuplaTabla*) malloc(sizeof(tuplaTabla));
 	if(!nuevo){
 		printf("Error, no hay memoria\n.");
 		return -1;
 	}
 
-	/* SI ES UN STRING, LE SACO LAS COMILLAS, RESERVO LA MEMORIA Y ASIGNO LOS VALORES A LOS CAMPOS DE LA TUPLA*/
-	if(tipo == ES_STRING){
-			nuevo->lexema = (char*) malloc(sizeof(char) * strlen(lexemaE) + 1);
-			if(!(nuevo->lexema)){
-				printf("Error, no hay memoria\n.");
-				return -1;
-			}
-
-			eliminarCaracter(lexemaE, '"');
-			strcpy(nuevo->lexema, "_");
-			strcat(nuevo->lexema, lexemaE);
-			nuevo->valor = (char*) malloc(sizeof(char) * strlen(lexemaE) + 1);
-			if(!(nuevo->valor)){
-				printf("Error, no hay memoria\n.");
-				return -1;
-			}
-			strcpy(nuevo->valor, lexemaE);
-
-	}else{/* SI NO ES UN STRING VERIFICO SI ES CON VALOR O SIN VALOR. PARA AMBOS CASOS ASIGNO EL NOMBRE AL LEXEMA Y RESERVO LA MEMORIA*/
-		nuevo->lexema = (char*) malloc(sizeof(char) * strlen(lexemaE) + 2);
-
-		if(!(nuevo->lexema)){
-			printf("Error, no hay memoria\n.");
-			return -1;
-		}
-
-		strcpy(nuevo->lexema, "_");
-
-		strcat(nuevo->lexema, lexemaE);
-
-		nuevo->tipo = NULL;
-		nuevo->valor = NULL;
-
-		/*SI ES CON VALOR GUARDO EL VALOR DEL LEXEMA EN LA TUPLA*/
-		if(tipo == CON_VALOR){
-
-			nuevo->valor = (char*) malloc(sizeof(char) * strlen(lexemaE) + 1);
-
-			if(!(nuevo->valor)){
-				printf("Error, no hay memoria\n.");
-				return -1;
-			}
-			if(constante == ES_CONSTANTE){
-				strcpy(nuevo->constante,"SI");
-			}
-
-			strcpy(nuevo->valor, lexemaE);
-		}
-
+	nuevo->lexema = (char*) malloc(sizeof(char) * strlen(lexema_p) + 2);
+	if(!(nuevo->lexema)){
+		printf("Error, no hay memoria\n.");
+		return -1;
 	}
-	/*LO INSERTO EN LA LISTA DE MANERA ORDENADA*/
-	strcpy(nuevo->constante,"NO");
 
-	resultado = enlistar_en_orden(tablaSimbolos, nuevo);
+	strcpy(nuevo->lexema, lexema_p);
+
+	nuevo->tipo = NULL;
+	nuevo->valor = NULL;
+	nuevo->longitud = 0;
+
+	resultado = enlistar_en_orden(tabla_p, nuevo);
 
 	if(resultado == 0){
 		free(nuevo);
@@ -141,10 +118,86 @@ int insertar(char* lexemaE, int tipo,tabla*  tablaSimbolos, int constante){
 	}
 
 	return 1;
-
-
 }
 
+int insertar_numero (tabla* tabla_p, char* lexema_p){
+	int resultado = 0;
+	tuplaTabla* nuevo = (tuplaTabla*) malloc(sizeof(tuplaTabla));
+	if(!nuevo){
+		printf("Error, no hay memoria\n.");
+		return -1;
+	}
+
+	nuevo->lexema = (char*) malloc(sizeof(char) * strlen(lexema_p) + 2);
+	if(!(nuevo->lexema)){
+		printf("Error, no hay memoria\n.");
+		return -1;
+	}
+
+	strcpy(nuevo->lexema, "_");
+	strcat(nuevo->lexema, lexema_p);
+
+	nuevo->tipo = NULL;
+	nuevo->valor = NULL;
+	nuevo->longitud = 0;
+
+	nuevo->valor = (char*) malloc(sizeof(char) * strlen(lexema_p) + 1);
+	if(!(nuevo->valor)){
+		printf("Error, no hay memoria\n.");
+		return -1;
+	}
+
+	strcpy(nuevo->valor, lexema_p);
+
+	resultado = enlistar_en_orden(tabla_p, nuevo);
+
+	if(resultado == 0){
+		free(nuevo);
+		return 0;
+	}
+
+	return 1;
+}
+
+int insertar_string (tabla* tabla_p, char* lexema_p) {
+	int resultado = 0;
+	tuplaTabla* nuevo = (tuplaTabla*) malloc(sizeof(tuplaTabla));
+	if(!nuevo){
+		printf("Error, no hay memoria\n.");
+		return -1;
+	}
+
+	nuevo->lexema = (char*) malloc(sizeof(char) * strlen(lexema_p) + 2);
+	if(!(nuevo->lexema)){
+		printf("Error, no hay memoria\n.");
+		return -1;
+	}
+
+	eliminarCaracter(lexema_p, '"');
+	strcpy(nuevo->lexema, "_");
+	strcat(nuevo->lexema, lexema_p);
+
+	nuevo->valor = (char*) malloc(sizeof(char) * strlen(lexema_p) + 1);
+	
+	if(!(nuevo->valor)){
+		printf("Error, no hay memoria\n.");
+		return -1;
+	}
+
+	nuevo->tipo = NULL;
+	strcpy(nuevo->valor, lexema_p);
+
+	nuevo->longitud = strlen(lexema_p);
+
+	resultado = enlistar_en_orden(tabla_p, nuevo);
+
+	if(resultado == 0){
+		free(nuevo);
+		return 0;
+	}
+
+	return 1;
+}
 
 void eliminarCaracter(char *str, char garbage) {
 
@@ -159,36 +212,16 @@ void eliminarCaracter(char *str, char garbage) {
 
 int enlistar_en_orden(tabla* l,tuplaTabla* d)
 {
-    tabla pm;
-    int resultado = 0;
-   while(*l && (resultado=strcmp((*l)->lexema,d->lexema))<=0)
-   {
-   		if(resultado == 0){
-   			return 0;
-   		}
-       	l=&(*l)->siguiente;
-   }
-   if(!*l)
-        {
-
-            d->siguiente=NULL;
-            *l=d;
-            return 1;
-        }
-    d->siguiente=*l;
-    *l=d;
-
+	int resultado = 0;
+	while(*l && (resultado=strcmp((*l)->lexema,d->lexema))<=0)
+	{
+		if(resultado == 0){
+			return 0;
+		}
+	   	l=&(*l)->siguiente;
+	}
+	d->siguiente=*l;
+	*l=d;
+	
     return 1;
 }
-
-int mi_strlen(char* cadena){
-
-	int i = 0;
-	while(*cadena){
-		i++;
-		cadena++;
-	}
-
-	return ( i <= 30 )? 1:0;
-}
-

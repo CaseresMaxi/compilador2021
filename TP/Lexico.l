@@ -5,9 +5,7 @@
 #include <string.h>
 #include "y.tab.h"
 
-
 FILE *yyin;
-
 
 int yyerror(void);
 int errorLexico(void);
@@ -53,7 +51,8 @@ OP_AS			":"
 OP_SUM			"+"
 OP_MUL			"*"
 OP_MENOS		"-"
-
+OP_MOD 			"MOD"|"Mod"|"mod"
+OP_DIV 			"DIV"|"Div"|"div"
 COMA			","
 WHILE_T			"while"|"WHILE"
 SEP_LINEA		";"
@@ -70,83 +69,61 @@ ENDWHILE_T 		"endwhile"|"Endwhile"|"ENDWHILE"
 ID_T			{LETRA}.({LETRA}|{DIGITO})*
 
 %%
-{COMENTARIO}		{printf("LEX-- ENTRE A COMENTARIO\n");}
-{COMENTARIO_A}		{printf("LEX-- ENTRE A COMENTARIO_A\n");}
-{COMENTARIO_C}		{printf("LEX-- ENTRE A COMENTARIO_C\n");}
-{CONST_STRING}		{printf("LEX-- ENTRE A CONST_STRING\n");
-					 yylval.strVal = strdup(yytext);
-					 if(strlen(yytext)<=30){
-						printf("Longitud del string %d\n",strlen(yytext));
-						
+{COMENTARIO}		
+{COMENTARIO_A}		
+{COMENTARIO_C}		
+{CONST_STRING}		{if(strlen(yytext)<=30){
+						yylval.strVal = strdup(yytext);
 						return CONST_STRING;}
 					 else{
-						printf("LEX-- longitud de la cadena mayor a 30\n");
+						printf("Longitud de la cadena mayor a 30\n");
 						errorLexico();}}
-{CONST_INT}			{
-					printf("LEX-- ENTRE A TOKEN ENTERO\n"); return CONST_INT;
-					yylval.strVal = strdup(yytext);}
-{CONST_FLOAT}		{yylval.strVal = strdup(yytext);
-					return CONST_FLOAT;}
-					
-{ELSE_T}			{return ELSE_T;}
-{IF_T}				{return IF_T;}
-{IN_T}				{return IN_T;}
-{DO_T}				{return DO_T;}
-{AND_T}				{return AND_T;}
-{OR_T}				{return OR_T;}
-{NOT_T}				{return NOT_T;}
-{ENDWHILE_T} 		{return ENDWHILE_T;}
-{OP_DISTINTO}		{return OP_DISTINTO;}
-{OP_COMP}			{return OP_COMP;}
-{OP_MAYORIGUAL}		{return OP_MAYORIGUAL;}
-{OP_MAYOR}			{return OP_MAYOR;}
-{OP_MENOR}			{return OP_MENOR;}
-{OP_MENORIGUAL}		{return OP_MENORIGUAL;}
-{LLAVE_C}			{return LLAVE_C;}
-{LLAVE_A}			{return LLAVE_A;}
-{PARENT_C}			{printf("LEX-- ENTRE A TOKEN PARENT_C\n"); return PARENT_C;}
-{PARENT_A}			{printf("LEX-- ENTRE A TOKEN PARENT_A\n"); return PARENT_A;}
+{CONST_INT}			{yylval.strVal = strdup(yytext); return CONST_INT;}
+{CONST_FLOAT}		{yylval.strVal = strdup(yytext); return CONST_FLOAT;}
+{ELSE_T}			return ELSE_T;
+{IF_T}				return IF_T;
+{IN_T}				return IN_T;
+{DO_T}				return DO_T;
+{AND_T}				return AND_T;
+{OR_T}				return OR_T;
+{NOT_T}				return NOT_T;
+{ENDWHILE_T} 		return ENDWHILE_T;
+{OP_DISTINTO}		return OP_DISTINTO;
+{OP_COMP}			return OP_COMP;
+{OP_MAYORIGUAL}		return OP_MAYORIGUAL;
+{OP_MAYOR}			return OP_MAYOR;
+{OP_MENOR}			return OP_MENOR;
+{OP_MENORIGUAL}		return OP_MENORIGUAL;
+{LLAVE_C}			return LLAVE_C;
+{LLAVE_A}			return LLAVE_A;
+{PARENT_C}			return PARENT_C;
+{PARENT_A}			return PARENT_A;
+{OP_MOD} 			return OP_MOD;
+{OP_DIV} 			return OP_DIV;
 {OP_DIVISION}		return OP_DIVISION;
-{OP_SUM}			{printf("LEX-- ENTRE A TOKEN OP_SUM\n"); return OP_SUM;}
-{OP_MENOS}			{printf("LEX-- ENTRE A TOKEN OP_MENOS\n"); return OP_MENOS;}
+{OP_SUM}			return OP_SUM;
+{OP_MENOS}			return OP_MENOS;
 {OP_AS}				return OP_AS;
-{OP_AVG}			{printf("LEX-- ENTRE A TOKEN OP_AVG\n"); return OP_AVG;}
+{OP_AVG}			return OP_AVG;
 {OP_MUL}			return OP_MUL;
 {COMA}				return COMA;
 {WHILE_T}			return WHILE_T;
 {SEP_LINEA}			return SEP_LINEA;
-{WRITE_T}			{printf("LEX-- ENTRE A WRITE\n"); return WRITE_T;};
-{READ_T}			{printf("LEX-- ENTRE A WRITE\n"); return READ_T;};
+{WRITE_T}			return WRITE_T;
+{READ_T}			return READ_T;
 {ENDDEC_T}			return ENDDEC_T;
 {FLOAT_T}			return FLOAT_T;
 {INTEGER_T}			return INTEGER_T;
 {STRING_T} 			return STRING_T;
-{OP_ASIG}			{printf("LEX-- ENTRE A TOKEN OP_ASIG\n"); return OP_ASIG;}
+{OP_ASIG}			return OP_ASIG;
 {DECVAR_T}			return DECVAR_T;
-{ID_T}				{printf("LEX-- ENTRE A TOKEN ID_T\n"); 
-					yylval.strVal = strdup(yytext);
-					return ID_T;}
-
+{ID_T}				{yylval.strVal = strdup(yytext); return ID_T;}
 "\n"
 "\t"
 " "
 .					{printf("LEX-- NO SE ENCONTRO TOKEN \n");errorLexico();}
-%%
 
-//
-//int main(int argc, char *argv[]){
-//
-//	if((yyin = fopen(argv[1], "rt")) == NULL){
-//		printf("\nNo se pudo abrir el archivo: %s\n", argv[1]);
-//	}else{
-//		crearTabla(&tablaSimbolos);
-//		yylex();
-//	}
-//	vaciar_lista(&tablaSimbolos);
-//	fclose(yyin);
-//	return 0;
-//}
-//
+%%
 
 int errorLexico(void){
 	printf("Error lexico\n");

@@ -1,2 +1,51 @@
-a:=2;
-c:=2+3;
+DECVAR
+a1,b1: FLOAT;
+-/ Esto es un comentario /- -/ Esto es un comentario /-
+variable1-/ Esto es un comentario en linea/- : STRING;
+entero1,entero2: INTEGER;
+ENDDEC
+-/ -/ Esto es un comentario anidado /-/-
+write id;
+
+WHILE cont IN (1,2,5,5+9,id2)
+DO
+	id:=1+2;
+ENDWHILE;
+
+write "hola";
+read id;
+
+IF (( 1 >= 2) && (id == id)) {
+	id:=3*3;
+	id:=9+5;
+}else{
+	id:=2+2;
+};
+
+IF ( 1 > 2 ) {
+	id:=3*3;
+		IF(((4>9))){
+		id:=9+9/3;
+	};
+}ELSE{
+	id:=4;
+};
+
+IF(((((2>3))))) {
+	id:=3*3;
+	
+}else{
+	id:=2+2;
+};
+
+WHILE !(id > 5) {
+	id := 3*3 MOD 3;
+	id2 := 4 DIV 2;
+};
+
+id:=4 MOD b1;
+id2:=	a222 div 2;
+
+id:= 10 MOD (3 * 5) + 10 DIV 2 / 5;
+
+id:= 5 MOD (1+1) * 6 - 8 DIV 2;
