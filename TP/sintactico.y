@@ -138,12 +138,7 @@ termino : termino OP_MUL factor //{printf(" termino OP_MUL factor\n");}
 		| termino OP_MOD factor //{printf(" termino OP_MOD factor\n");}
 		| termino OP_DIV factor //{printf(" termino OP_DIV factor\n");}
 		| factor
-		//| termino_moddiv
 		;
-
-//termino_moddiv: termino_moddiv OP_MOD factor //{printf(" termino OP_MOD factor\n");}
-		//|termino_moddiv OP_DIV factor //{printf(" termino OP_DIV factor\n");}
-		//| factor
 
 factor	: PARENT_A expr PARENT_C  //{printf(" PARENT_A expr PARENT_C\n");}
 		| NUMERO  //{printf(" NUMERO\n");} 
