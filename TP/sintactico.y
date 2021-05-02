@@ -100,7 +100,7 @@ grammar : asig
 while: WHILE_T cond_final LLAVE_A sentencia LLAVE_C
 	 ;
 
-if: IF_T cond_final LLAVE_A sentencia LLAVE_C
+if: IF_T cond_final LLAVE_A sentencia LLAVE_C | IF_T cond_final LLAVE_A sentencia LLAVE_C ELSE_T LLAVE_A sentencia LLAVE_C
 
 write : WRITE_T CONST_STRING_R 
 	  | WRITE_T expr 
@@ -118,7 +118,11 @@ asig: ID_R OP_ASIG expr
 	| ID_R OP_ASIG CONST_STRING_R
 	;
 
-cond_final: PARENT_A cond_final OR_AND cond_final PARENT_C | cond | NOT_T cond
+cond_final: PARENT_A cond_final OR_AND cond_final PARENT_C 
+		  | cond 
+		  | NOT_T cond 
+		  | PARENT_A cond_final PARENT_C
+		  ;
 
 cond: PARENT_A expr COMPARADOR termino PARENT_C
 

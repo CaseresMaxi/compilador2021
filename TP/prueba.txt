@@ -22,6 +22,8 @@ IF (( 1 >= 2) && (id == id)) {
 
 IF ( 1 > 2 ) {
 	id:=3*3;
+} ELSE {
+	id := 4 MOD 5 DIV 6 + 7;	
 };
 
 WHILE !(id > 5) {
