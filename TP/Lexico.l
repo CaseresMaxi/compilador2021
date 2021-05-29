@@ -115,7 +115,7 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 {FLOAT_T}			return FLOAT_T;
 {INTEGER_T}			return INTEGER_T;
 {STRING_T} 			return STRING_T;
-{OP_ASIG}			return OP_ASIG;
+{OP_ASIG}			{yylval.strVal = strdup(yytext); return OP_ASIG;}
 {DECVAR_T}			return DECVAR_T;
 {ID_T}				{yylval.strVal = strdup(yytext); return ID_T;}
 "\n"

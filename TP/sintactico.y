@@ -4,8 +4,13 @@
 #include <conio.h>
 #include "y.tab.h"
 #include "funciones.h"
+#include "Lista.h"
 
 tabla tablaSimbolos;
+
+t_lista listaPolaca;
+
+int cont = 0;
 
 extern int yylex();
 extern void yyerror();
@@ -61,7 +66,7 @@ extern FILE* yyin;
 %token READ_T
 %token ENDDEC_T
 %token DECVAR_T
-%token OP_ASIG
+%token <strVal> OP_ASIG
 %token OP_AVG
 %token COMA
 %token IN_T
@@ -114,8 +119,12 @@ lista_expresion: expr
 			   | lista_expresion COMA expr
 			   ;
 
-asig: ID_R OP_ASIG expr
-	| ID_R OP_ASIG CONST_STRING_R
+asig: ID_R OP_ASIG expr{
+		printf("%s",$2);
+		
+		insertar_en_polaca(&listaPolaca,$2,cont++);
+	}
+	| ID_R OP_ASIG CONST_STRING_R 
 	;
 
 cond_final: PARENT_A cond_final OR_AND cond_final PARENT_C 
@@ -126,12 +135,12 @@ cond_final: PARENT_A cond_final OR_AND cond_final PARENT_C
 
 cond: PARENT_A expr COMPARADOR termino PARENT_C
 
-COMPARADOR : OP_DISTINTO|OP_COMP|OP_MAYORIGUAL|OP_MAYOR|OP_MENOR|OP_MENORIGUAL
+COMPARADOR : OP_DISTINTO |OP_COMP|OP_MAYORIGUAL|OP_MAYOR|OP_MENOR|OP_MENORIGUAL
 
-OR_AND: OR_T | AND_T
+OR_AND: OR_T {insertar_en_polaca(&listaPolaca,$1,cont++); } | AND_T {insertar_en_polaca(&listaPolaca,$1,cont++); }
 
-expr: expr OP_SUM expr  //{printf("SOY UNA SUMA\n");}
-	| expr OP_MENOS expr //{printf("SOY UNA RESTA\n");}
+expr: expr OP_SUM expr {insertar_en_polaca(&listaPolaca,$2,cont++); }//{printf("SOY UNA SUMA\n");}
+	| expr OP_MENOS expr {insertar_en_polaca(&listaPolaca,$2,cont++);} //{printf("SOY UNA RESTA\n");}
 	| termino
 	;
 
@@ -165,17 +174,21 @@ tipo_variable: FLOAT_T
 			 ;
 
 ID_R: ID_T {
+	insertar_en_polaca(&listaPolaca,$1,cont++);
 		insertar_id(&tablaSimbolos,$1);
 	};
 
 CONST_STRING_R: CONST_STRING {
+		insertar_en_polaca(&listaPolaca,$1,cont++);
 		insertar_string(&tablaSimbolos,$1);
 	};
 
 NUMERO: CONST_INT {
+			insertar_en_polaca(&listaPolaca,$1,cont++);
 			insertar_numero(&tablaSimbolos,$1);
 		}
 	  | CONST_FLOAT {
+	  		insertar_en_polaca(&listaPolaca,$1,cont++);
 	  		insertar_numero(&tablaSimbolos,$1);
 	  	}
 	  ;
@@ -192,10 +205,13 @@ void main(int argc, char* argv[]){
 	}
 
 	crear_Tabla(&tablaSimbolos);
+	crear_lista(&listaPolaca);
+
 
 	yyparse();
 
 	vaciar_Tabla(&tablaSimbolos);
+	vaciar_polaca(&listaPolaca);
 	printf("No hubo errores!\n");
 	fclose(yyin);
 	exit(1);
