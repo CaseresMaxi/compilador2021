@@ -98,14 +98,14 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 {LLAVE_A}			return LLAVE_A;
 {PARENT_C}			return PARENT_C;
 {PARENT_A}			return PARENT_A;
-{OP_MOD} 			return OP_MOD;
-{OP_DIV} 			return OP_DIV;
-{OP_DIVISION}		return OP_DIVISION;
-{OP_SUM}			return OP_SUM;
-{OP_MENOS}			return OP_MENOS;
+{OP_MOD} 			{yylval.strVal = strdup(yytext); return OP_MOD;}
+{OP_DIV} 			{yylval.strVal = strdup(yytext); return OP_DIV;}
+{OP_DIVISION}		{yylval.strVal = strdup(yytext); return OP_DIVISION;}
+{OP_SUM}			{yylval.strVal = strdup(yytext); return OP_SUM;}
+{OP_MENOS}			{yylval.strVal = strdup(yytext); return OP_MENOS;}
 {OP_AS}				return OP_AS;
 {OP_AVG}			return OP_AVG;
-{OP_MUL}			return OP_MUL;
+{OP_MUL}			{yylval.strVal = strdup(yytext); return OP_MUL;}
 {COMA}				return COMA;
 {WHILE_T}			return WHILE_T;
 {SEP_LINEA}			return SEP_LINEA;
