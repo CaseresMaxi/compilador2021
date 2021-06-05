@@ -66,7 +66,7 @@ DECVAR_T		"decvar"|"DECVAR"
 IN_T 			"in"|"In"|"IN"
 DO_T 			"do"|"Do"|"DO"
 ENDWHILE_T 		"endwhile"|"Endwhile"|"ENDWHILE"
-ID_T			{LETRA}.({LETRA}|{DIGITO})*
+ID_T			{LETRA}({LETRA}|{DIGITO})*
 
 %%
 {COMENTARIO}		
@@ -108,7 +108,6 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 {OP_MUL}			{yylval.strVal = strdup(yytext); return OP_MUL;}
 {COMA}				return COMA;
 {WHILE_T}			return WHILE_T;
-{SEP_LINEA}			return SEP_LINEA;
 {WRITE_T}			return WRITE_T;
 {READ_T}			return READ_T;
 {ENDDEC_T}			return ENDDEC_T;
@@ -118,6 +117,7 @@ ID_T			{LETRA}.({LETRA}|{DIGITO})*
 {OP_ASIG}			{yylval.strVal = strdup(yytext); return OP_ASIG;}
 {DECVAR_T}			return DECVAR_T;
 {ID_T}				{yylval.strVal = strdup(yytext); return ID_T;}
+{SEP_LINEA}			return SEP_LINEA;
 "\n"
 "\t"
 " "

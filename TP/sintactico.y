@@ -9,9 +9,10 @@
 tabla tablaSimbolos;
 
 t_lista listaPolaca;
+t_pila 	pilaPolaca;
 
-//Variables para polaca
-int cont = 0;
+//VARIABLES PARA LA POLACA
+int cont = 1; //Inicia en 1 para imprimir correctamente el numero en el código intermedio
 char simboloAux[3];
 int bandNot = 0;
 
@@ -90,7 +91,7 @@ extern FILE* yyin;
 programa_final : programa {printf("La expresion es valida\n");};
 
 programa: bloque_declaracion sentencia
-		| sentencia
+		| sentencia 
 		;
 
 sentencia: sentencia grammar SEP_LINEA
@@ -105,10 +106,57 @@ grammar : asig
 		| if //{printf("SOY UN IF\n");}
 		; 
 
-while: WHILE_T cond_final LLAVE_A sentencia LLAVE_C
+while: WHILE_T{
+			char cadena[7];
+			char num[4];
+			itoa(cont, num, 10);
+			strcpy(cadena,"ET");
+			strcat(cadena,num);
+			apilar_en_polaca(&listaPolaca,cadena,cont++,&pilaPolaca);
+		}	
+		cond_final LLAVE_A sentencia LLAVE_C {
+			char cadena[7];
+			char num[4];
+			int ret = desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
+
+			if (ret == 0) {
+				printf("ERROR FATAL");
+			}
+
+			insertar_en_polaca(&listaPolaca,"BI",cont++);
+
+			itoa(desapilar(&pilaPolaca),num,10);
+			strcpy(cadena,"ET");
+			strcat(cadena,num);
+			apilar_en_polaca(&listaPolaca, cadena , cont++, &pilaPolaca);
+	 }
 	 ;
 
-if: IF_T cond_final LLAVE_A sentencia LLAVE_C | IF_T cond_final LLAVE_A sentencia LLAVE_C ELSE_T LLAVE_A sentencia LLAVE_C
+if: IF_T cond_final LLAVE_A sentencia LLAVE_C {
+		int ret = desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
+
+		if (ret == 0) {
+			printf("ERROR FATAL");
+		}
+
+		insertar_en_polaca(&listaPolaca,"BI",cont++);
+		apilar_en_polaca(&listaPolaca, "", cont++, &pilaPolaca);
+	}	ELSE_T LLAVE_A sentencia LLAVE_C {
+		int ret = desapilar_polaca(&listaPolaca, &pilaPolaca, cont);
+
+		if (ret == 0) {
+			printf("ERROR FATAL");
+		}
+	}
+	|
+	IF_T cond_final LLAVE_A sentencia LLAVE_C {
+		int ret = desapilar_polaca(&listaPolaca,&pilaPolaca,cont);
+
+		if (ret == 0) {
+			printf("ERROR FATAL");
+		}
+	}
+	;
 
 write : WRITE_T CONST_STRING_R 
 	  | WRITE_T expr 
@@ -123,12 +171,15 @@ lista_expresion: expr
 			   ;
 
 asig: ID_R OP_ASIG expr{
+		
 		insertar_en_polaca(&listaPolaca,$2,cont++);
+		
 	}
 	| ID_R OP_ASIG CONST_STRING_R 
 	;
 
-cond_final: PARENT_A cond_final OR_AND cond_final PARENT_C 
+cond_final: PARENT_A cond_final AND_T cond_final PARENT_C
+			| PARENT_A cond_final OR_T cond_final PARENT_C 
 		  | cond 
 		  | NOT_T {
 		  	bandNot = 1;
@@ -139,6 +190,7 @@ cond_final: PARENT_A cond_final OR_AND cond_final PARENT_C
 cond: PARENT_A expr COMPARADOR termino PARENT_C {
 			insertar_en_polaca(&listaPolaca,"CMP",cont++);
 			insertar_en_polaca(&listaPolaca,simboloAux,cont++);
+			apilar_en_polaca(&listaPolaca,"",cont++,&pilaPolaca);
 		}
 
 COMPARADOR : OP_DISTINTO { 
@@ -190,11 +242,6 @@ COMPARADOR : OP_DISTINTO {
 						}
 						;
 
-//*RESERVAR SALTOS*
-OR_AND: OR_T 
-			| AND_T
-			; 
-
 expr: expr OP_SUM expr {insertar_en_polaca(&listaPolaca,$2,cont++); }
 	| expr OP_MENOS expr {insertar_en_polaca(&listaPolaca,$2,cont++);} 
 	| termino
@@ -228,7 +275,7 @@ declaracion : linea_declaracion
 
 linea_declaracion: var_declaracion OP_AS tipo_variable SEP_LINEA
 
-var_declaracion : ID_R 
+var_declaracion: ID_R 
 				| var_declaracion COMA ID_R
 				;
 
@@ -238,7 +285,7 @@ tipo_variable: FLOAT_T
 			 ;
 
 ID_R: ID_T {
-	insertar_en_polaca(&listaPolaca,$1,cont++);
+		insertar_en_polaca(&listaPolaca,$1,cont++);
 		insertar_id(&tablaSimbolos,$1);
 	};
 
@@ -271,6 +318,7 @@ void main(int argc, char* argv[]){
 	crear_Tabla(&tablaSimbolos);
 	crear_lista(&listaPolaca);
 
+	crear_Pila(&pilaPolaca);
 
 	yyparse();
 

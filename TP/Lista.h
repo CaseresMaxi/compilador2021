@@ -12,13 +12,32 @@ typedef struct l_nodo
 }l_nodo;
 typedef l_nodo* t_lista;
 
+typedef struct s_nodo
+{
+    struct  s_nodo *sig;
+    int info;
+}t_nodo;
+typedef t_nodo* t_pila;
 
+
+//PILA
+void crear_Pila(t_pila *);
+int apilar(t_pila*,int);
+int desapilar(t_pila*);
+
+//LISTA
 void crear_lista(t_lista*);
-int lista_vacia(t_lista* );
-int insertar_en_polaca(t_lista* ,char*, int );
+int lista_vacia(t_lista*);
 int desenlistar(t_lista *,char *);
 int lista_llena(t_lista* );
+
+//POLACA
+int insertar_en_polaca(t_lista* ,char*, int );
+int apilar_en_polaca(t_lista* ,char*, int , t_pila*);
+int desapilar_polaca(t_lista* , t_pila*, int);
 int vaciar_polaca(t_lista* );
+void rellenarPolaca(t_lista*, int , int ); //Completar la posicion apilada
+
 
 
 
@@ -56,6 +75,33 @@ int insertar_en_polaca(t_lista* l,char* d, int posicion)
     return 1;
 }
 
+int apilar_en_polaca(t_lista* l,char* d, int posicion, t_pila *p)
+{
+    int ret = insertar_en_polaca(l,d, posicion);
+
+    if (ret == 1) {
+        return apilar(p, posicion);
+    } else {
+        return 0;
+    }
+}
+
+int desapilar_polaca(t_lista* l, t_pila* p, int posicion)
+{
+    int posLista = desapilar(p);
+
+    if (posLista == 0) {
+        printf("ERROR: PILA VACIA");
+        return 0;
+    }
+
+    rellenarPolaca(l,posLista,posicion);
+
+    return 1;
+}
+
+
+
 int desenlistar(t_lista *l,char *d)
 {
     if(!*l)
@@ -77,7 +123,6 @@ int lista_llena(t_lista* l)
 int vaciar_polaca(t_lista* l)
 {
     l_nodo* aux;
-    int i = 1;
     FILE* pf = fopen("intermedia.txt","w+");
     FILE* auxpf = fopen("auxiliar.txt","w+");
     if(!pf){
@@ -93,9 +138,8 @@ int vaciar_polaca(t_lista* l)
     {
         aux=*l;
         *l=aux->sig;
-        fprintf(pf,"%d\t%s\n",i, aux->elemento);
+        fprintf(pf,"%d\t%s\n",aux->nroPolaca, aux->elemento);
         fprintf(auxpf,"%s\n", aux->elemento);
-        i++;
         free(aux);
     }
     fclose(pf);
@@ -133,4 +177,32 @@ void rellenarPolacaChar(t_lista *l, int posicion, char* valor){
     if(((*aux)->nroPolaca-posicion) == 0){
         strcpy((*aux)->elemento, valor );
     }
+}
+
+void crear_Pila(t_pila *p)
+{
+    *p=NULL;
+}
+
+int apilar(t_pila *p,int posicion)
+{
+    t_nodo *nuevo=(t_nodo *)malloc(sizeof(t_nodo));
+    if(nuevo==NULL)
+        return 0;
+    nuevo->sig=*p;
+    nuevo->info=posicion;
+    *p=nuevo;
+    return 1;
+}
+
+int desapilar(t_pila *p)
+{
+    int valor_actual;
+    t_nodo *viejo=*p;
+    if(viejo==NULL)
+        return 0;
+    *p=viejo->sig;
+    valor_actual = viejo->info;
+    free(viejo);
+    return valor_actual;
 }

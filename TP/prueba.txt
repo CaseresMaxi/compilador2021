@@ -9,7 +9,7 @@ write id;
 
 WHILE cont IN (1,2,5,5+9,id2)
 DO
-	id:=1+2;
+	id:=1+cont;
 ENDWHILE;
 
 write "hola";
