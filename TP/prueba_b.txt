@@ -1,3 +1,4 @@
-WHILE ( a <= b AND c < 3) {
-  a := a+2;
-};
+WHILE cont IN (1,2)
+DO
+	id:=6;
+ENDWHILE;

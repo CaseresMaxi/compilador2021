@@ -10,11 +10,19 @@ tabla tablaSimbolos;
 
 t_lista listaPolaca;
 t_pila 	pilaPolaca;
+t_pila  pilaWhileEspecialIni;
+t_pila  pilaWhileEspecialIniSentencia;
+t_pila  pilaWhileEspecialFin;
+t_pila  pilaWhileEspecialExp;
+t_pila  pilaWhileEspecialCantExp;
 
 //VARIABLES PARA LA POLACA
 int cont = 1; //Inicia en 1 para imprimir correctamente el numero en el código intermedio
 char simboloAux[3];
 int bandNot = 0;
+char idWhileEspecial[50]; //Variable que guarda el id del ciclo especial
+int cantExpresiones;
+int bandId = 0;
 
 extern int yylex();
 extern void yyerror();
@@ -164,10 +172,58 @@ write : WRITE_T CONST_STRING_R
 
 read: READ_T ID_R 
 
-ciclo_especial: WHILE_T ID_R IN_T PARENT_A lista_expresion PARENT_C DO_T sentencia ENDWHILE_T;
+/*ciclo_especial: WHILE_T ID_R IN_T PARENT_A lista_expresion PARENT_C DO_T sentencia ENDWHILE_T;*/
 
-lista_expresion: expr
-			   | lista_expresion COMA expr
+ciclo_especial: WHILE_T {
+			bandId = 1;
+	} ID_R {
+			apilar(&pilaWhileEspecialIni,cont);
+			cantExpresiones = 0;
+			bandId = 0;
+	} IN_T PARENT_A lista_expresion {
+			insertar_en_polaca(&listaPolaca,"BI",cont++);
+			apilar_en_polaca(&listaPolaca, "", cont++, &pilaWhileEspecialFin);
+			apilar(&pilaWhileEspecialCantExp,cantExpresiones);
+			apilar(&pilaWhileEspecialIniSentencia,cont);
+	} PARENT_C DO_T sentencia ENDWHILE_T {
+			int posIni = desapilar(&pilaWhileEspecialIni);
+			char auxPosIni[10];
+
+			itoa(posIni, auxPosIni, 10);
+
+			insertar_en_polaca(&listaPolaca,"BI",cont++);
+			insertar_en_polaca(&listaPolaca,auxPosIni,cont++);
+
+			int ret = desapilar_polaca(&listaPolaca,&pilaWhileEspecialFin,cont);
+
+			if (ret == 0) {
+				printf("ERROR FATAL");
+			}
+
+			int cantFinExpresiones = desapilar(&pilaWhileEspecialCantExp);
+			int auxIniSentencia = desapilar(&pilaWhileEspecialIniSentencia);
+
+			for(;cantFinExpresiones > 0; cantFinExpresiones --) {
+				desapilar_polaca(&listaPolaca,&pilaWhileEspecialExp,auxIniSentencia);
+			}
+	};
+
+lista_expresion: {
+		insertar_en_polaca(&listaPolaca,idWhileEspecial,cont++);
+	}	expr {
+		insertar_en_polaca(&listaPolaca,"CMP",cont++);
+		insertar_en_polaca(&listaPolaca,"BE",cont++);
+		apilar_en_polaca(&listaPolaca, "", cont++, &pilaWhileEspecialExp);
+		cantExpresiones++;
+	}
+	| lista_expresion COMA {
+		insertar_en_polaca(&listaPolaca,idWhileEspecial,cont++);
+	} expr {
+		insertar_en_polaca(&listaPolaca,"CMP",cont++);
+		insertar_en_polaca(&listaPolaca,"BE",cont++);
+		apilar_en_polaca(&listaPolaca, "", cont++, &pilaWhileEspecialExp);
+		cantExpresiones++;
+	}
 			   ;
 
 asig: ID_R OP_ASIG expr{
@@ -285,8 +341,12 @@ tipo_variable: FLOAT_T
 			 ;
 
 ID_R: ID_T {
-		insertar_en_polaca(&listaPolaca,$1,cont++);
-		insertar_id(&tablaSimbolos,$1);
+		if( bandId == 0) {
+			insertar_en_polaca(&listaPolaca,$1,cont++);
+			insertar_id(&tablaSimbolos,$1);
+		} else {
+			strcpy(idWhileEspecial,$1);
+		}
 	};
 
 CONST_STRING_R: CONST_STRING {
@@ -319,6 +379,12 @@ void main(int argc, char* argv[]){
 	crear_lista(&listaPolaca);
 
 	crear_Pila(&pilaPolaca);
+
+	crear_Pila(&pilaWhileEspecialIni);
+	crear_Pila(&pilaWhileEspecialFin);
+	crear_Pila(&pilaWhileEspecialExp);
+	crear_Pila(&pilaWhileEspecialCantExp);
+	crear_Pila(&pilaWhileEspecialIniSentencia);
 
 	yyparse();
 
