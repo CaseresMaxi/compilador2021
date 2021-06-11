@@ -178,6 +178,14 @@ ciclo_especial: WHILE_T {
 			bandId = 1;
 	} ID_R {
 			apilar(&pilaWhileEspecialIni,cont);
+
+			char cadena[7];
+			char num[4];
+			itoa(cont, num, 10);
+			strcpy(cadena,"ET");
+			strcat(cadena,num);
+
+			insertar_en_polaca(&listaPolaca,cadena,cont++);
 			cantExpresiones = 0;
 			bandId = 0;
 	} IN_T PARENT_A lista_expresion {
@@ -187,9 +195,12 @@ ciclo_especial: WHILE_T {
 			apilar(&pilaWhileEspecialIniSentencia,cont);
 	} PARENT_C DO_T sentencia ENDWHILE_T {
 			int posIni = desapilar(&pilaWhileEspecialIni);
-			char auxPosIni[10];
 
-			itoa(posIni, auxPosIni, 10);
+			char auxPosIni[10];
+			char num[4];
+			itoa(posIni, num, 10);
+			strcpy(auxPosIni,"ET");
+			strcat(auxPosIni,num);
 
 			insertar_en_polaca(&listaPolaca,"BI",cont++);
 			insertar_en_polaca(&listaPolaca,auxPosIni,cont++);
