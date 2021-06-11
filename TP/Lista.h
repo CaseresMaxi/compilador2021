@@ -35,6 +35,7 @@ int lista_llena(t_lista* );
 int insertar_en_polaca(t_lista* ,char*, int );
 int apilar_en_polaca(t_lista* ,char*, int , t_pila*);
 int desapilar_polaca(t_lista* , t_pila*, int);
+int desapilar_polaca_sig(t_lista*, t_pila*);
 int vaciar_polaca(t_lista* );
 void rellenarPolaca(t_lista*, int , int ); //Completar la posicion apilada
 
@@ -96,6 +97,20 @@ int desapilar_polaca(t_lista* l, t_pila* p, int posicion)
     }
 
     rellenarPolaca(l,posLista,posicion);
+
+    return 1;
+}
+
+int desapilar_polaca_sig(t_lista* l, t_pila* p)
+{
+    int posLista = desapilar(p);
+
+    if (posLista == 0) {
+        printf("ERROR: PILA VACIA");
+        return 0;
+    }
+
+    rellenarPolaca(l,posLista,posLista+1);
 
     return 1;
 }

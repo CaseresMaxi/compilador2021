@@ -1,8 +1,3 @@
-WHILE cont IN (id,2)
-DO
-	id:=6;
-	WHILE cont2 IN (11,22)
-	DO
-		id2:=66;
-	ENDWHILE;
-ENDWHILE;
+IF ((A > B) AND (id > 6)) {
+	id := 5;
+};

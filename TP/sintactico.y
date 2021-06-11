@@ -6,15 +6,24 @@
 #include "funciones.h"
 #include "Lista.h"
 
+#define COND_AND 2
+#define COND_OR 1
+#define COND_NORMAL 0
+
 tabla tablaSimbolos;
 
 t_lista listaPolaca;
 t_pila 	pilaPolaca;
+
+//CICLO ESPECIAL
 t_pila  pilaWhileEspecialIni;
 t_pila  pilaWhileEspecialIniSentencia;
 t_pila  pilaWhileEspecialFin;
 t_pila  pilaWhileEspecialExp;
 t_pila  pilaWhileEspecialCantExp;
+
+//AND OR
+t_pila  pilaTipoCondicion;
 
 //VARIABLES PARA LA POLACA
 int cont = 1; //Inicia en 1 para imprimir correctamente el numero en el código intermedio
@@ -141,14 +150,26 @@ while: WHILE_T{
 	 ;
 
 if: IF_T cond_final LLAVE_A sentencia LLAVE_C {
-		int ret = desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
 
-		if (ret == 0) {
-			printf("ERROR FATAL");
+		int tipoCond = desapilar(&pilaTipoCondicion);
+
+		if (tipoCond == COND_AND) {
+			desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
+			desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
+		} else if (tipoCond == COND_OR) {
+			desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
+			desapilar_polaca_sig(&listaPolaca,&pilaPolaca);
+		} else {
+			int ret = desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
+
+			if (ret == 0) {
+				printf("ERROR FATAL");
+			}
 		}
 
 		insertar_en_polaca(&listaPolaca,"BI",cont++);
 		apilar_en_polaca(&listaPolaca, "", cont++, &pilaPolaca);
+
 	}	ELSE_T LLAVE_A sentencia LLAVE_C {
 		int ret = desapilar_polaca(&listaPolaca, &pilaPolaca, cont);
 
@@ -158,10 +179,23 @@ if: IF_T cond_final LLAVE_A sentencia LLAVE_C {
 	}
 	|
 	IF_T cond_final LLAVE_A sentencia LLAVE_C {
-		int ret = desapilar_polaca(&listaPolaca,&pilaPolaca,cont);
+		int tipoCond = desapilar(&pilaTipoCondicion);
 
-		if (ret == 0) {
-			printf("ERROR FATAL");
+		printf("\nTipo Cond %d\n",tipoCond);
+
+		if (tipoCond == COND_AND) {
+			desapilar_polaca(&listaPolaca,&pilaPolaca,cont);
+			desapilar_polaca(&listaPolaca,&pilaPolaca,cont);
+			printf("DESAPILO COND 2 veces");
+		} else if (tipoCond == COND_OR) {
+			desapilar_polaca(&listaPolaca,&pilaPolaca,cont);
+			desapilar_polaca_sig(&listaPolaca,&pilaPolaca);
+		} else {
+			int ret = desapilar_polaca(&listaPolaca,&pilaPolaca,cont);
+
+			if (ret == 0) {
+				printf("ERROR FATAL");
+			}
 		}
 	}
 	;
@@ -170,9 +204,8 @@ write : WRITE_T CONST_STRING_R
 	  | WRITE_T expr 
 	  ;
 
-read: READ_T ID_R 
+read: READ_T ID_R ;
 
-/*ciclo_especial: WHILE_T ID_R IN_T PARENT_A lista_expresion PARENT_C DO_T sentencia ENDWHILE_T;*/
 
 ciclo_especial: WHILE_T {
 			bandId = 1;
@@ -245,19 +278,47 @@ asig: ID_R OP_ASIG expr{
 	| ID_R OP_ASIG CONST_STRING_R 
 	;
 
-cond_final: PARENT_A cond_final AND_T cond_final PARENT_C
-			| PARENT_A cond_final OR_T cond_final PARENT_C 
-		  | cond 
+cond_final: PARENT_A cond_final AND_T cond_final {
+
+				int aux = desapilar(&pilaTipoCondicion);
+				aux = desapilar(&pilaTipoCondicion);
+				apilar(&pilaTipoCondicion,COND_AND);
+				printf("APILO TIPO COND");
+			
+			} PARENT_C
+			| PARENT_A cond_final OR_T cond_final {
+				int aux = desapilar(&pilaTipoCondicion);
+				aux = desapilar(&pilaTipoCondicion);
+				apilar(&pilaTipoCondicion,COND_OR);
+			
+			} PARENT_C 
+		  | PARENT_A cond AND_T cond {
+
+				int aux = desapilar(&pilaTipoCondicion);
+				aux = desapilar(&pilaTipoCondicion);
+				apilar(&pilaTipoCondicion,COND_AND);
+				printf("APILO TIPO COND");
+			
+			} PARENT_C
+			| PARENT_A cond OR_T cond {
+				int aux = desapilar(&pilaTipoCondicion);
+				aux = desapilar(&pilaTipoCondicion);
+				apilar(&pilaTipoCondicion,COND_OR);
+			
+			} PARENT_C 
+		  | PARENT_A cond PARENT_C
 		  | NOT_T {
 		  	bandNot = 1;
-		  } cond 
+		  } cond_final
 		  | PARENT_A cond_final PARENT_C
 		  ;
 
-cond: PARENT_A expr COMPARADOR termino PARENT_C {
+cond: expr COMPARADOR termino {
 			insertar_en_polaca(&listaPolaca,"CMP",cont++);
 			insertar_en_polaca(&listaPolaca,simboloAux,cont++);
 			apilar_en_polaca(&listaPolaca,"",cont++,&pilaPolaca);
+			printf("APILO COND");
+			apilar(&pilaTipoCondicion,COND_NORMAL);
 		}
 
 COMPARADOR : OP_DISTINTO { 
@@ -391,11 +452,15 @@ void main(int argc, char* argv[]){
 
 	crear_Pila(&pilaPolaca);
 
+	//CICLO ESPECIAL
 	crear_Pila(&pilaWhileEspecialIni);
 	crear_Pila(&pilaWhileEspecialFin);
 	crear_Pila(&pilaWhileEspecialExp);
 	crear_Pila(&pilaWhileEspecialCantExp);
 	crear_Pila(&pilaWhileEspecialIniSentencia);
+	
+	//AND OR
+	crear_Pila(&pilaTipoCondicion);
 
 	yyparse();
 
