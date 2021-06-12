@@ -83,7 +83,7 @@ extern FILE* yyin;
 %token TOKEN_OR		
 %token MAX_TOKEN	
 %token <strVal> ID_T			
-%token WRITE_T
+%token <strVal> WRITE_T
 %token READ_T
 %token ENDDEC_T
 %token DECVAR_T
@@ -149,6 +149,49 @@ while: WHILE_T{
 	 }
 	 ;
 
+/*while: WHILE_T{
+			char cadena[7];
+			char num[4];
+			itoa(cont, num, 10);
+			strcpy(cadena,"ET");
+			strcat(cadena,num);
+			apilar_en_polaca(&listaPolaca,cadena,cont++,&pilaPolaca);
+
+
+		}	
+		cond_final LLAVE_A sentencia LLAVE_C {
+			char cadena[7];
+			char num[4];
+			//int ret = desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
+
+			int tipoCond = desapilar(&pilaTipoCondicion);
+
+			printf("\nTipo Cond %d\n",tipoCond);
+	
+			if (tipoCond == COND_AND) {
+				desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
+				desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
+				printf("DESAPILO COND 2 veces");
+			} else if (tipoCond == COND_OR) {
+				desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
+				desapilar_polaca_sig(&listaPolaca,&pilaPolaca);
+			} else {
+				int ret = desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
+	
+				if (ret == 0) {
+					printf("ERROR FATAL");
+				}
+			}
+
+			insertar_en_polaca(&listaPolaca,"BI",cont++);
+
+			itoa(desapilar(&pilaPolaca),num,10);
+			strcpy(cadena,"ET");
+			strcat(cadena,num);
+			apilar_en_polaca(&listaPolaca, cadena , cont++, &pilaPolaca);
+	 }
+	 ;*/
+
 if: IF_T cond_final LLAVE_A sentencia LLAVE_C {
 
 		int tipoCond = desapilar(&pilaTipoCondicion);
@@ -200,8 +243,8 @@ if: IF_T cond_final LLAVE_A sentencia LLAVE_C {
 	}
 	;
 
-write : WRITE_T CONST_STRING_R 
-	  | WRITE_T expr 
+write : WRITE_T CONST_STRING_R {insertar_en_polaca(&listaPolaca,$1,cont++);}
+	  | WRITE_T expr {insertar_en_polaca(&listaPolaca,$1,cont++);}
 	  ;
 
 read: READ_T ID_R ;

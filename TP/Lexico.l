@@ -108,7 +108,7 @@ ID_T			{LETRA}({LETRA}|{DIGITO})*
 {OP_MUL}			{yylval.strVal = strdup(yytext); return OP_MUL;}
 {COMA}				return COMA;
 {WHILE_T}			return WHILE_T;
-{WRITE_T}			return WRITE_T;
+{WRITE_T}			{yylval.strVal = strdup(yytext); return WRITE_T;}
 {READ_T}			return READ_T;
 {ENDDEC_T}			return ENDDEC_T;
 {FLOAT_T}			return FLOAT_T;
