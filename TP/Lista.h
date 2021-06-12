@@ -201,6 +201,7 @@ void crear_Pila(t_pila *p)
 
 int apilar(t_pila *p,int posicion)
 {
+    printf("\nApilo posicion: %d", posicion);
     t_nodo *nuevo=(t_nodo *)malloc(sizeof(t_nodo));
     if(nuevo==NULL)
         return 0;
@@ -212,6 +213,7 @@ int apilar(t_pila *p,int posicion)
 
 int desapilar(t_pila *p)
 {
+
     int valor_actual;
     t_nodo *viejo=*p;
     if(viejo==NULL)
@@ -219,5 +221,7 @@ int desapilar(t_pila *p)
     *p=viejo->sig;
     valor_actual = viejo->info;
     free(viejo);
+
+    printf("\nDesapilo posicion: %d", valor_actual);
     return valor_actual;
 }

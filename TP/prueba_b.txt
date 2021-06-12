@@ -1,8 +1,20 @@
-WHILE ( a > 5 )  
+WHILE ( a > 5 AND 6 < 8)  
 {
 	d := 4 ;
-	WHILE ( e > 5 )
+	WHILE ( e > 9 OR 10 < id)
 	{
 		h := 3 ;
 	} ;
+	
+	id3 := 4 ;
+
+	IF ( 11 > 5 ) {
+		IF ( 12 == id8 OR id7 == 89) {
+			id := 56 ;
+		} ;
+	} ;
+	write id;
+	read id;
+	id8 := 5 + 6 MOD 8;
+	id9 := 9 DIV 8;
 } ;

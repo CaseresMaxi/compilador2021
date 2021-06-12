@@ -83,7 +83,7 @@ extern FILE* yyin;
 %token TOKEN_OR		
 %token MAX_TOKEN	
 %token <strVal> ID_T			
-%token <strVal> WRITE_T
+%token WRITE_T
 %token READ_T
 %token ENDDEC_T
 %token DECVAR_T
@@ -124,58 +124,31 @@ grammar : asig
 		; 
 
 while: WHILE_T{
+			printf("\nINICIO WHILE");
 			char cadena[7];
 			char num[4];
 			itoa(cont, num, 10);
 			strcpy(cadena,"ET");
 			strcat(cadena,num);
+			printf("\nAPILO ET");
 			apilar_en_polaca(&listaPolaca,cadena,cont++,&pilaPolaca);
 		}	
 		cond_final LLAVE_A sentencia LLAVE_C {
+			printf("\nFIN WHILE");
 			char cadena[7];
 			char num[4];
-			int ret = desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
-
-			if (ret == 0) {
-				printf("ERROR FATAL");
-			}
-
-			insertar_en_polaca(&listaPolaca,"BI",cont++);
-
-			itoa(desapilar(&pilaPolaca),num,10);
-			strcpy(cadena,"ET");
-			strcat(cadena,num);
-			apilar_en_polaca(&listaPolaca, cadena , cont++, &pilaPolaca);
-	 }
-	 ;
-
-/*while: WHILE_T{
-			char cadena[7];
-			char num[4];
-			itoa(cont, num, 10);
-			strcpy(cadena,"ET");
-			strcat(cadena,num);
-			apilar_en_polaca(&listaPolaca,cadena,cont++,&pilaPolaca);
-
-
-		}	
-		cond_final LLAVE_A sentencia LLAVE_C {
-			char cadena[7];
-			char num[4];
-			//int ret = desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
-
+			printf("\nDESAPILO COND");
 			int tipoCond = desapilar(&pilaTipoCondicion);
 
-			printf("\nTipo Cond %d\n",tipoCond);
-	
+
 			if (tipoCond == COND_AND) {
 				desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
 				desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
-				printf("DESAPILO COND 2 veces");
 			} else if (tipoCond == COND_OR) {
 				desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
 				desapilar_polaca_sig(&listaPolaca,&pilaPolaca);
 			} else {
+				printf("\nDESAPILO NORMAL %d",cont);
 				int ret = desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
 	
 				if (ret == 0) {
@@ -188,9 +161,9 @@ while: WHILE_T{
 			itoa(desapilar(&pilaPolaca),num,10);
 			strcpy(cadena,"ET");
 			strcat(cadena,num);
-			apilar_en_polaca(&listaPolaca, cadena , cont++, &pilaPolaca);
+			insertar_en_polaca(&listaPolaca, cadena , cont++);
 	 }
-	 ;*/
+	 ;
 
 if: IF_T cond_final LLAVE_A sentencia LLAVE_C {
 
@@ -224,12 +197,10 @@ if: IF_T cond_final LLAVE_A sentencia LLAVE_C {
 	IF_T cond_final LLAVE_A sentencia LLAVE_C {
 		int tipoCond = desapilar(&pilaTipoCondicion);
 
-		printf("\nTipo Cond %d\n",tipoCond);
 
 		if (tipoCond == COND_AND) {
 			desapilar_polaca(&listaPolaca,&pilaPolaca,cont);
 			desapilar_polaca(&listaPolaca,&pilaPolaca,cont);
-			printf("DESAPILO COND 2 veces");
 		} else if (tipoCond == COND_OR) {
 			desapilar_polaca(&listaPolaca,&pilaPolaca,cont);
 			desapilar_polaca_sig(&listaPolaca,&pilaPolaca);
@@ -243,11 +214,11 @@ if: IF_T cond_final LLAVE_A sentencia LLAVE_C {
 	}
 	;
 
-write : WRITE_T CONST_STRING_R {insertar_en_polaca(&listaPolaca,$1,cont++);}
-	  | WRITE_T expr {insertar_en_polaca(&listaPolaca,$1,cont++);}
+write : WRITE_T CONST_STRING_R {insertar_en_polaca(&listaPolaca,"WRITE",cont++);}
+	  | WRITE_T expr {insertar_en_polaca(&listaPolaca,"WRITE",cont++);}
 	  ;
 
-read: READ_T ID_R ;
+read: READ_T ID_R {insertar_en_polaca(&listaPolaca,"READ",cont++);};
 
 
 ciclo_especial: WHILE_T {
@@ -326,7 +297,6 @@ cond_final: PARENT_A cond_final AND_T cond_final {
 				int aux = desapilar(&pilaTipoCondicion);
 				aux = desapilar(&pilaTipoCondicion);
 				apilar(&pilaTipoCondicion,COND_AND);
-				printf("APILO TIPO COND");
 			
 			} PARENT_C
 			| PARENT_A cond_final OR_T cond_final {
@@ -340,7 +310,6 @@ cond_final: PARENT_A cond_final AND_T cond_final {
 				int aux = desapilar(&pilaTipoCondicion);
 				aux = desapilar(&pilaTipoCondicion);
 				apilar(&pilaTipoCondicion,COND_AND);
-				printf("APILO TIPO COND");
 			
 			} PARENT_C
 			| PARENT_A cond OR_T cond {
@@ -360,7 +329,6 @@ cond: expr COMPARADOR termino {
 			insertar_en_polaca(&listaPolaca,"CMP",cont++);
 			insertar_en_polaca(&listaPolaca,simboloAux,cont++);
 			apilar_en_polaca(&listaPolaca,"",cont++,&pilaPolaca);
-			printf("APILO COND");
 			apilar(&pilaTipoCondicion,COND_NORMAL);
 		}
 
@@ -425,10 +393,10 @@ termino : termino OP_MUL factor {
 			insertar_en_polaca(&listaPolaca,$2,cont++); 
 		}
 		| termino OP_MOD factor { 
-			insertar_en_polaca(&listaPolaca,$2,cont++); 
+			insertar_en_polaca(&listaPolaca,"MOD",cont++); 
 		}
 		| termino OP_DIV factor { 
-			insertar_en_polaca(&listaPolaca,$2,cont++); 
+			insertar_en_polaca(&listaPolaca,"DIV",cont++); 
 		}
 		| factor
 		;
