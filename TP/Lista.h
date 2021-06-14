@@ -139,12 +139,7 @@ int vaciar_polaca(t_lista* l)
 {
     l_nodo* aux;
     FILE* pf = fopen("intermedia.txt","w+");
-    FILE* auxpf = fopen("auxiliar.txt","w+");
     if(!pf){
-        printf("No se pudo abrir el archivo;\n");
-        return 0;
-    }
-    if(!auxpf){
         printf("No se pudo abrir el archivo;\n");
         return 0;
     }
@@ -154,11 +149,9 @@ int vaciar_polaca(t_lista* l)
         aux=*l;
         *l=aux->sig;
         fprintf(pf,"%d\t%s\n",aux->nroPolaca, aux->elemento);
-        fprintf(auxpf,"%s\n", aux->elemento);
         free(aux);
     }
     fclose(pf);
-    fclose(auxpf);
     return 1;
 }
 
@@ -201,7 +194,6 @@ void crear_Pila(t_pila *p)
 
 int apilar(t_pila *p,int posicion)
 {
-    printf("\nApilo posicion: %d", posicion);
     t_nodo *nuevo=(t_nodo *)malloc(sizeof(t_nodo));
     if(nuevo==NULL)
         return 0;
@@ -222,6 +214,5 @@ int desapilar(t_pila *p)
     valor_actual = viejo->info;
     free(viejo);
 
-    printf("\nDesapilo posicion: %d", valor_actual);
     return valor_actual;
 }

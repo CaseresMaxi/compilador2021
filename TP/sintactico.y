@@ -124,20 +124,16 @@ grammar : asig
 		; 
 
 while: WHILE_T{
-			printf("\nINICIO WHILE");
 			char cadena[7];
 			char num[4];
 			itoa(cont, num, 10);
 			strcpy(cadena,"ET");
 			strcat(cadena,num);
-			printf("\nAPILO ET");
 			apilar_en_polaca(&listaPolaca,cadena,cont++,&pilaPolaca);
 		}	
 		cond_final LLAVE_A sentencia LLAVE_C {
-			printf("\nFIN WHILE");
 			char cadena[7];
 			char num[4];
-			printf("\nDESAPILO COND");
 			int tipoCond = desapilar(&pilaTipoCondicion);
 
 
@@ -148,7 +144,6 @@ while: WHILE_T{
 				desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
 				desapilar_polaca_sig(&listaPolaca,&pilaPolaca);
 			} else {
-				printf("\nDESAPILO NORMAL %d",cont);
 				int ret = desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
 	
 				if (ret == 0) {
@@ -299,7 +294,33 @@ cond_final: PARENT_A cond_final AND_T cond_final {
 				apilar(&pilaTipoCondicion,COND_AND);
 			
 			} PARENT_C
+			| PARENT_A cond AND_T cond_final {
+
+				int aux = desapilar(&pilaTipoCondicion);
+				aux = desapilar(&pilaTipoCondicion);
+				apilar(&pilaTipoCondicion,COND_AND);
+			
+			} PARENT_C
+			| PARENT_A cond_final AND_T cond {
+
+				int aux = desapilar(&pilaTipoCondicion);
+				aux = desapilar(&pilaTipoCondicion);
+				apilar(&pilaTipoCondicion,COND_AND);
+			
+			} PARENT_C
 			| PARENT_A cond_final OR_T cond_final {
+				int aux = desapilar(&pilaTipoCondicion);
+				aux = desapilar(&pilaTipoCondicion);
+				apilar(&pilaTipoCondicion,COND_OR);
+			
+			} PARENT_C 
+			| PARENT_A cond OR_T cond_final {
+				int aux = desapilar(&pilaTipoCondicion);
+				aux = desapilar(&pilaTipoCondicion);
+				apilar(&pilaTipoCondicion,COND_OR);
+			
+			} PARENT_C 
+			| PARENT_A cond_final OR_T cond {
 				int aux = desapilar(&pilaTipoCondicion);
 				aux = desapilar(&pilaTipoCondicion);
 				apilar(&pilaTipoCondicion,COND_OR);
