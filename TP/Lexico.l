@@ -110,11 +110,11 @@ ID_T			{LETRA}({LETRA}|{DIGITO})*
 {WHILE_T}			return WHILE_T;
 {WRITE_T}			{yylval.strVal = strdup(yytext); return WRITE_T;}
 {READ_T}			return READ_T;
-{ENDDEC_T}			return ENDDEC_T;
 {FLOAT_T}			return FLOAT_T;
 {INTEGER_T}			return INTEGER_T;
 {STRING_T} 			return STRING_T;
 {OP_ASIG}			{yylval.strVal = strdup(yytext); return OP_ASIG;}
+{ENDDEC_T}			return ENDDEC_T;
 {DECVAR_T}			return DECVAR_T;
 {ID_T}				{yylval.strVal = strdup(yytext); return ID_T;}
 {SEP_LINEA}			return SEP_LINEA;

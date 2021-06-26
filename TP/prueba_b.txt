@@ -1,23 +1,23 @@
 DECVAR
-a1,b1: FLOAT;
+a1,b1,id: FLOAT;
 -/ Esto es un comentario /- -/ Esto es un comentario /-
 variable1-/ Esto es un comentario en linea/- : STRING;
-entero1,entero2: INTEGER;
+entero1,entero2,id2: INTEGER;
 ENDDEC
 -/ -/ Esto es un comentario anidado /-/-
 write id;
 
-WHILE cont IN (1,2,5,5+9,id2)
+WHILE a1 IN (1,2,5,5+9,b1)
 DO
-	id:=1+cont;
+	entero1:=1+a1;
 ENDWHILE;
 
 write "hola";
 read id;
 
-IF ( 1 >= 2 && (id == id)) {
-	id:=3*3;
-	id:=9+5;
+IF ( 1 >= 2 && (id == entero2)) {
+	entero2:=3*3;
+	entero2:=9+5;
 };
 
 IF ( 1 > 2 ) {

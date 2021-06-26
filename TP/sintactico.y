@@ -25,6 +25,11 @@ t_pila  pilaWhileEspecialCantExp;
 //AND OR
 t_pila  pilaTipoCondicion;
 
+//VARIABLES PARA LA TS
+int bandDecvar = 0;
+t_pila_decvar pilaDecvar;
+int cantApila = 0;
+
 //VARIABLES PARA LA POLACA
 int cont = 1; //Inicia en 1 para imprimir correctamente el numero en el código intermedio
 char simboloAux[3];
@@ -427,7 +432,7 @@ factor	: PARENT_A expr PARENT_C
 		| ID_R
 		;
 
-bloque_declaracion: DECVAR_T declaracion ENDDEC_T
+bloque_declaracion: DECVAR_T { bandDecvar = 1; printf("\nInicio decvar"); } declaracion ENDDEC_T { bandDecvar = 0; printf("\nFin decvar");}
 
 declaracion : linea_declaracion
 			| declaracion linea_declaracion
@@ -439,18 +444,61 @@ var_declaracion: ID_R
 				| var_declaracion COMA ID_R
 				;
 
-tipo_variable: FLOAT_T 
-			 | INTEGER_T 
-			 | STRING_T
+tipo_variable: 
+				FLOAT_T {
+					char* valor_actual;
+					while(cantApila > 0) 
+					{
+						valor_actual = desapilar_decvar(&pilaDecvar);
+						insertar_id(&tablaSimbolos,valor_actual,TIPO_FLOAT);
+						cantApila--;
+					}
+				}
+			 | INTEGER_T {
+			 		char* valor_actual;
+					while(cantApila > 0) 
+					{
+						valor_actual = desapilar_decvar(&pilaDecvar);
+						insertar_id(&tablaSimbolos,valor_actual,TIPO_INTEGER);
+						cantApila--;
+					}
+			 } 
+			 | STRING_T {
+			 		char* valor_actual;
+					while(cantApila > 0) 
+					{
+						valor_actual = desapilar_decvar(&pilaDecvar);
+						insertar_id(&tablaSimbolos,valor_actual,TIPO_STRING);
+						cantApila--;
+					}
+			 } 
 			 ;
 
 ID_R: ID_T {
-		if( bandId == 0) {
-			insertar_en_polaca(&listaPolaca,$1,cont++);
-			insertar_id(&tablaSimbolos,$1);
+		if(bandDecvar == 1) {
+			printf("\nApilando.%s",$1);
+			cantApila++;
+			apilar_decvar(&pilaDecvar,$1);
+
 		} else {
-			strcpy(idWhileEspecial,$1);
+			//Validar si existe
+
+			if(validar_id(&tablaSimbolos,$1) == 1) {
+				//Si existe
+				if( bandId == 0) {
+					insertar_en_polaca(&listaPolaca,$1,cont++);
+				} else {
+					strcpy(idWhileEspecial,$1);
+				}
+			} else {
+				/*
+				printf("\n\nERROR\nLa variable %s no se encuentra declarada",$1);
+				exit(1);*/
+			}
+
+
 		}
+
 	};
 
 CONST_STRING_R: CONST_STRING {
@@ -468,6 +516,7 @@ NUMERO: CONST_INT {
 	  	}
 	  ;
 
+
 %%
 
 
@@ -483,6 +532,7 @@ void main(int argc, char* argv[]){
 	crear_lista(&listaPolaca);
 
 	crear_Pila(&pilaPolaca);
+	crear_Pila_decvar(&pilaDecvar);
 
 	//CICLO ESPECIAL
 	crear_Pila(&pilaWhileEspecialIni);
@@ -498,6 +548,11 @@ void main(int argc, char* argv[]){
 
 	vaciar_Tabla(&tablaSimbolos);
 	vaciar_polaca(&listaPolaca);
+
+
+	//generarAssembler(&listaPolaca,&tablaSimbolos);
+
+
 	printf("No hubo errores!\n");
 	fclose(yyin);
 	exit(1);

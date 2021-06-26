@@ -2,10 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define TIPO_FLOAT "FLOAT"
+#define TIPO_STRING "STRING"
+#define TIPO_INTEGER "INTEGER"
+
 typedef struct tupla{
-	char* lexema;
-	char* tipo;
-	char* valor;
+	char lexema[200];
+	char tipo[10];
+	char valor[200];
 	int   longitud;
 	struct tupla* siguiente;
 
@@ -19,7 +23,9 @@ void crear_Tabla(tabla* tabla_p);
 
 void vaciar_Tabla(tabla* tabla_p);
 
-int insertar_id (tabla* tabla_p, char* lexema_p);
+int insertar_id (tabla* tabla_p, char* lexema_p, char* tipo_dato);
+
+int validar_id (tabla* tabla_p, char* lexema_p);
 
 int insertar_string (tabla* tabla_p, char* lexema_p);
 
@@ -40,6 +46,7 @@ void crear_Tabla(tabla* tabla_p){
 
 void vaciar_Tabla(tabla* tabla_p)
 {
+    tabla* auxTabla = tabla_p;
     tuplaTabla* viejo;
     char aux[30];
     int i;
@@ -70,10 +77,10 @@ void vaciar_Tabla(tabla* tabla_p)
    	printf("\n");
    	fprintf(pf,"\n");
 
-    while(*tabla_p)
+    while(*auxTabla)
     {
-        viejo=*tabla_p;
-        *tabla_p=viejo->siguiente;
+        viejo=*auxTabla;
+        *auxTabla=viejo->siguiente;
         printf("|%-32s|%-8s|%-32s|%-8s|\n", viejo->lexema, "", !(viejo->valor)?"-":viejo->valor, viejo->longitud == 0?"":itoa(viejo->longitud,aux,10));
         fprintf(pf,"|%-32s|%-8s|%-32s|%-8s|\n", viejo->lexema, "", !(viejo->valor)?"-":viejo->valor, viejo->longitud == 0?"":itoa(viejo->longitud,aux,10));
 
@@ -90,7 +97,7 @@ void vaciar_Tabla(tabla* tabla_p)
     fclose(pf);
 }
 
-int insertar_id (tabla* tabla_p, char* lexema_p){
+int insertar_id (tabla* tabla_p, char* lexema_p, char* tipo_dato){
 	int resultado = 0;
 	tuplaTabla* nuevo = (tuplaTabla*) malloc(sizeof(tuplaTabla));
 	if(!nuevo){
@@ -98,29 +105,61 @@ int insertar_id (tabla* tabla_p, char* lexema_p){
 		return -1;
 	}
 
+	/*
 	nuevo->lexema = (char*) malloc(sizeof(char) * strlen(lexema_p) + 2);
 	if(!(nuevo->lexema)){
 		printf("Error, no hay memoria\n.");
 		return -1;
 	}
 
+	nuevo->tipo = (char*) malloc(sizeof(char) * strlen(tipo_dato) + 1);
+	if(!(nuevo->tipo)){
+		printf("Error, no hay memoria\n.");
+		return -1;
+	}*/
+
 	strcpy(nuevo->lexema, lexema_p);
 
-	nuevo->tipo = NULL;
-	nuevo->valor = NULL;
+	strcpy(nuevo->tipo,tipo_dato);
+	
+	printf("\n2 No hay problema %s %s",nuevo->lexema,nuevo->tipo);
+
+	strcpy(nuevo->valor,"-");
+
 	nuevo->longitud = 0;
 
-	resultado = enlistar_en_orden(tabla_p, nuevo);
+	printf("\n3 No hay problema %s %s",nuevo->lexema,nuevo->tipo);
+
+	resultado = enlistar_en_orden(tabla_p,nuevo);
+
+	printf("\n4 No hay problema %s %s",nuevo->lexema,nuevo->tipo);
 
 	if(resultado == 0){
 		free(nuevo);
 		return 0;
 	}
 
+	printf("\nTermine");
+
 	return 1;
 }
 
-int insertar_numero (tabla* tabla_p, char* lexema_p){
+int validar_id (tabla* tabla_p, char* lexema_p) {
+	tabla* auxTabla = tabla_p;
+    tuplaTabla* viejo;
+	while(*auxTabla)
+    {
+        viejo=*auxTabla;
+        *auxTabla=viejo->siguiente;
+        
+        if(strcmp(viejo->lexema,lexema_p) == 0) {
+        	return 1;
+        }
+    }
+    return 0;
+}
+
+int insertar_numero (tabla* tabla_p, char* lexema_p) {
 	int resultado = 0;
 	tuplaTabla* nuevo = (tuplaTabla*) malloc(sizeof(tuplaTabla));
 	if(!nuevo){
@@ -128,24 +167,33 @@ int insertar_numero (tabla* tabla_p, char* lexema_p){
 		return -1;
 	}
 
+	/*
 	nuevo->lexema = (char*) malloc(sizeof(char) * strlen(lexema_p) + 2);
 	if(!(nuevo->lexema)){
 		printf("Error, no hay memoria\n.");
 		return -1;
 	}
+	*/
 
 	strcpy(nuevo->lexema, "_");
 	strcat(nuevo->lexema, lexema_p);
 
-	nuevo->tipo = NULL;
-	nuevo->valor = NULL;
+	if(1 == 1) {
+		strcpy(nuevo->tipo,TIPO_FLOAT);
+	} else {
+		strcpy(nuevo->tipo,TIPO_INTEGER);
+	}
+
+
 	nuevo->longitud = 0;
 
+	/*
 	nuevo->valor = (char*) malloc(sizeof(char) * strlen(lexema_p) + 1);
 	if(!(nuevo->valor)){
 		printf("Error, no hay memoria\n.");
 		return -1;
 	}
+	*/
 
 	strcpy(nuevo->valor, lexema_p);
 
@@ -167,24 +215,28 @@ int insertar_string (tabla* tabla_p, char* lexema_p) {
 		return -1;
 	}
 
+	/*
 	nuevo->lexema = (char*) malloc(sizeof(char) * strlen(lexema_p) + 2);
 	if(!(nuevo->lexema)){
 		printf("Error, no hay memoria\n.");
 		return -1;
 	}
+	*/
 
 	eliminarCaracter(lexema_p, '"');
 	strcpy(nuevo->lexema, "_");
 	strcat(nuevo->lexema, lexema_p);
 
+	/*
 	nuevo->valor = (char*) malloc(sizeof(char) * strlen(lexema_p) + 1);
 	
 	if(!(nuevo->valor)){
 		printf("Error, no hay memoria\n.");
 		return -1;
 	}
+	*/
 
-	nuevo->tipo = NULL;
+	strcpy(nuevo->tipo,TIPO_STRING);
 	strcpy(nuevo->valor, lexema_p);
 
 	nuevo->longitud = strlen(lexema_p);
@@ -213,8 +265,10 @@ void eliminarCaracter(char *str, char garbage) {
 int enlistar_en_orden(tabla* l,tuplaTabla* d)
 {
 	int resultado = 0;
+	printf("\n PASO1");
 	while(*l && (resultado=strcmp((*l)->lexema,d->lexema))<=0)
 	{
+		printf("\n PASO2");
 		if(resultado == 0){
 			return 0;
 		}
