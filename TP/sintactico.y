@@ -432,7 +432,7 @@ factor	: PARENT_A expr PARENT_C
 		| ID_R
 		;
 
-bloque_declaracion: DECVAR_T { bandDecvar = 1; printf("\nInicio decvar"); } declaracion ENDDEC_T { bandDecvar = 0; printf("\nFin decvar");}
+bloque_declaracion: DECVAR_T { bandDecvar = 1; printf("\n  "); } declaracion ENDDEC_T { bandDecvar = 0; };
 
 declaracion : linea_declaracion
 			| declaracion linea_declaracion
@@ -450,7 +450,9 @@ tipo_variable:
 					while(cantApila > 0) 
 					{
 						valor_actual = desapilar_decvar(&pilaDecvar);
-						insertar_id(&tablaSimbolos,valor_actual,TIPO_FLOAT);
+						if(insertar_id(&tablaSimbolos,valor_actual,TIPO_FLOAT) == 0) {
+							exit(1);
+						}
 						cantApila--;
 					}
 				}
@@ -459,7 +461,9 @@ tipo_variable:
 					while(cantApila > 0) 
 					{
 						valor_actual = desapilar_decvar(&pilaDecvar);
-						insertar_id(&tablaSimbolos,valor_actual,TIPO_INTEGER);
+						if(insertar_id(&tablaSimbolos,valor_actual,TIPO_INTEGER) == 0) {
+							exit(1);
+						}
 						cantApila--;
 					}
 			 } 
@@ -468,7 +472,9 @@ tipo_variable:
 					while(cantApila > 0) 
 					{
 						valor_actual = desapilar_decvar(&pilaDecvar);
-						insertar_id(&tablaSimbolos,valor_actual,TIPO_STRING);
+						if(insertar_id(&tablaSimbolos,valor_actual,TIPO_STRING)== 0) {
+							exit(1);
+						}
 						cantApila--;
 					}
 			 } 
@@ -476,7 +482,6 @@ tipo_variable:
 
 ID_R: ID_T {
 		if(bandDecvar == 1) {
-			printf("\nApilando.%s",$1);
 			cantApila++;
 			apilar_decvar(&pilaDecvar,$1);
 
@@ -491,9 +496,8 @@ ID_R: ID_T {
 					strcpy(idWhileEspecial,$1);
 				}
 			} else {
-				/*
 				printf("\n\nERROR\nLa variable %s no se encuentra declarada",$1);
-				exit(1);*/
+				exit(1);
 			}
 
 
