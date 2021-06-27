@@ -1,8 +1,12 @@
 DECVAR
-id,h1,h67: FLOAT;
+id,h1,h67,h70,h80,h90: FLOAT;
 a1,variable1: STRING;
 entero1: INTEGER;
 ENDDEC
-id:= 56;
-a1 := "HOLACARLOS";
-h1 := 58.69;
+h67 := 3;
+h80 := 4;
+id := 56 + 45;
+h1 := 85 - 23;
+h70 := 10 * h67 + 1 - 23 * 4;
+h90 := h80 / 2 + 3;
+

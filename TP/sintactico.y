@@ -132,7 +132,7 @@ while: WHILE_T{
 			char cadena[7];
 			char num[4];
 			itoa(cont, num, 10);
-			strcpy(cadena,"ET");
+			strcpy(cadena,"_ET");
 			strcat(cadena,num);
 			apilar_en_polaca(&listaPolaca,cadena,cont++,&pilaPolaca);
 		}	
@@ -159,7 +159,7 @@ while: WHILE_T{
 			insertar_en_polaca(&listaPolaca,"BI",cont++);
 
 			itoa(desapilar(&pilaPolaca),num,10);
-			strcpy(cadena,"ET");
+			strcpy(cadena,"_ET");
 			strcat(cadena,num);
 			insertar_en_polaca(&listaPolaca, cadena , cont++);
 	 }
@@ -229,7 +229,7 @@ ciclo_especial: WHILE_T {
 			char cadena[7];
 			char num[4];
 			itoa(cont, num, 10);
-			strcpy(cadena,"ET");
+			strcpy(cadena,"_ET");
 			strcat(cadena,num);
 
 			insertar_en_polaca(&listaPolaca,cadena,cont++);
@@ -246,7 +246,7 @@ ciclo_especial: WHILE_T {
 			char auxPosIni[10];
 			char num[4];
 			itoa(posIni, num, 10);
-			strcpy(auxPosIni,"ET");
+			strcpy(auxPosIni,"_ET");
 			strcat(auxPosIni,num);
 
 			insertar_en_polaca(&listaPolaca,"BI",cont++);

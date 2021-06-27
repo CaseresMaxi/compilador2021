@@ -4,13 +4,22 @@ TABLA DE SIMBOLOS:
 _____________________________________________________________________________________
 |LEXEMA                          |TIPO    |VALOR                           |LONGITUD|
 -------------------------------------------------------------------------------------
+|_1                              |INTEGER |1                               |        |
+|_10                             |INTEGER |10                              |        |
+|_2                              |INTEGER |2                               |        |
+|_23                             |INTEGER |23                              |        |
+|_3                              |INTEGER |3                               |        |
+|_4                              |INTEGER |4                               |        |
+|_45                             |INTEGER |45                              |        |
 |_56                             |INTEGER |56                              |        |
-|_58.69                          |FLOAT   |58.69                           |        |
-|_HOLACARLOS                     |STRING  |HOLACARLOS                      |10      |
+|_85                             |INTEGER |85                              |        |
 |a1                              |STRING  |-                               |        |
 |entero1                         |INTEGER |-                               |        |
 |h1                              |FLOAT   |-                               |        |
 |h67                             |FLOAT   |-                               |        |
+|h70                             |FLOAT   |-                               |        |
+|h80                             |FLOAT   |-                               |        |
+|h90                             |FLOAT   |-                               |        |
 |id                              |FLOAT   |-                               |        |
 |variable1                       |STRING  |-                               |        |
 -------------------------------------------------------------------------------------
