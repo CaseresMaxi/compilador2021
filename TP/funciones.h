@@ -29,7 +29,7 @@ int validar_id (tabla* tabla_p, char* lexema_p);
 
 int insertar_string (tabla* tabla_p, char* lexema_p);
 
-int insertar_numero (tabla* tabla_p, char* lexema_p);
+int insertar_numero (tabla* tabla_p, char* lexema_p,char* tipo_dato);
 
 int enlistar_en_orden(tabla* l,char* lexema,char* tipo_dato, char* valor, int longitud);
 
@@ -58,7 +58,6 @@ void crear_Tabla(tabla* tabla_p){
 
 void vaciar_Tabla(tabla* tabla_p)
 {
-    tuplaTabla* viejo;
     char aux[30];
     int i;
     FILE* pf = fopen("ts.txt","w+");
@@ -90,12 +89,12 @@ void vaciar_Tabla(tabla* tabla_p)
 
     while(*tabla_p)
     {
-        viejo=*tabla_p;
-        *tabla_p=viejo->siguiente;
-        printf("|%-32s|%-8s|%-32s|%-8s|\n", viejo->lexema, viejo->tipo, !(viejo->valor)?"-":viejo->valor, viejo->longitud == 0?"":itoa(viejo->longitud,aux,10));
-        fprintf(pf,"|%-32s|%-8s|%-32s|%-8s|\n", viejo->lexema, viejo->tipo, !(viejo->valor)?"-":viejo->valor, viejo->longitud == 0?"":itoa(viejo->longitud,aux,10));
+        printf("|%-32s|%-8s|%-32s|%-8s|\n", (*tabla_p)->lexema, (*tabla_p)->tipo, !((*tabla_p)->valor)?"-":(*tabla_p)->valor, (*tabla_p)->longitud == 0?"":itoa((*tabla_p)->longitud,aux,10));
+        fprintf(pf,"|%-32s|%-8s|%-32s|%-8s|\n", (*tabla_p)->lexema, (*tabla_p)->tipo, !((*tabla_p)->valor)?"-":(*tabla_p)->valor, (*tabla_p)->longitud == 0?"":itoa((*tabla_p)->longitud,aux,10));
+        tabla_p=&(*tabla_p)->siguiente;
 
-        free(viejo);
+
+        //free(viejo);
     }
 
     for(i=0;i<85;i++){
@@ -133,18 +132,14 @@ int validar_id (tabla* tabla_p, char* lexema_p) {
     return 0;
 }
 
-int insertar_numero (tabla* tabla_p, char* lexema_p) {
+int insertar_numero (tabla* tabla_p, char* lexema_p, char* tipo_dato) {
 	int resultado = 0;
 	char aux[200];
 
 	strcpy(aux, "_");
 	strcat(aux, lexema_p);
 
-	if(1 == 1) {
-		resultado = enlistar_en_orden(tabla_p, aux,TIPO_FLOAT,lexema_p,0);
-	} else {
-		resultado = enlistar_en_orden(tabla_p, aux,TIPO_INTEGER,lexema_p,0);
-	}
+	resultado = enlistar_en_orden(tabla_p, aux,tipo_dato,lexema_p,0);
 
 	if(resultado == 0){
 		return 0;
@@ -160,6 +155,8 @@ int insertar_string (tabla* tabla_p, char* lexema_p) {
 	eliminarCaracter(lexema_p, '"');
 	strcpy(aux, "_");
 	strcat(aux, lexema_p);
+
+	//Sacarle a AUX espacios y caracteres especiales
 
 	resultado = enlistar_en_orden(tabla_p, aux,TIPO_STRING,lexema_p,strlen(lexema_p));
 

@@ -4,4 +4,5 @@ a1,variable1: STRING;
 entero1: INTEGER;
 ENDDEC
 id:= 56;
-a1 := "HOLA";
+a1 := "HOLACARLOS";
+h1 := 58.69;

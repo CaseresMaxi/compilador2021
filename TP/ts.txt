@@ -4,8 +4,9 @@ TABLA DE SIMBOLOS:
 _____________________________________________________________________________________
 |LEXEMA                          |TIPO    |VALOR                           |LONGITUD|
 -------------------------------------------------------------------------------------
-|_56                             |FLOAT   |56                              |        |
-|_HOLA                           |STRING  |HOLA                            |4       |
+|_56                             |INTEGER |56                              |        |
+|_58.69                          |FLOAT   |58.69                           |        |
+|_HOLACARLOS                     |STRING  |HOLACARLOS                      |10      |
 |a1                              |STRING  |-                               |        |
 |entero1                         |INTEGER |-                               |        |
 |h1                              |FLOAT   |-                               |        |

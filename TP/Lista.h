@@ -151,20 +151,17 @@ int lista_llena(t_lista* l)
 
 int vaciar_polaca(t_lista* l)
 {
-    t_lista* listaAux = l;
-    l_nodo* aux;
     FILE* pf = fopen("intermedia.txt","w+");
     if(!pf){
         printf("No se pudo abrir el archivo;\n");
         return 0;
     }
 
-    while(*listaAux)
+    while(*l)
     {
-        aux=*listaAux;
-        *listaAux=aux->sig;
-        fprintf(pf,"%d\t%s\n",aux->nroPolaca, aux->elemento);
-        free(aux);
+        fprintf(pf,"%d\t%s\n",(*l)->nroPolaca, (*l)->elemento);
+        l=&(*l)->sig;
+        //free(aux);
     }
     fclose(pf);
     return 1;
@@ -241,16 +238,13 @@ void crear_Pila_decvar(t_pila_decvar *p)
 
 int apilar_decvar(t_pila_decvar *p,char* dato)
 {
-    printf("\nPASE");
     t_nodo_decvar *nuevo=(t_nodo_decvar *)malloc(sizeof(t_nodo_decvar));
-    printf("\nPASE1");
     if(nuevo==NULL){
         printf("\nSin memoria");
         return 0;
     }
     nuevo->sig=*p;
     strcpy(nuevo->info,dato);
-    printf("\nApilando %s",dato);
     *p=nuevo;
     return 1;
 }
@@ -261,19 +255,17 @@ char* desapilar_decvar(t_pila_decvar *p)
     char* valor_actual;
     t_nodo_decvar *viejo=*p;
     if(viejo==NULL) {
-        printf("\nNo desapilo");
         return NO_DESAPILAR;
     }
     *p=viejo->sig;
     strcpy(valor_actual,viejo->info);
-    printf("\nDesapilando %s",valor_actual);
     free(viejo);
 
     return valor_actual;
 }
 
 ///////////////////////////////////
-/*
+
 int generarAssembler(t_lista* listaPolaca, tabla* listaSimbolos) 
 {
     tabla* auxSimbolos = listaSimbolos;
@@ -285,20 +277,80 @@ int generarAssembler(t_lista* listaPolaca, tabla* listaSimbolos)
         return 0;
     }
 
-    fprintf(af,"include macros2.asm\n");
-    fprintf(af,"include number.asm\n");
-    fprintf(af,".MODEL LARGE\n.386\n.STACK 200h\n\n");
+    fprintf(finalf,"include macros2.asm\n");
+    fprintf(finalf,"include number.asm\n");
+    fprintf(finalf,".MODEL LARGE\n.386\n.STACK 200h\n\n");
 
-    fprintf(af,".DATA\n;variables de la tabla de simbolos\n\n");
+    fprintf(finalf,".DATA\n;variables de la tabla de simbolos\n\n");
     
     while(*auxSimbolos)
     {
-        viejo=*auxSimbolos;
-        *auxSimbolos=viejo->siguiente;
+        char aux_tipo1[10];
+        char aux_tipo2[25];
+        char aux_tipo3[25];
+        char aux_valor_float[50];
 
-        viejo->lexema,viejo->valor,viejo->longitud
-        
-        //free(viejo);
+        char aux_char[50];
+
+        if(strcmp((*auxSimbolos)->tipo,TIPO_STRING) == 0) {
+            strcpy(aux_tipo1,"db");
+
+            strcpy(aux_char,"db");
+            sprintf(aux_tipo2,", '$' , %d dup\t(?)",(*auxSimbolos)->longitud);
+            strcpy(aux_tipo3,"");
+            
+        } else {
+            strcpy(aux_tipo1,"dd");
+            strcpy(aux_tipo2,";esddfloat");
+            strcpy(aux_tipo3,"_esddfloat");
+        }
+
+        if(strcmp((*auxSimbolos)->valor,"-") == 0) {
+            fprintf(finalf,"_%s%s\t%s\t?\t%s",(*auxSimbolos)->lexema,aux_tipo3,aux_tipo1,aux_tipo2);
+        } else {
+            if(strcmp((*auxSimbolos)->tipo,TIPO_STRING) == 0) {
+                strcpy(aux_valor_float,"\"");
+                strcat(aux_valor_float,(*auxSimbolos)->valor);
+                strcat(aux_valor_float,"\"");
+            } else {
+                strcpy(aux_valor_float,(*auxSimbolos)->valor);
+
+                if(strcmp((*auxSimbolos)->tipo,TIPO_INTEGER) == 0) {
+                    strcat(aux_valor_float,".0");
+                }
+            }
+
+            fprintf(finalf,"%s%s\t%s\t%s\t%s",(*auxSimbolos)->lexema,aux_tipo3,aux_tipo1,aux_valor_float,aux_tipo2);
+        }
+
+        fprintf(finalf,"\n");
+
+        auxSimbolos=&(*auxSimbolos)->siguiente;
+
     }
+/*
+    fprintf(finalf,"_@max1\tdd\t?\t;esddfloat\n");
+    fprintf(finalf,"_@max2\tdd\t?\t;esddfloat\n");
+    fprintf(finalf,"_@max3\tdd\t?\t;esddfloat\n");
+    fprintf(finalf,"_@max4\tdd\t?\t;esddfloat\n");
+    fprintf(finalf,"_@max5\tdd\t?\t;esddfloat\n");
+    fprintf(finalf,"_@max6\tdd\t?\t;esddfloat\n");
+    fprintf(finalf,"_@max7\tdd\t?\t;esddfloat\n");
+    fprintf(finalf,"_@max8\tdd\t?\t;esddfloat\n");
+    fprintf(finalf,"_@max9\tdd\t?\t;esddfloat\n");
+    fprintf(finalf,"_@max10\tdd\t?\t;esddfloat\n");
+    fprintf(finalf,"_@aux\tdd\t?\t;esddfloat\n");
+*/
+    fprintf(finalf,"\n\n\n\n");  // agrego saltos de linea al archivo assembler
+    fprintf(finalf,".CODE\n;comienzo de la zona de codigo\n\n\nstart:\n");
+    fprintf(finalf,"MOV EAX,@DATA\n");
+    fprintf(finalf,"MOV DS,EAX\n");
+    fprintf(finalf,"MOV ES,EAX\n\n\n");
 
-}*/
+
+
+    fclose(finalf);
+
+    return 1;
+
+}

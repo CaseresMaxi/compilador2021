@@ -512,11 +512,11 @@ CONST_STRING_R: CONST_STRING {
 
 NUMERO: CONST_INT {
 			insertar_en_polaca(&listaPolaca,$1,cont++);
-			insertar_numero(&tablaSimbolos,$1);
+			insertar_numero(&tablaSimbolos,$1,TIPO_INTEGER);
 		}
 	  | CONST_FLOAT {
 	  		insertar_en_polaca(&listaPolaca,$1,cont++);
-	  		insertar_numero(&tablaSimbolos,$1);
+	  		insertar_numero(&tablaSimbolos,$1,TIPO_FLOAT);
 	  	}
 	  ;
 
@@ -554,7 +554,7 @@ void main(int argc, char* argv[]){
 	vaciar_polaca(&listaPolaca);
 
 
-	//generarAssembler(&listaPolaca,&tablaSimbolos);
+	generarAssembler(&listaPolaca,&tablaSimbolos);
 
 
 	printf("No hubo errores!\n");
