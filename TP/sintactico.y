@@ -449,8 +449,14 @@ tipo_variable:
 					char* valor_actual;
 					while(cantApila > 0) 
 					{
+						char string_aux[100];
+						strcpy(string_aux,"");
 						valor_actual = desapilar_decvar(&pilaDecvar);
-						if(insertar_id(&tablaSimbolos,valor_actual,TIPO_FLOAT) == 0) {
+						printf("Valor actual: %s\n", valor_actual);
+						strcat(string_aux,valor_actual);
+						//strcat(valor_actual,"_esddfloat");
+						printf("String aux: %s\n", string_aux);
+						if(insertar_id(&tablaSimbolos,string_aux,TIPO_FLOAT) == 0) {
 							exit(1);
 						}
 						cantApila--;
@@ -460,8 +466,12 @@ tipo_variable:
 			 		char* valor_actual;
 					while(cantApila > 0) 
 					{
+						char string_aux[100];
+						strcpy(string_aux,"");
 						valor_actual = desapilar_decvar(&pilaDecvar);
-						if(insertar_id(&tablaSimbolos,valor_actual,TIPO_INTEGER) == 0) {
+						strcat(string_aux,valor_actual);
+						//strcat(valor_actual,"_esddfloat");
+						if(insertar_id(&tablaSimbolos,string_aux,TIPO_INTEGER) == 0) {
 							exit(1);
 						}
 						cantApila--;
@@ -471,8 +481,13 @@ tipo_variable:
 			 		char* valor_actual;
 					while(cantApila > 0) 
 					{
+						
+						char string_aux[100];
+						strcpy(string_aux,"");
 						valor_actual = desapilar_decvar(&pilaDecvar);
-						if(insertar_id(&tablaSimbolos,valor_actual,TIPO_STRING)== 0) {
+						strcat(valor_actual,"_esddstring");
+						strcat(string_aux,valor_actual);
+						if(insertar_id(&tablaSimbolos,string_aux,TIPO_STRING)== 0) {
 							exit(1);
 						}
 						cantApila--;
@@ -483,20 +498,27 @@ tipo_variable:
 ID_R: ID_T {
 		if(bandDecvar == 1) {
 			cantApila++;
-			apilar_decvar(&pilaDecvar,$1);
+			char string_aux2[100];
+			strcpy(string_aux2,"_");
+			strcat(string_aux2,$1);
+			strcat(string_aux2,"_esddfloat");
+			apilar_decvar(&pilaDecvar,string_aux2);
 
 		} else {
 			//Validar si existe
-
-			if(validar_id(&tablaSimbolos,$1) == 1) {
+			char string_aux2[100];
+			strcpy(string_aux2,"_");
+			strcat(string_aux2,$1);
+			strcat(string_aux2,"_esddfloat");
+			if(validar_id(&tablaSimbolos,string_aux2) == 1) {
 				//Si existe
 				if( bandId == 0) {
-					insertar_en_polaca(&listaPolaca,$1,cont++);
+					insertar_en_polaca(&listaPolaca,string_aux2,cont++);
 				} else {
-					strcpy(idWhileEspecial,$1);
+					strcpy(idWhileEspecial,string_aux2);
 				}
 			} else {
-				printf("\n\nERROR\nLa variable %s no se encuentra declarada",$1);
+				printf("\n\nERROR\nLa variable %s no se encuentra declarada",string_aux2);
 				exit(1);
 			}
 
@@ -506,17 +528,30 @@ ID_R: ID_T {
 	};
 
 CONST_STRING_R: CONST_STRING {
-		insertar_en_polaca(&listaPolaca,$1,cont++);
-		insertar_string(&tablaSimbolos,$1);
+		char string_aux2[100];
+		strcpy(string_aux2,"_");
+		strcat(string_aux2,$1);
+		strcat(string_aux2,"_esddstring");
+
+		insertar_en_polaca(&listaPolaca,string_aux2,cont++);
+		insertar_string(&tablaSimbolos,string_aux2);
 	};
 
 NUMERO: CONST_INT {
-			insertar_en_polaca(&listaPolaca,$1,cont++);
-			insertar_numero(&tablaSimbolos,$1,TIPO_INTEGER);
+			char string_aux2[100];
+			strcpy(string_aux2,"_");
+			strcat(string_aux2,$1);
+			strcat(string_aux2,"_esddfloat");
+			insertar_en_polaca(&listaPolaca,string_aux2,cont++);
+			insertar_numero(&tablaSimbolos,string_aux2,TIPO_INTEGER);
 		}
 	  | CONST_FLOAT {
-	  		insertar_en_polaca(&listaPolaca,$1,cont++);
-	  		insertar_numero(&tablaSimbolos,$1,TIPO_FLOAT);
+		  	char string_aux2[100];
+			strcpy(string_aux2,"_");
+			strcat(string_aux2,$1);
+			strcat(string_aux2,"_esddfloat");
+	  		insertar_en_polaca(&listaPolaca,string_aux2,cont++);
+	  		insertar_numero(&tablaSimbolos,string_aux2,TIPO_FLOAT);
 	  	}
 	  ;
 

@@ -4,22 +4,22 @@ TABLA DE SIMBOLOS:
 _____________________________________________________________________________________
 |LEXEMA                          |TIPO    |VALOR                           |LONGITUD|
 -------------------------------------------------------------------------------------
-|_1                              |INTEGER |1                               |        |
-|_10                             |INTEGER |10                              |        |
-|_2                              |INTEGER |2                               |        |
-|_23                             |INTEGER |23                              |        |
-|_3                              |INTEGER |3                               |        |
-|_4                              |INTEGER |4                               |        |
-|_45                             |INTEGER |45                              |        |
-|_56                             |INTEGER |56                              |        |
-|_85                             |INTEGER |85                              |        |
-|a1                              |STRING  |-                               |        |
-|entero1                         |INTEGER |-                               |        |
-|h1                              |FLOAT   |-                               |        |
-|h67                             |FLOAT   |-                               |        |
-|h70                             |FLOAT   |-                               |        |
-|h80                             |FLOAT   |-                               |        |
-|h90                             |FLOAT   |-                               |        |
-|id                              |FLOAT   |-                               |        |
-|variable1                       |STRING  |-                               |        |
+|_10_esddfloat                   |INTEGER |10                              |        |
+|_1_esddfloat                    |INTEGER |1                               |        |
+|_23_esddfloat                   |INTEGER |23                              |        |
+|_2_esddfloat                    |INTEGER |2                               |        |
+|_3_esddfloat                    |INTEGER |3                               |        |
+|_45_esddfloat                   |INTEGER |45                              |        |
+|_4_esddfloat                    |INTEGER |4                               |        |
+|_56_esddfloat                   |INTEGER |56                              |        |
+|_85_esddfloat                   |INTEGER |85                              |        |
+|_a1_esddfloat_esddstring        |STRING  |-                               |        |
+|_entero1_esddfloat              |INTEGER |-                               |        |
+|_h1_esddfloat                   |FLOAT   |-                               |        |
+|_h67_esddfloat                  |FLOAT   |-                               |        |
+|_h70_esddfloat                  |FLOAT   |-                               |        |
+|_h80_esddfloat                  |FLOAT   |-                               |        |
+|_h90_esddfloat                  |FLOAT   |-                               |        |
+|_id_esddfloat                   |FLOAT   |-                               |        |
+|_variable1_esddfloat_esddstring |STRING  |-                               |        |
 -------------------------------------------------------------------------------------

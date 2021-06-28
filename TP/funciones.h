@@ -37,6 +37,8 @@ void eliminarCaracter(char *str, char garbage);
 
 void mostrarLista(tabla*);
 
+void extraerValor (char* cadena,char* valor);
+
 void mostrarLista(tabla *l)
 {
     printf("\nContenido de la lista");
@@ -139,6 +141,7 @@ int insertar_numero (tabla* tabla_p, char* lexema_p, char* tipo_dato) {
 	strcpy(aux, "_");
 	strcat(aux, lexema_p);
 
+
 	resultado = enlistar_en_orden(tabla_p, aux,tipo_dato,lexema_p,0);
 
 	if(resultado == 0){
@@ -181,8 +184,12 @@ void eliminarCaracter(char *str, char garbage) {
 int enlistar_en_orden(tabla* l,char* lexema,char* tipo_dato, char* valor, int longitud)
 {
 	int resultado = 0;
+	if(strstr(lexema,"__")){
+		strcpy(lexema, lexema+1);
+	}
 	while(*l && (resultado=strcmp((*l)->lexema,lexema))<=0)
 	{
+
 		if(resultado == 0){
 			return 0;
 		}
@@ -196,8 +203,9 @@ int enlistar_en_orden(tabla* l,char* lexema,char* tipo_dato, char* valor, int lo
 	strcpy(nuevo->lexema, lexema);
 
 	strcpy(nuevo->tipo,tipo_dato);
-
-	strcpy(nuevo->valor,valor);
+	char valorAux [100];
+	extraerValor(valor,valorAux);
+	strcpy(nuevo->valor,valorAux);
 
 	nuevo->longitud = longitud;
 
@@ -205,4 +213,35 @@ int enlistar_en_orden(tabla* l,char* lexema,char* tipo_dato, char* valor, int lo
 	*l=nuevo;
 	
     return 1;
+}
+
+void extraerValor (char* cadena,char* valor){
+	/*char aux [100];
+    char * paux = cadena;
+    paux++;
+    while(isdigit(*paux)) 
+    {
+    	paux++;
+    }
+    char * posfinal = paux;
+    *posfinal='\0';
+    strcpy(, cadena+1);*/
+    printf("Entre225\n");
+    char *aux = cadena; 
+    char *posfinal;
+	aux++;
+	if(strstr(cadena,"-")){
+		strcpy( valor, cadena);
+	}else{
+		printf("Cadena: %s\n",cadena);
+		while(isdigit(*aux)) aux++;
+		posfinal = aux;
+		char auxiliarFinal = *posfinal;
+		*posfinal='\0';
+		printf("Cadena+1: %s\n",cadena+1);
+		strcpy( valor, cadena+1); //Lo paso y le vuelvo a poner lo que hay en el \0
+		*posfinal = auxiliarFinal;
+	
+	}
+	
 }

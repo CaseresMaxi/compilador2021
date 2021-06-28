@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 #define NO_DESAPILAR "VACIO"
 
 
@@ -67,7 +68,7 @@ void rellenarPolaca(t_lista*, int , int ); //Completar la posicion apilada
 
 //ASSEMBLER
 int generarAssembler(t_lista* , tabla* );
-
+void mostrarListaPolaca(t_lista *l)
 
 
 void crear_lista(t_lista* l)
@@ -90,6 +91,9 @@ int insertar_en_polaca(t_lista* l,char* d, int posicion)
     }
 
     nuevo->sig=NULL;
+    if(strstr(d,"__")){
+        strcpy(d, d+1);
+    }
     strcpy(nuevo->elemento,d);
     nuevo->nroPolaca = posicion;
     if(!*l){
@@ -333,6 +337,7 @@ int esOperadorUnario(char *d){
 
 int generarAssembler(t_lista* listaPolaca, tabla* listaSimbolos) 
 {
+    //mostrarListaPolaca(listaPolaca);
     tabla* auxSimbolos = listaSimbolos;
     tuplaTabla* auxTuplaSimbolos;
 
@@ -380,7 +385,7 @@ int generarAssembler(t_lista* listaPolaca, tabla* listaSimbolos)
         } else {
             strcpy(aux_tipo1,"dd");
             strcpy(aux_tipo2,";esddfloat");
-            strcpy(aux_tipo3,"_esddfloat");
+            strcpy(aux_tipo3," ");
         }
 
         if(strcmp((*auxSimbolos)->valor,"-") == 0) {
@@ -397,6 +402,8 @@ int generarAssembler(t_lista* listaPolaca, tabla* listaSimbolos)
                     strcat(aux_valor_float,".0");
                 }
             }
+
+
 
             fprintf(finalf,"%s%s\t%s\t%s\t%s",(*auxSimbolos)->lexema,aux_tipo3,aux_tipo1,aux_valor_float,aux_tipo2);
         }
@@ -430,12 +437,15 @@ int generarAssembler(t_lista* listaPolaca, tabla* listaSimbolos)
 
 
     while(*listaPolaca){
-      printf("%s\n",(*listaPolaca)->elemento);
+      //printf("%s\n",(*listaPolaca)->elemento);
       if(esOperadorBinario((*listaPolaca)->elemento)){
         if(strcmp((*listaPolaca)->elemento,"+")==0){
             desapilar_asm(&pila,operando1);
             fprintf(finalf,"FLD %s\n",operando1);
             desapilar_asm(&pila,operando2);
+            if((strcmp(varAuxResultado,operando2)==0) && (strcmp(operando2,operando1)==0)){
+
+            }
             fprintf(finalf,"FLD %s\n",operando2);
             fprintf(finalf,"FADD\n");
             fprintf(finalf, "FSTP %s\n",varAuxResultado);
@@ -471,7 +481,21 @@ int generarAssembler(t_lista* listaPolaca, tabla* listaSimbolos)
             fprintf(finalf,"FSTP %s\n",operando2);
         }
       }else if(esOperadorUnario((*listaPolaca)->elemento)){
-
+            if(strcmp((*listaPolaca)->elemento,"WRITE")==0){
+                desapilar_asm(&pila,operando1);
+                if(strstr(operando1,"_esddfloat") != NULL && strstr(operando1,"_esddstring") == NULL){
+                    fprintf(finalf,"DisplayFloat %s , 2\n",operando1);
+        			fprintf(finalf,"newline 1\n");
+                }else{
+        			fprintf(finalf,"displayString %s \n",operando1);
+        			fprintf(finalf,"newline 1\n");
+                }
+                
+                
+            }else if(strcmp((*listaPolaca)->elemento,"READ")==0){
+                desapilar_asm(&pila,operando1);
+                fprintf(finalf,"getFloat %s",operando1); 
+            }
       }else{
         apilar_asm(&pila,(*listaPolaca)->elemento);
       }
@@ -480,8 +504,23 @@ int generarAssembler(t_lista* listaPolaca, tabla* listaSimbolos)
       listaPolaca=&(*listaPolaca)->sig;
     }
 
+    fprintf(finalf,"\nMOV EAX, 4c00h  ; termina la ejecucion\n");
+	fprintf(finalf,"INT 21h\n");
+	fprintf(finalf,"END start;\n;\n");
+
     fclose(finalf);
 
     return 1;
 
+}
+
+//no anda
+void mostrarListaPolaca(t_lista *l)
+{
+    printf("\nContenido de la lista");
+    while(*l)
+    {
+        printf("\n%s",(*l)->elemento);
+        l=&(*l)->sig;
+    }
 }
