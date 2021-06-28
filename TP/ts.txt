@@ -4,12 +4,27 @@ TABLA DE SIMBOLOS:
 _____________________________________________________________________________________
 |LEXEMA                          |TIPO    |VALOR                           |LONGITUD|
 -------------------------------------------------------------------------------------
+|_1                              |INTEGER |1                               |        |
+|_10                             |INTEGER |10                              |        |
+|_15                             |INTEGER |15                              |        |
 |_2                              |INTEGER |2                               |        |
+|_20                             |INTEGER |20                              |        |
+|_25                             |INTEGER |25                              |        |
+|_3                              |INTEGER |3                               |        |
 |_5                              |INTEGER |5                               |        |
-|_Inicio                         |STRING  |Inicio                          |6       |
-|cont                            |FLOAT   |-                               |        |
-|id                              |FLOAT   |-                               |        |
+|_7                              |INTEGER |7                               |        |
+|_8                              |INTEGER |8                               |        |
+|_Ingresevalorvalordeid2         |STRING  |Ingrese valor valor de id2      |26      |
+|_Ingresevalorvalorid1           |STRING  |Ingrese valor valor id1         |23      |
+|_Valordeid2                     |STRING  |Valor de id2:                   |13      |
+|_id1esmayora20                  |STRING  |id1 es mayor a 20               |17      |
+|_id1esmayora20oa25              |STRING  |id1 es mayor a 20 o a 25        |24      |
+|_id1esmayora25                  |STRING  |id1 es mayor a 25               |17      |
+|_id1esmenora20                  |STRING  |id1 es menor a 20               |17      |
+|_id1estaentre10y15              |STRING  |id1 esta entre 10 y 15          |22      |
+|id1                             |FLOAT   |-                               |        |
 |id2                             |FLOAT   |-                               |        |
-|id3                             |FLOAT   |-                               |        |
+|id3                             |INTEGER |-                               |        |
+|id4                             |FLOAT   |-                               |        |
 |str                             |STRING  |-                               |        |
 -------------------------------------------------------------------------------------

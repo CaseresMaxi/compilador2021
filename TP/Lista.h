@@ -536,14 +536,15 @@ int generarAssembler(t_lista* listaPolaca, tabla* listaSimbolos)
                 //desapilamos operando 2
                 desapilar_asm(&pila,operando1);
                 
-                fprintf(finalf,"\tFLD %s\n",operando1);
                 fprintf(finalf,"\tFLD %s\n",operando2);
+                fprintf(finalf,"\tFLD %s\n",operando1);
                 
                 //Operacion
-                fprintf(finalf,"\tFMUL\n");
-                
+                fprintf(finalf,"\tFPREM\n");
+
                 auxiliar_actual++;
                 fprintf(finalf, "\tFSTP %s\n",auxiliares[auxiliar_actual]);
+
                 apilar_asm(&pila,auxiliares[auxiliar_actual]);
             } else if(strcmp((*listaPolaca)->elemento,"DIV")==0){
                 //desapilamos operando1
@@ -552,14 +553,34 @@ int generarAssembler(t_lista* listaPolaca, tabla* listaSimbolos)
                 //desapilamos operando 2
                 desapilar_asm(&pila,operando1);
                 
-                fprintf(finalf,"\tFLD %s\n",operando1);
                 fprintf(finalf,"\tFLD %s\n",operando2);
+                fprintf(finalf,"\tFLD %s\n",operando1);
                 
                 //Operacion
-                fprintf(finalf,"\tFDIV\n");
+                fprintf(finalf,"\tFPREM\n");
                 
                 auxiliar_actual++;
-                fprintf(finalf, "\tFISTP %s\n",auxiliares[auxiliar_actual]);
+                fprintf(finalf, "\tFSTP %s\n",auxiliares[auxiliar_actual]);
+                
+                fprintf(finalf,"\tFLD %s\n",operando1);
+                fprintf(finalf,"\tFLD %s\n",auxiliares[auxiliar_actual]);
+
+                //Operacion
+                fprintf(finalf,"\tFSUB\n");
+
+                auxiliar_actual++;
+                fprintf(finalf, "\tFSTP %s\n",auxiliares[auxiliar_actual]);
+
+
+                fprintf(finalf,"\tFLD %s\n",auxiliares[auxiliar_actual]);
+                fprintf(finalf,"\tFLD %s\n",operando2);
+
+                //Operacion
+                fprintf(finalf,"\tFDIV\n");
+
+
+                auxiliar_actual++;
+                fprintf(finalf, "\tFSTP %s\n",auxiliares[auxiliar_actual]);
                 apilar_asm(&pila,auxiliares[auxiliar_actual]);
             } else if(strcmp((*listaPolaca)->elemento,"/")==0){
                 //desapilamos operando1
@@ -692,7 +713,7 @@ int esEtiqueta(char *d){
 }
 
 void equivalenteCondicion(char* aux){
-    if(strstr(aux, "BEQ") != NULL){
+    if(strstr(aux, "BE") != NULL){
         strcpy(aux, "JE");
     }else if(strstr(aux, "BNE") != NULL){
         strcpy(aux, "JNE");

@@ -157,18 +157,12 @@ int insertar_string (tabla* tabla_p, char* lexema_p) {
 	strcat(aux, lexema_p);
 
 	eliminarCaracter(aux,' ');
-	/*
 	eliminarCaracter(aux,'!');
 	eliminarCaracter(aux,':');
 	eliminarCaracter(aux,'<');
-	eliminarCaracter(aux,'<=');
-	eliminarCaracter(aux,'>');
-	eliminarCaracter(aux,'>=');
-	eliminarCaracter(aux,'==');
-	eliminarCaracter(aux,'<>');
 	eliminarCaracter(aux,'=');
+	eliminarCaracter(aux,'>');
 	eliminarCaracter(aux,'?');
-	*/
 
 	//Sacarle a AUX espacios y caracteres especiales
 

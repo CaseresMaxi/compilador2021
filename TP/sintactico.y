@@ -148,7 +148,12 @@ while: WHILE_T{
 				desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
 			} else if (tipoCond == COND_OR) {
 				desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
-				desapilar_polaca_sig(&listaPolaca,&pilaPolaca);
+
+				int saltoOr = desapilar(&pilaOr);
+				desapilar_polaca(&listaPolaca,&pilaPolaca,saltoOr);
+
+				int pos_comp = desapilar(&pilaOr);
+				invertir_comp_en_pos(&listaPolaca,pos_comp);
 			} else {
 				int ret = desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
 	
