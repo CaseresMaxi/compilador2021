@@ -30,3 +30,15 @@ MOV DS,EAX
 MOV ES,EAX
 
 
+
+
+POLACA
+
+_id_esddfloat
+_56_esddfloat
+:=
+_a1
+_HOLACARLOS
+_h1_esddfloat
+_58.69_esddfloat
+:=

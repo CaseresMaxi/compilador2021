@@ -28,6 +28,13 @@ typedef struct s_nodo_decvar
 }t_nodo_decvar;
 typedef t_nodo_decvar* t_pila_decvar;
 
+typedef struct s_nodo_asm
+{
+    struct  s_nodo_asm *sig;
+    char info[100];
+}t_nodo_asm;
+typedef t_nodo_asm* t_pila_asm;
+
 
 //PILA
 void crear_Pila(t_pila *);
@@ -54,7 +61,12 @@ void rellenarPolaca(t_lista*, int , int ); //Completar la posicion apilada
 
 //ASSEMBLER
 int generarAssembler(t_lista* , tabla* );
-
+void crear_Pila_asm(t_pila_asm *p);
+int apilar_asm(t_pila_asm *p,char * elemento);
+int desapilar_asm(t_pila_asm* p,char* d);
+void reemplazarEnPolaca(t_lista* listaPolaca,char* id_viejo,char* nuevo_id);
+int esOperadorBinario(char *d);
+int esOperadorUnario(char *d);
 
 
 void crear_lista(t_lista* l)
@@ -265,11 +277,53 @@ char* desapilar_decvar(t_pila_decvar *p)
 }
 
 ///////////////////////////////////
+void crear_Pila_asm(t_pila_asm *p)
+{
+    *p=NULL;
+}
+
+int apilar_asm(t_pila_asm *p,char * elemento)
+{
+    t_nodo_asm *nuevo=(t_nodo_asm *)malloc(sizeof(t_nodo_asm));
+    if(nuevo==NULL)
+        return 0;
+    nuevo->sig=*p;
+    strcpy(nuevo->info,elemento);
+    *p=nuevo;
+    return 1;
+}
+
+int desapilar_asm(t_pila_asm* p,char* d)
+{
+    t_nodo_asm* viejo;
+    if(!*p)
+        return 0;
+    viejo=(t_nodo_asm*)malloc(sizeof(t_nodo_asm));
+    viejo=*p;
+    strcpy(d,viejo->info);
+    *p=viejo->sig;
+    free(viejo);
+    return 1;
+}
+
+///////////////////////////////////
 
 int generarAssembler(t_lista* listaPolaca, tabla* listaSimbolos) 
 {
     tabla* auxSimbolos = listaSimbolos;
     tuplaTabla* auxTuplaSimbolos;
+
+    //Pila Assembler
+    t_pila_asm pila;
+
+    char operando1[100];
+    char operando2[100];
+
+    char varAuxResultado[100];
+
+    strcpy(varAuxResultado,"_@varAuxResultado");
+
+    crear_Pila_asm(&pila);
 
     FILE *finalf = fopen("Final.asm","w+");
     if(!finalf){
@@ -289,6 +343,7 @@ int generarAssembler(t_lista* listaPolaca, tabla* listaSimbolos)
         char aux_tipo2[25];
         char aux_tipo3[25];
         char aux_valor_float[50];
+        char aux_lexema[200];
 
         char aux_char[50];
 
@@ -306,14 +361,22 @@ int generarAssembler(t_lista* listaPolaca, tabla* listaSimbolos)
         }
 
         if(strcmp((*auxSimbolos)->valor,"-") == 0) {
+            sprintf(aux_lexema,"_%s%s",(*auxSimbolos)->lexema,aux_tipo3);
+            reemplazarEnPolaca(listaPolaca,(*auxSimbolos)->lexema,aux_lexema);
             fprintf(finalf,"_%s%s\t%s\t?\t%s",(*auxSimbolos)->lexema,aux_tipo3,aux_tipo1,aux_tipo2);
         } else {
             if(strcmp((*auxSimbolos)->tipo,TIPO_STRING) == 0) {
                 strcpy(aux_valor_float,"\"");
                 strcat(aux_valor_float,(*auxSimbolos)->valor);
                 strcat(aux_valor_float,"\"");
+
+                sprintf(aux_lexema,"%s%s",(*auxSimbolos)->lexema,aux_tipo3);
+                reemplazarEnPolaca(listaPolaca,aux_valor_float,aux_lexema);
             } else {
                 strcpy(aux_valor_float,(*auxSimbolos)->valor);
+
+                sprintf(aux_lexema,"%s%s",(*auxSimbolos)->lexema,aux_tipo3);
+                reemplazarEnPolaca(listaPolaca,aux_valor_float,aux_lexema);
 
                 if(strcmp((*auxSimbolos)->tipo,TIPO_INTEGER) == 0) {
                     strcat(aux_valor_float,".0");
@@ -347,10 +410,111 @@ int generarAssembler(t_lista* listaPolaca, tabla* listaSimbolos)
     fprintf(finalf,"MOV DS,EAX\n");
     fprintf(finalf,"MOV ES,EAX\n\n\n");
 
+    while(*listaPolaca){
+      //printf("%s\n",(*listaPolaca)->elemento);
+      if(esOperadorBinario((*listaPolaca)->elemento)){
+        if(strcmp((*listaPolaca)->elemento,"+")==0){
+            desapilar_asm(&pila,operando1);
+            fprintf(finalf,"FLD %s\n",operando1);
+            desapilar_asm(&pila,operando2);
+            
+            if((strcmp(varAuxResultado,operando2)==0) && (strcmp(operando2,operando1)==0)){
 
+            }
+            fprintf(finalf,"FLD %s\n",operando2);
+            fprintf(finalf,"FADD\n");
+            fprintf(finalf, "FSTP %s\n",varAuxResultado);
+            apilar_asm(&pila,varAuxResultado);
+        }else if(strcmp((*listaPolaca)->elemento,"-")==0){
+            desapilar_asm(&pila,operando1);
+            fprintf(finalf,"FLD %s\n",operando1);
+            desapilar_asm(&pila,operando2);
+            fprintf(finalf,"FLD %s\n",operando2);
+            fprintf(finalf,"FSUB\n");
+            fprintf(finalf, "FSTP %s\n",varAuxResultado);
+            apilar_asm(&pila,varAuxResultado);
+        }else if(strcmp((*listaPolaca)->elemento,"*")==0){
+            desapilar_asm(&pila,operando1);
+            fprintf(finalf,"FLD %s\n",operando1);
+            desapilar_asm(&pila,operando2);
+            fprintf(finalf,"FLD %s\n",operando2);
+            fprintf(finalf,"FMUL\n");
+            fprintf(finalf, "FSTP %s\n",varAuxResultado);
+            apilar_asm(&pila,varAuxResultado);
+        }else if(strcmp((*listaPolaca)->elemento,"/")==0){
+            desapilar_asm(&pila,operando1);
+            fprintf(finalf,"FLD %s\n",operando1);
+            desapilar_asm(&pila,operando2);
+            fprintf(finalf,"FLD %s\n",operando2);
+            fprintf(finalf,"FDIV\n");
+            fprintf(finalf, "FSTP %s\n",varAuxResultado);
+            apilar_asm(&pila,varAuxResultado);
+        }else if(strcmp((*listaPolaca)->elemento,":=")==0){
+            desapilar_asm(&pila, operando1);
+            fprintf(finalf,"FLD %s\n",operando1);
+            desapilar_asm(&pila,operando2);
+            fprintf(finalf,"FSTP %s\n",operando2);
+        }
+      }else if(esOperadorUnario((*listaPolaca)->elemento)){
+            if(strcmp((*listaPolaca)->elemento,"WRITE")==0){
+                desapilar_asm(&pila,operando1);
+                if(strstr(operando1,"_esddfloat") != NULL && strstr(operando1,"_esddstring") == NULL){
+                    fprintf(finalf,"DisplayFloat %s , 2\n",operando1);
+                    fprintf(finalf,"newline 1\n");
+                }else{
+                    fprintf(finalf,"displayString %s \n",operando1);
+                    fprintf(finalf,"newline 1\n");
+                }
+                
+                
+            }else if(strcmp((*listaPolaca)->elemento,"READ")==0){
+                desapilar_asm(&pila,operando1);
+                fprintf(finalf,"getFloat %s",operando1); 
+            }
+      }else{
+        apilar_asm(&pila,(*listaPolaca)->elemento);
+      }
+      
+
+      listaPolaca=&(*listaPolaca)->sig;
+    }
+
+    fprintf(finalf,"\nMOV EAX, 4c00h  ; termina la ejecucion\n");
+    fprintf(finalf,"INT 21h\n");
+    fprintf(finalf,"END start;\n;\n");
 
     fclose(finalf);
 
     return 1;
 
+}
+
+void reemplazarEnPolaca(t_lista* listaPolaca,char* id_viejo,char* nuevo_id) {
+    while(*listaPolaca) {
+        if(strcmp((*listaPolaca)->elemento,id_viejo) == 0) {
+            strcpy((*listaPolaca)->elemento,nuevo_id);
+        }
+
+        listaPolaca=&(*listaPolaca)->sig;
+    }
+}
+
+int esOperadorBinario(char *d){
+    if(strcmp(d,"+") == 0 || strcmp(d,"-") == 0 || strcmp(d,"/") == 0 || strcmp(d,"*") == 0 || strcmp(d,"BGE") == 0 || strcmp(d,"BGT") == 0 
+            || strcmp(d,"BLE") == 0 || strcmp(d,"BLT") == 0 || strcmp(d,"BNE") == 0 || strcmp(d,"BEQ") == 0 || strcmp(d,":=") == 0 || strcmp(d,"CMP") == 0
+            || strcmp(d,"MOD") == 0 || strcmp(d,"DIV") == 0){
+
+        return 1;
+    }
+
+    return 0;
+}
+
+
+int esOperadorUnario(char *d){
+    if(strcmp(d, "WRITE") == 0 || strcmp(d, "READ") == 0){
+        return 1;
+    }
+
+    return 0;
 }
