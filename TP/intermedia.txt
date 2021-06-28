@@ -1,8 +1,9 @@
-1	id
-2	56
-3	:=
-4	a1
-5	"HOLACARLOS"
-6	h1
-7	58.69
-8	:=
+1	"Inicio"
+2	WRITE
+3	id2
+4	5
+5	2
+6	/
+7	:=
+8	id2
+9	WRITE

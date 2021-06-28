@@ -24,6 +24,7 @@ t_pila  pilaWhileEspecialCantExp;
 
 //AND OR
 t_pila  pilaTipoCondicion;
+t_pila  pilaOr;
 
 //VARIABLES PARA LA TS
 int bandDecvar = 0;
@@ -162,6 +163,14 @@ while: WHILE_T{
 			strcpy(cadena,"ET");
 			strcat(cadena,num);
 			insertar_en_polaca(&listaPolaca, cadena , cont++);
+
+			char auxEtiq[10];
+			char numero[10];
+			strcpy(auxEtiq,"ET");
+			itoa(cont, numero, 10);
+			strcat(auxEtiq,numero);
+
+			insertar_en_polaca(&listaPolaca,auxEtiq,cont++);
 	 }
 	 ;
 
@@ -174,7 +183,12 @@ if: IF_T cond_final LLAVE_A sentencia LLAVE_C {
 			desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
 		} else if (tipoCond == COND_OR) {
 			desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
-			desapilar_polaca_sig(&listaPolaca,&pilaPolaca);
+
+			int saltoOr = desapilar(&pilaOr);
+			desapilar_polaca(&listaPolaca,&pilaPolaca,saltoOr);
+
+			int pos_comp = desapilar(&pilaOr);
+			invertir_comp_en_pos(&listaPolaca,pos_comp);
 		} else {
 			int ret = desapilar_polaca(&listaPolaca,&pilaPolaca,cont+2);
 
@@ -186,12 +200,29 @@ if: IF_T cond_final LLAVE_A sentencia LLAVE_C {
 		insertar_en_polaca(&listaPolaca,"BI",cont++);
 		apilar_en_polaca(&listaPolaca, "", cont++, &pilaPolaca);
 
+
+		char auxEtiq[10];
+		char numero[10];
+		strcpy(auxEtiq,"ET");
+		itoa(cont, numero, 10);
+		strcat(auxEtiq,numero);
+
+		insertar_en_polaca(&listaPolaca,auxEtiq,cont++);
+
 	}	ELSE_T LLAVE_A sentencia LLAVE_C {
 		int ret = desapilar_polaca(&listaPolaca, &pilaPolaca, cont);
 
 		if (ret == 0) {
 			printf("ERROR FATAL");
 		}
+
+		char auxEtiq[10];
+		char numero[10];
+		strcpy(auxEtiq,"ET");
+		itoa(cont, numero, 10);
+		strcat(auxEtiq,numero);
+
+		insertar_en_polaca(&listaPolaca,auxEtiq,cont++);
 	}
 	|
 	IF_T cond_final LLAVE_A sentencia LLAVE_C {
@@ -203,7 +234,12 @@ if: IF_T cond_final LLAVE_A sentencia LLAVE_C {
 			desapilar_polaca(&listaPolaca,&pilaPolaca,cont);
 		} else if (tipoCond == COND_OR) {
 			desapilar_polaca(&listaPolaca,&pilaPolaca,cont);
-			desapilar_polaca_sig(&listaPolaca,&pilaPolaca);
+			
+			int saltoOr = desapilar(&pilaOr);
+			desapilar_polaca(&listaPolaca,&pilaPolaca,saltoOr);
+
+			int pos_comp = desapilar(&pilaOr);
+			invertir_comp_en_pos(&listaPolaca,pos_comp);
 		} else {
 			int ret = desapilar_polaca(&listaPolaca,&pilaPolaca,cont);
 
@@ -211,6 +247,14 @@ if: IF_T cond_final LLAVE_A sentencia LLAVE_C {
 				printf("ERROR FATAL");
 			}
 		}
+
+		char auxEtiq[10];
+		char numero[10];
+		strcpy(auxEtiq,"ET");
+		itoa(cont, numero, 10);
+		strcat(auxEtiq,numero);
+
+		insertar_en_polaca(&listaPolaca,auxEtiq,cont++);
 	}
 	;
 
@@ -240,6 +284,14 @@ ciclo_especial: WHILE_T {
 			apilar_en_polaca(&listaPolaca, "", cont++, &pilaWhileEspecialFin);
 			apilar(&pilaWhileEspecialCantExp,cantExpresiones);
 			apilar(&pilaWhileEspecialIniSentencia,cont);
+
+			char auxEtiq[10];
+			char numero[10];
+			strcpy(auxEtiq,"ET");
+			itoa(cont, numero, 10);
+			strcat(auxEtiq,numero);
+
+			insertar_en_polaca(&listaPolaca,auxEtiq,cont++);
 	} PARENT_C DO_T sentencia ENDWHILE_T {
 			int posIni = desapilar(&pilaWhileEspecialIni);
 
@@ -264,6 +316,14 @@ ciclo_especial: WHILE_T {
 			for(;cantFinExpresiones > 0; cantFinExpresiones --) {
 				desapilar_polaca(&listaPolaca,&pilaWhileEspecialExp,auxIniSentencia);
 			}
+
+			char auxEtiq[10];
+			char numero[10];
+			strcpy(auxEtiq,"ET");
+			itoa(cont, numero, 10);
+			strcat(auxEtiq,numero);
+
+			insertar_en_polaca(&listaPolaca,auxEtiq,cont++);
 	};
 
 lista_expresion: {
@@ -313,24 +373,63 @@ cond_final: PARENT_A cond_final AND_T cond_final {
 				apilar(&pilaTipoCondicion,COND_AND);
 			
 			} PARENT_C
-			| PARENT_A cond_final OR_T cond_final {
+			| PARENT_A cond_final OR_T {
+					//Apilamos posicion del comparador
+					apilar(&pilaOr,cont-2);
+				} cond_final {
 				int aux = desapilar(&pilaTipoCondicion);
 				aux = desapilar(&pilaTipoCondicion);
 				apilar(&pilaTipoCondicion,COND_OR);
 			
-			} PARENT_C 
-			| PARENT_A cond OR_T cond_final {
+			} PARENT_C {
+				//Apilar donde empieza el codigo
+				char num[10];
+				char etiqueta[10];
+
+				itoa(cont,num,10);
+				strcpy(etiqueta,"ET");
+				strcat(etiqueta,num);
+				apilar(&pilaOr,cont);
+				insertar_en_polaca(&listaPolaca,etiqueta,cont++);
+			}
+			| PARENT_A cond OR_T {
+					//Apilamos posicion del comparador
+					apilar(&pilaOr,cont-2);
+				} cond_final {
 				int aux = desapilar(&pilaTipoCondicion);
 				aux = desapilar(&pilaTipoCondicion);
 				apilar(&pilaTipoCondicion,COND_OR);
 			
-			} PARENT_C 
-			| PARENT_A cond_final OR_T cond {
+			} PARENT_C {
+				//Apilar donde empieza el codigo
+				char num[10];
+				char etiqueta[10];
+
+				itoa(cont,num,10);
+				strcpy(etiqueta,"ET");
+				strcat(etiqueta,num);
+				apilar(&pilaOr,cont);
+				insertar_en_polaca(&listaPolaca,etiqueta,cont++);
+			}
+			| PARENT_A cond_final OR_T {
+					//Apilamos posicion del comparador
+					apilar(&pilaOr,cont-2);
+				} cond {
 				int aux = desapilar(&pilaTipoCondicion);
 				aux = desapilar(&pilaTipoCondicion);
 				apilar(&pilaTipoCondicion,COND_OR);
 			
-			} PARENT_C 
+			} PARENT_C {
+				//Apilar donde empieza el codigo
+				char num[10];
+				char etiqueta[10];
+
+				itoa(cont,num,10);
+				strcpy(etiqueta,"ET");
+				strcat(etiqueta,num);
+				apilar(&pilaOr,cont);
+				insertar_en_polaca(&listaPolaca,etiqueta,cont++);
+			}
 		  | PARENT_A cond AND_T cond {
 
 				int aux = desapilar(&pilaTipoCondicion);
@@ -338,12 +437,25 @@ cond_final: PARENT_A cond_final AND_T cond_final {
 				apilar(&pilaTipoCondicion,COND_AND);
 			
 			} PARENT_C
-			| PARENT_A cond OR_T cond {
+			| PARENT_A cond OR_T {
+					//Apilamos posicion del comparador
+					apilar(&pilaOr,cont-2);
+				} cond {
 				int aux = desapilar(&pilaTipoCondicion);
 				aux = desapilar(&pilaTipoCondicion);
 				apilar(&pilaTipoCondicion,COND_OR);
 			
-			} PARENT_C 
+			} PARENT_C {
+				//Apilar donde empieza el codigo
+				char num[10];
+				char etiqueta[10];
+
+				itoa(cont,num,10);
+				strcpy(etiqueta,"ET");
+				strcat(etiqueta,num);
+				apilar(&pilaOr,cont);
+				insertar_en_polaca(&listaPolaca,etiqueta,cont++);
+			}
 		  | PARENT_A cond PARENT_C
 		  | NOT_T {
 		  	bandNot = 1;
@@ -363,6 +475,7 @@ COMPARADOR : OP_DISTINTO {
 								strcpy(simboloAux,"BEQ");
 							} else {
 								strcpy(simboloAux,"BNE");
+								bandNot = 0;
 							}
 						}
 						|OP_COMP { 
@@ -547,6 +660,7 @@ void main(int argc, char* argv[]){
 	
 	//AND OR
 	crear_Pila(&pilaTipoCondicion);
+	crear_Pila(&pilaOr);
 
 	yyparse();
 

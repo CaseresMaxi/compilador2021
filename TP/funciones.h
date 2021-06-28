@@ -156,6 +156,20 @@ int insertar_string (tabla* tabla_p, char* lexema_p) {
 	strcpy(aux, "_");
 	strcat(aux, lexema_p);
 
+	eliminarCaracter(aux,' ');
+	/*
+	eliminarCaracter(aux,'!');
+	eliminarCaracter(aux,':');
+	eliminarCaracter(aux,'<');
+	eliminarCaracter(aux,'<=');
+	eliminarCaracter(aux,'>');
+	eliminarCaracter(aux,'>=');
+	eliminarCaracter(aux,'==');
+	eliminarCaracter(aux,'<>');
+	eliminarCaracter(aux,'=');
+	eliminarCaracter(aux,'?');
+	*/
+
 	//Sacarle a AUX espacios y caracteres especiales
 
 	resultado = enlistar_en_orden(tabla_p, aux,TIPO_STRING,lexema_p,strlen(lexema_p));

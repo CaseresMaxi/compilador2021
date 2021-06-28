@@ -1,8 +1,8 @@
 DECVAR
-id,h1,h67: FLOAT;
-a1,variable1: STRING;
-entero1: INTEGER;
+id2,id,cont,id3: FLOAT;
+str: STRING;
 ENDDEC
-id:= 56;
-a1 := "HOLACARLOS";
-h1 := 58.69;
+write "Inicio";
+id2 := 5 DIV 2;
+
+write id2;

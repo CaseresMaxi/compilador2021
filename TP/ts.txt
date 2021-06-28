@@ -4,13 +4,12 @@ TABLA DE SIMBOLOS:
 _____________________________________________________________________________________
 |LEXEMA                          |TIPO    |VALOR                           |LONGITUD|
 -------------------------------------------------------------------------------------
-|_56                             |INTEGER |56                              |        |
-|_58.69                          |FLOAT   |58.69                           |        |
-|_HOLACARLOS                     |STRING  |HOLACARLOS                      |10      |
-|a1                              |STRING  |-                               |        |
-|entero1                         |INTEGER |-                               |        |
-|h1                              |FLOAT   |-                               |        |
-|h67                             |FLOAT   |-                               |        |
+|_2                              |INTEGER |2                               |        |
+|_5                              |INTEGER |5                               |        |
+|_Inicio                         |STRING  |Inicio                          |6       |
+|cont                            |FLOAT   |-                               |        |
 |id                              |FLOAT   |-                               |        |
-|variable1                       |STRING  |-                               |        |
+|id2                             |FLOAT   |-                               |        |
+|id3                             |FLOAT   |-                               |        |
+|str                             |STRING  |-                               |        |
 -------------------------------------------------------------------------------------
