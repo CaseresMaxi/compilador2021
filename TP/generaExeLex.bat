@@ -1,10 +1,10 @@
 E:\Lenguajes\GnuWin32\bin\flex Lexico.l
 E:\Lenguajes\GnuWin32\bin\bison -dyv Sintactico.y
 pause
-E:\Lenguajes\MinGW\bin\gcc.exe lex.yy.c y.tab.c -o Segunda.exe
+E:\Lenguajes\MinGW\bin\gcc.exe lex.yy.c y.tab.c -o Grupo08.exe
 pause
 
-Segunda.exe prueba.txt
+Grupo08.exe prueba.txt
 
 del lex.yy.c
 del y.tab.c 

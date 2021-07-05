@@ -1,0 +1,1908 @@
+Terminals unused in grammar
+
+   SEPARADOR_T
+   DIM_T
+   AS_T
+   TOKEN_PUT
+   GET_T
+   CONST_T
+   TOKEN_AND
+   TOKEN_OR
+   MAX_TOKEN
+   OP_AVG
+
+
+Estado 65 conflictos: 1 reducción(ones)/reducción(ones)
+Estado 68 conflictos: 1 reducción(ones)/reducción(ones)
+
+
+Gramática
+
+    0 $accept: programa_final $end
+
+    1 programa_final: programa
+
+    2 programa: bloque_declaracion sentencia
+    3         | sentencia
+
+    4 sentencia: sentencia grammar SEP_LINEA
+    5          | grammar SEP_LINEA
+
+    6 grammar: asig
+    7        | while
+    8        | write
+    9        | read
+   10        | ciclo_especial
+   11        | if
+
+   12 $@1: /* vacío */
+
+   13 while: WHILE_T $@1 cond_final LLAVE_A sentencia LLAVE_C
+
+   14 $@2: /* vacío */
+
+   15 if: IF_T cond_final LLAVE_A sentencia LLAVE_C $@2 ELSE_T LLAVE_A sentencia LLAVE_C
+   16   | IF_T cond_final LLAVE_A sentencia LLAVE_C
+
+   17 write: WRITE_T CONST_STRING_R
+   18      | WRITE_T expr
+
+   19 read: READ_T ID_R
+
+   20 $@3: /* vacío */
+
+   21 $@4: /* vacío */
+
+   22 $@5: /* vacío */
+
+   23 ciclo_especial: WHILE_T $@3 ID_R $@4 IN_T PARENT_A lista_expresion $@5 PARENT_C DO_T sentencia ENDWHILE_T
+
+   24 $@6: /* vacío */
+
+   25 lista_expresion: $@6 expr
+
+   26 $@7: /* vacío */
+
+   27 lista_expresion: lista_expresion COMA $@7 expr
+
+   28 asig: ID_R OP_ASIG expr
+   29     | ID_R OP_ASIG CONST_STRING_R
+
+   30 $@8: /* vacío */
+
+   31 cond_final: PARENT_A cond_final AND_T cond_final $@8 PARENT_C
+
+   32 $@9: /* vacío */
+
+   33 cond_final: PARENT_A cond AND_T cond_final $@9 PARENT_C
+
+   34 $@10: /* vacío */
+
+   35 cond_final: PARENT_A cond_final AND_T cond $@10 PARENT_C
+
+   36 $@11: /* vacío */
+
+   37 $@12: /* vacío */
+
+   38 cond_final: PARENT_A cond_final OR_T $@11 cond_final $@12 PARENT_C
+
+   39 $@13: /* vacío */
+
+   40 $@14: /* vacío */
+
+   41 cond_final: PARENT_A cond OR_T $@13 cond_final $@14 PARENT_C
+
+   42 $@15: /* vacío */
+
+   43 $@16: /* vacío */
+
+   44 cond_final: PARENT_A cond_final OR_T $@15 cond $@16 PARENT_C
+
+   45 $@17: /* vacío */
+
+   46 cond_final: PARENT_A cond AND_T cond $@17 PARENT_C
+
+   47 $@18: /* vacío */
+
+   48 $@19: /* vacío */
+
+   49 cond_final: PARENT_A cond OR_T $@18 cond $@19 PARENT_C
+   50           | PARENT_A cond PARENT_C
+
+   51 $@20: /* vacío */
+
+   52 cond_final: NOT_T $@20 cond_final
+   53           | PARENT_A cond_final PARENT_C
+
+   54 cond: expr COMPARADOR termino
+
+   55 COMPARADOR: OP_DISTINTO
+   56           | OP_COMP
+   57           | OP_MAYORIGUAL
+   58           | OP_MAYOR
+   59           | OP_MENOR
+   60           | OP_MENORIGUAL
+
+   61 expr: expr OP_SUM expr
+   62     | expr OP_MENOS expr
+   63     | termino
+
+   64 termino: termino OP_MUL factor
+   65        | termino OP_DIVISION factor
+   66        | termino OP_MOD factor
+   67        | termino OP_DIV factor
+   68        | factor
+
+   69 factor: PARENT_A expr PARENT_C
+   70       | NUMERO
+   71       | ID_R
+
+   72 $@21: /* vacío */
+
+   73 bloque_declaracion: DECVAR_T $@21 declaracion ENDDEC_T
+
+   74 declaracion: linea_declaracion
+   75            | declaracion linea_declaracion
+
+   76 linea_declaracion: var_declaracion OP_AS tipo_variable SEP_LINEA
+
+   77 var_declaracion: ID_R
+   78                | var_declaracion COMA ID_R
+
+   79 tipo_variable: FLOAT_T
+   80              | INTEGER_T
+   81              | STRING_T
+
+   82 ID_R: ID_T
+
+   83 CONST_STRING_R: CONST_STRING
+
+   84 NUMERO: CONST_INT
+   85       | CONST_FLOAT
+
+
+Terminales con las reglas donde aparecen
+
+$end (0) 0
+error (256)
+CONST_INT (258) 84
+CONST_FLOAT (259) 85
+CONST_STRING (260) 83
+ELSE_T (261) 15
+IF_T (262) 15 16
+OP_DISTINTO (263) 55
+OP_COMP (264) 56
+OP_MAYORIGUAL (265) 57
+OP_MAYOR (266) 58
+OP_MENOR (267) 59
+OP_MENORIGUAL (268) 60
+LLAVE_C (269) 13 15 16
+LLAVE_A (270) 13 15 16
+PARENT_C (271) 23 31 33 35 38 41 44 46 49 50 53 69
+PARENT_A (272) 23 31 33 35 38 41 44 46 49 50 53 69
+OP_AS (273) 76
+OP_DIVISION (274) 65
+OP_SUM (275) 61
+OP_MENOS (276) 62
+OP_MUL (277) 64
+WHILE_T (278) 13 23
+SEP_LINEA (279) 4 5 76
+SEPARADOR_T (280)
+FLOAT_T (281) 79
+INTEGER_T (282) 80
+STRING_T (283) 81
+DIM_T (284)
+AS_T (285)
+TOKEN_PUT (286)
+GET_T (287)
+CONST_T (288)
+TOKEN_AND (289)
+TOKEN_OR (290)
+MAX_TOKEN (291)
+ID_T (292) 82
+WRITE_T (293) 17 18
+READ_T (294) 19
+ENDDEC_T (295) 73
+DECVAR_T (296) 73
+OP_ASIG (297) 28 29
+OP_AVG (298)
+COMA (299) 27 78
+IN_T (300) 23
+DO_T (301) 23
+ENDWHILE_T (302) 23
+OR_T (303) 38 41 44 49
+AND_T (304) 31 33 35 46
+NOT_T (305) 52
+OP_MOD (306) 66
+OP_DIV (307) 67
+
+
+No terminales con las reglas donde aparecen
+
+$accept (53)
+    en la izquierda: 0
+programa_final (54)
+    en la izquierda: 1, en la derecha: 0
+programa (55)
+    en la izquierda: 2 3, en la derecha: 1
+sentencia (56)
+    en la izquierda: 4 5, en la derecha: 2 3 4 13 15 16 23
+grammar (57)
+    en la izquierda: 6 7 8 9 10 11, en la derecha: 4 5
+while (58)
+    en la izquierda: 13, en la derecha: 7
+$@1 (59)
+    en la izquierda: 12, en la derecha: 13
+if (60)
+    en la izquierda: 15 16, en la derecha: 11
+$@2 (61)
+    en la izquierda: 14, en la derecha: 15
+write (62)
+    en la izquierda: 17 18, en la derecha: 8
+read (63)
+    en la izquierda: 19, en la derecha: 9
+ciclo_especial (64)
+    en la izquierda: 23, en la derecha: 10
+$@3 (65)
+    en la izquierda: 20, en la derecha: 23
+$@4 (66)
+    en la izquierda: 21, en la derecha: 23
+$@5 (67)
+    en la izquierda: 22, en la derecha: 23
+lista_expresion (68)
+    en la izquierda: 25 27, en la derecha: 23 27
+$@6 (69)
+    en la izquierda: 24, en la derecha: 25
+$@7 (70)
+    en la izquierda: 26, en la derecha: 27
+asig (71)
+    en la izquierda: 28 29, en la derecha: 6
+cond_final (72)
+    en la izquierda: 31 33 35 38 41 44 46 49 50 52 53, en la derecha:
+    13 15 16 31 33 35 38 41 44 52 53
+$@8 (73)
+    en la izquierda: 30, en la derecha: 31
+$@9 (74)
+    en la izquierda: 32, en la derecha: 33
+$@10 (75)
+    en la izquierda: 34, en la derecha: 35
+$@11 (76)
+    en la izquierda: 36, en la derecha: 38
+$@12 (77)
+    en la izquierda: 37, en la derecha: 38
+$@13 (78)
+    en la izquierda: 39, en la derecha: 41
+$@14 (79)
+    en la izquierda: 40, en la derecha: 41
+$@15 (80)
+    en la izquierda: 42, en la derecha: 44
+$@16 (81)
+    en la izquierda: 43, en la derecha: 44
+$@17 (82)
+    en la izquierda: 45, en la derecha: 46
+$@18 (83)
+    en la izquierda: 47, en la derecha: 49
+$@19 (84)
+    en la izquierda: 48, en la derecha: 49
+$@20 (85)
+    en la izquierda: 51, en la derecha: 52
+cond (86)
+    en la izquierda: 54, en la derecha: 33 35 41 44 46 49 50
+COMPARADOR (87)
+    en la izquierda: 55 56 57 58 59 60, en la derecha: 54
+expr (88)
+    en la izquierda: 61 62 63, en la derecha: 18 25 27 28 54 61 62
+    69
+termino (89)
+    en la izquierda: 64 65 66 67 68, en la derecha: 54 63 64 65 66
+    67
+factor (90)
+    en la izquierda: 69 70 71, en la derecha: 64 65 66 67 68
+bloque_declaracion (91)
+    en la izquierda: 73, en la derecha: 2
+$@21 (92)
+    en la izquierda: 72, en la derecha: 73
+declaracion (93)
+    en la izquierda: 74 75, en la derecha: 73 75
+linea_declaracion (94)
+    en la izquierda: 76, en la derecha: 74 75
+var_declaracion (95)
+    en la izquierda: 77 78, en la derecha: 76 78
+tipo_variable (96)
+    en la izquierda: 79 80 81, en la derecha: 76
+ID_R (97)
+    en la izquierda: 82, en la derecha: 19 23 28 29 71 77 78
+CONST_STRING_R (98)
+    en la izquierda: 83, en la derecha: 17 29
+NUMERO (99)
+    en la izquierda: 84 85, en la derecha: 70
+
+
+estado 0
+
+    0 $accept: . programa_final $end
+
+    IF_T      desplazar e ir al estado 1
+    WHILE_T   desplazar e ir al estado 2
+    ID_T      desplazar e ir al estado 3
+    WRITE_T   desplazar e ir al estado 4
+    READ_T    desplazar e ir al estado 5
+    DECVAR_T  desplazar e ir al estado 6
+
+    programa_final      ir al estado 7
+    programa            ir al estado 8
+    sentencia           ir al estado 9
+    grammar             ir al estado 10
+    while               ir al estado 11
+    if                  ir al estado 12
+    write               ir al estado 13
+    read                ir al estado 14
+    ciclo_especial      ir al estado 15
+    asig                ir al estado 16
+    bloque_declaracion  ir al estado 17
+    ID_R                ir al estado 18
+
+
+estado 1
+
+   15 if: IF_T . cond_final LLAVE_A sentencia LLAVE_C $@2 ELSE_T LLAVE_A sentencia LLAVE_C
+   16   | IF_T . cond_final LLAVE_A sentencia LLAVE_C
+
+    PARENT_A  desplazar e ir al estado 19
+    NOT_T     desplazar e ir al estado 20
+
+    cond_final  ir al estado 21
+
+
+estado 2
+
+   13 while: WHILE_T . $@1 cond_final LLAVE_A sentencia LLAVE_C
+   23 ciclo_especial: WHILE_T . $@3 ID_R $@4 IN_T PARENT_A lista_expresion $@5 PARENT_C DO_T sentencia ENDWHILE_T
+
+    ID_T      reduce usando la regla 20 ($@3)
+    $default  reduce usando la regla 12 ($@1)
+
+    $@1  ir al estado 22
+    $@3  ir al estado 23
+
+
+estado 3
+
+   82 ID_R: ID_T .
+
+    $default  reduce usando la regla 82 (ID_R)
+
+
+estado 4
+
+   17 write: WRITE_T . CONST_STRING_R
+   18      | WRITE_T . expr
+
+    CONST_INT     desplazar e ir al estado 24
+    CONST_FLOAT   desplazar e ir al estado 25
+    CONST_STRING  desplazar e ir al estado 26
+    PARENT_A      desplazar e ir al estado 27
+    ID_T          desplazar e ir al estado 3
+
+    expr            ir al estado 28
+    termino         ir al estado 29
+    factor          ir al estado 30
+    ID_R            ir al estado 31
+    CONST_STRING_R  ir al estado 32
+    NUMERO          ir al estado 33
+
+
+estado 5
+
+   19 read: READ_T . ID_R
+
+    ID_T  desplazar e ir al estado 3
+
+    ID_R  ir al estado 34
+
+
+estado 6
+
+   73 bloque_declaracion: DECVAR_T . $@21 declaracion ENDDEC_T
+
+    $default  reduce usando la regla 72 ($@21)
+
+    $@21  ir al estado 35
+
+
+estado 7
+
+    0 $accept: programa_final . $end
+
+    $end  desplazar e ir al estado 36
+
+
+estado 8
+
+    1 programa_final: programa .
+
+    $default  reduce usando la regla 1 (programa_final)
+
+
+estado 9
+
+    3 programa: sentencia .
+    4 sentencia: sentencia . grammar SEP_LINEA
+
+    IF_T     desplazar e ir al estado 1
+    WHILE_T  desplazar e ir al estado 2
+    ID_T     desplazar e ir al estado 3
+    WRITE_T  desplazar e ir al estado 4
+    READ_T   desplazar e ir al estado 5
+
+    $default  reduce usando la regla 3 (programa)
+
+    grammar         ir al estado 37
+    while           ir al estado 11
+    if              ir al estado 12
+    write           ir al estado 13
+    read            ir al estado 14
+    ciclo_especial  ir al estado 15
+    asig            ir al estado 16
+    ID_R            ir al estado 18
+
+
+estado 10
+
+    5 sentencia: grammar . SEP_LINEA
+
+    SEP_LINEA  desplazar e ir al estado 38
+
+
+estado 11
+
+    7 grammar: while .
+
+    $default  reduce usando la regla 7 (grammar)
+
+
+estado 12
+
+   11 grammar: if .
+
+    $default  reduce usando la regla 11 (grammar)
+
+
+estado 13
+
+    8 grammar: write .
+
+    $default  reduce usando la regla 8 (grammar)
+
+
+estado 14
+
+    9 grammar: read .
+
+    $default  reduce usando la regla 9 (grammar)
+
+
+estado 15
+
+   10 grammar: ciclo_especial .
+
+    $default  reduce usando la regla 10 (grammar)
+
+
+estado 16
+
+    6 grammar: asig .
+
+    $default  reduce usando la regla 6 (grammar)
+
+
+estado 17
+
+    2 programa: bloque_declaracion . sentencia
+
+    IF_T     desplazar e ir al estado 1
+    WHILE_T  desplazar e ir al estado 2
+    ID_T     desplazar e ir al estado 3
+    WRITE_T  desplazar e ir al estado 4
+    READ_T   desplazar e ir al estado 5
+
+    sentencia       ir al estado 39
+    grammar         ir al estado 10
+    while           ir al estado 11
+    if              ir al estado 12
+    write           ir al estado 13
+    read            ir al estado 14
+    ciclo_especial  ir al estado 15
+    asig            ir al estado 16
+    ID_R            ir al estado 18
+
+
+estado 18
+
+   28 asig: ID_R . OP_ASIG expr
+   29     | ID_R . OP_ASIG CONST_STRING_R
+
+    OP_ASIG  desplazar e ir al estado 40
+
+
+estado 19
+
+   31 cond_final: PARENT_A . cond_final AND_T cond_final $@8 PARENT_C
+   33           | PARENT_A . cond AND_T cond_final $@9 PARENT_C
+   35           | PARENT_A . cond_final AND_T cond $@10 PARENT_C
+   38           | PARENT_A . cond_final OR_T $@11 cond_final $@12 PARENT_C
+   41           | PARENT_A . cond OR_T $@13 cond_final $@14 PARENT_C
+   44           | PARENT_A . cond_final OR_T $@15 cond $@16 PARENT_C
+   46           | PARENT_A . cond AND_T cond $@17 PARENT_C
+   49           | PARENT_A . cond OR_T $@18 cond $@19 PARENT_C
+   50           | PARENT_A . cond PARENT_C
+   53           | PARENT_A . cond_final PARENT_C
+
+    CONST_INT    desplazar e ir al estado 24
+    CONST_FLOAT  desplazar e ir al estado 25
+    PARENT_A     desplazar e ir al estado 41
+    ID_T         desplazar e ir al estado 3
+    NOT_T        desplazar e ir al estado 20
+
+    cond_final  ir al estado 42
+    cond        ir al estado 43
+    expr        ir al estado 44
+    termino     ir al estado 29
+    factor      ir al estado 30
+    ID_R        ir al estado 31
+    NUMERO      ir al estado 33
+
+
+estado 20
+
+   52 cond_final: NOT_T . $@20 cond_final
+
+    $default  reduce usando la regla 51 ($@20)
+
+    $@20  ir al estado 45
+
+
+estado 21
+
+   15 if: IF_T cond_final . LLAVE_A sentencia LLAVE_C $@2 ELSE_T LLAVE_A sentencia LLAVE_C
+   16   | IF_T cond_final . LLAVE_A sentencia LLAVE_C
+
+    LLAVE_A  desplazar e ir al estado 46
+
+
+estado 22
+
+   13 while: WHILE_T $@1 . cond_final LLAVE_A sentencia LLAVE_C
+
+    PARENT_A  desplazar e ir al estado 19
+    NOT_T     desplazar e ir al estado 20
+
+    cond_final  ir al estado 47
+
+
+estado 23
+
+   23 ciclo_especial: WHILE_T $@3 . ID_R $@4 IN_T PARENT_A lista_expresion $@5 PARENT_C DO_T sentencia ENDWHILE_T
+
+    ID_T  desplazar e ir al estado 3
+
+    ID_R  ir al estado 48
+
+
+estado 24
+
+   84 NUMERO: CONST_INT .
+
+    $default  reduce usando la regla 84 (NUMERO)
+
+
+estado 25
+
+   85 NUMERO: CONST_FLOAT .
+
+    $default  reduce usando la regla 85 (NUMERO)
+
+
+estado 26
+
+   83 CONST_STRING_R: CONST_STRING .
+
+    $default  reduce usando la regla 83 (CONST_STRING_R)
+
+
+estado 27
+
+   69 factor: PARENT_A . expr PARENT_C
+
+    CONST_INT    desplazar e ir al estado 24
+    CONST_FLOAT  desplazar e ir al estado 25
+    PARENT_A     desplazar e ir al estado 27
+    ID_T         desplazar e ir al estado 3
+
+    expr     ir al estado 49
+    termino  ir al estado 29
+    factor   ir al estado 30
+    ID_R     ir al estado 31
+    NUMERO   ir al estado 33
+
+
+estado 28
+
+   18 write: WRITE_T expr .
+   61 expr: expr . OP_SUM expr
+   62     | expr . OP_MENOS expr
+
+    OP_SUM    desplazar e ir al estado 50
+    OP_MENOS  desplazar e ir al estado 51
+
+    $default  reduce usando la regla 18 (write)
+
+
+estado 29
+
+   63 expr: termino .
+   64 termino: termino . OP_MUL factor
+   65        | termino . OP_DIVISION factor
+   66        | termino . OP_MOD factor
+   67        | termino . OP_DIV factor
+
+    OP_DIVISION  desplazar e ir al estado 52
+    OP_MUL       desplazar e ir al estado 53
+    OP_MOD       desplazar e ir al estado 54
+    OP_DIV       desplazar e ir al estado 55
+
+    $default  reduce usando la regla 63 (expr)
+
+
+estado 30
+
+   68 termino: factor .
+
+    $default  reduce usando la regla 68 (termino)
+
+
+estado 31
+
+   71 factor: ID_R .
+
+    $default  reduce usando la regla 71 (factor)
+
+
+estado 32
+
+   17 write: WRITE_T CONST_STRING_R .
+
+    $default  reduce usando la regla 17 (write)
+
+
+estado 33
+
+   70 factor: NUMERO .
+
+    $default  reduce usando la regla 70 (factor)
+
+
+estado 34
+
+   19 read: READ_T ID_R .
+
+    $default  reduce usando la regla 19 (read)
+
+
+estado 35
+
+   73 bloque_declaracion: DECVAR_T $@21 . declaracion ENDDEC_T
+
+    ID_T  desplazar e ir al estado 3
+
+    declaracion        ir al estado 56
+    linea_declaracion  ir al estado 57
+    var_declaracion    ir al estado 58
+    ID_R               ir al estado 59
+
+
+estado 36
+
+    0 $accept: programa_final $end .
+
+    $default  aceptar
+
+
+estado 37
+
+    4 sentencia: sentencia grammar . SEP_LINEA
+
+    SEP_LINEA  desplazar e ir al estado 60
+
+
+estado 38
+
+    5 sentencia: grammar SEP_LINEA .
+
+    $default  reduce usando la regla 5 (sentencia)
+
+
+estado 39
+
+    2 programa: bloque_declaracion sentencia .
+    4 sentencia: sentencia . grammar SEP_LINEA
+
+    IF_T     desplazar e ir al estado 1
+    WHILE_T  desplazar e ir al estado 2
+    ID_T     desplazar e ir al estado 3
+    WRITE_T  desplazar e ir al estado 4
+    READ_T   desplazar e ir al estado 5
+
+    $default  reduce usando la regla 2 (programa)
+
+    grammar         ir al estado 37
+    while           ir al estado 11
+    if              ir al estado 12
+    write           ir al estado 13
+    read            ir al estado 14
+    ciclo_especial  ir al estado 15
+    asig            ir al estado 16
+    ID_R            ir al estado 18
+
+
+estado 40
+
+   28 asig: ID_R OP_ASIG . expr
+   29     | ID_R OP_ASIG . CONST_STRING_R
+
+    CONST_INT     desplazar e ir al estado 24
+    CONST_FLOAT   desplazar e ir al estado 25
+    CONST_STRING  desplazar e ir al estado 26
+    PARENT_A      desplazar e ir al estado 27
+    ID_T          desplazar e ir al estado 3
+
+    expr            ir al estado 61
+    termino         ir al estado 29
+    factor          ir al estado 30
+    ID_R            ir al estado 31
+    CONST_STRING_R  ir al estado 62
+    NUMERO          ir al estado 33
+
+
+estado 41
+
+   31 cond_final: PARENT_A . cond_final AND_T cond_final $@8 PARENT_C
+   33           | PARENT_A . cond AND_T cond_final $@9 PARENT_C
+   35           | PARENT_A . cond_final AND_T cond $@10 PARENT_C
+   38           | PARENT_A . cond_final OR_T $@11 cond_final $@12 PARENT_C
+   41           | PARENT_A . cond OR_T $@13 cond_final $@14 PARENT_C
+   44           | PARENT_A . cond_final OR_T $@15 cond $@16 PARENT_C
+   46           | PARENT_A . cond AND_T cond $@17 PARENT_C
+   49           | PARENT_A . cond OR_T $@18 cond $@19 PARENT_C
+   50           | PARENT_A . cond PARENT_C
+   53           | PARENT_A . cond_final PARENT_C
+   69 factor: PARENT_A . expr PARENT_C
+
+    CONST_INT    desplazar e ir al estado 24
+    CONST_FLOAT  desplazar e ir al estado 25
+    PARENT_A     desplazar e ir al estado 41
+    ID_T         desplazar e ir al estado 3
+    NOT_T        desplazar e ir al estado 20
+
+    cond_final  ir al estado 42
+    cond        ir al estado 43
+    expr        ir al estado 63
+    termino     ir al estado 29
+    factor      ir al estado 30
+    ID_R        ir al estado 31
+    NUMERO      ir al estado 33
+
+
+estado 42
+
+   31 cond_final: PARENT_A cond_final . AND_T cond_final $@8 PARENT_C
+   35           | PARENT_A cond_final . AND_T cond $@10 PARENT_C
+   38           | PARENT_A cond_final . OR_T $@11 cond_final $@12 PARENT_C
+   44           | PARENT_A cond_final . OR_T $@15 cond $@16 PARENT_C
+   53           | PARENT_A cond_final . PARENT_C
+
+    PARENT_C  desplazar e ir al estado 64
+    OR_T      desplazar e ir al estado 65
+    AND_T     desplazar e ir al estado 66
+
+
+estado 43
+
+   33 cond_final: PARENT_A cond . AND_T cond_final $@9 PARENT_C
+   41           | PARENT_A cond . OR_T $@13 cond_final $@14 PARENT_C
+   46           | PARENT_A cond . AND_T cond $@17 PARENT_C
+   49           | PARENT_A cond . OR_T $@18 cond $@19 PARENT_C
+   50           | PARENT_A cond . PARENT_C
+
+    PARENT_C  desplazar e ir al estado 67
+    OR_T      desplazar e ir al estado 68
+    AND_T     desplazar e ir al estado 69
+
+
+estado 44
+
+   54 cond: expr . COMPARADOR termino
+   61 expr: expr . OP_SUM expr
+   62     | expr . OP_MENOS expr
+
+    OP_DISTINTO    desplazar e ir al estado 70
+    OP_COMP        desplazar e ir al estado 71
+    OP_MAYORIGUAL  desplazar e ir al estado 72
+    OP_MAYOR       desplazar e ir al estado 73
+    OP_MENOR       desplazar e ir al estado 74
+    OP_MENORIGUAL  desplazar e ir al estado 75
+    OP_SUM         desplazar e ir al estado 50
+    OP_MENOS       desplazar e ir al estado 51
+
+    COMPARADOR  ir al estado 76
+
+
+estado 45
+
+   52 cond_final: NOT_T $@20 . cond_final
+
+    PARENT_A  desplazar e ir al estado 19
+    NOT_T     desplazar e ir al estado 20
+
+    cond_final  ir al estado 77
+
+
+estado 46
+
+   15 if: IF_T cond_final LLAVE_A . sentencia LLAVE_C $@2 ELSE_T LLAVE_A sentencia LLAVE_C
+   16   | IF_T cond_final LLAVE_A . sentencia LLAVE_C
+
+    IF_T     desplazar e ir al estado 1
+    WHILE_T  desplazar e ir al estado 2
+    ID_T     desplazar e ir al estado 3
+    WRITE_T  desplazar e ir al estado 4
+    READ_T   desplazar e ir al estado 5
+
+    sentencia       ir al estado 78
+    grammar         ir al estado 10
+    while           ir al estado 11
+    if              ir al estado 12
+    write           ir al estado 13
+    read            ir al estado 14
+    ciclo_especial  ir al estado 15
+    asig            ir al estado 16
+    ID_R            ir al estado 18
+
+
+estado 47
+
+   13 while: WHILE_T $@1 cond_final . LLAVE_A sentencia LLAVE_C
+
+    LLAVE_A  desplazar e ir al estado 79
+
+
+estado 48
+
+   23 ciclo_especial: WHILE_T $@3 ID_R . $@4 IN_T PARENT_A lista_expresion $@5 PARENT_C DO_T sentencia ENDWHILE_T
+
+    $default  reduce usando la regla 21 ($@4)
+
+    $@4  ir al estado 80
+
+
+estado 49
+
+   61 expr: expr . OP_SUM expr
+   62     | expr . OP_MENOS expr
+   69 factor: PARENT_A expr . PARENT_C
+
+    PARENT_C  desplazar e ir al estado 81
+    OP_SUM    desplazar e ir al estado 50
+    OP_MENOS  desplazar e ir al estado 51
+
+
+estado 50
+
+   61 expr: expr OP_SUM . expr
+
+    CONST_INT    desplazar e ir al estado 24
+    CONST_FLOAT  desplazar e ir al estado 25
+    PARENT_A     desplazar e ir al estado 27
+    ID_T         desplazar e ir al estado 3
+
+    expr     ir al estado 82
+    termino  ir al estado 29
+    factor   ir al estado 30
+    ID_R     ir al estado 31
+    NUMERO   ir al estado 33
+
+
+estado 51
+
+   62 expr: expr OP_MENOS . expr
+
+    CONST_INT    desplazar e ir al estado 24
+    CONST_FLOAT  desplazar e ir al estado 25
+    PARENT_A     desplazar e ir al estado 27
+    ID_T         desplazar e ir al estado 3
+
+    expr     ir al estado 83
+    termino  ir al estado 29
+    factor   ir al estado 30
+    ID_R     ir al estado 31
+    NUMERO   ir al estado 33
+
+
+estado 52
+
+   65 termino: termino OP_DIVISION . factor
+
+    CONST_INT    desplazar e ir al estado 24
+    CONST_FLOAT  desplazar e ir al estado 25
+    PARENT_A     desplazar e ir al estado 27
+    ID_T         desplazar e ir al estado 3
+
+    factor  ir al estado 84
+    ID_R    ir al estado 31
+    NUMERO  ir al estado 33
+
+
+estado 53
+
+   64 termino: termino OP_MUL . factor
+
+    CONST_INT    desplazar e ir al estado 24
+    CONST_FLOAT  desplazar e ir al estado 25
+    PARENT_A     desplazar e ir al estado 27
+    ID_T         desplazar e ir al estado 3
+
+    factor  ir al estado 85
+    ID_R    ir al estado 31
+    NUMERO  ir al estado 33
+
+
+estado 54
+
+   66 termino: termino OP_MOD . factor
+
+    CONST_INT    desplazar e ir al estado 24
+    CONST_FLOAT  desplazar e ir al estado 25
+    PARENT_A     desplazar e ir al estado 27
+    ID_T         desplazar e ir al estado 3
+
+    factor  ir al estado 86
+    ID_R    ir al estado 31
+    NUMERO  ir al estado 33
+
+
+estado 55
+
+   67 termino: termino OP_DIV . factor
+
+    CONST_INT    desplazar e ir al estado 24
+    CONST_FLOAT  desplazar e ir al estado 25
+    PARENT_A     desplazar e ir al estado 27
+    ID_T         desplazar e ir al estado 3
+
+    factor  ir al estado 87
+    ID_R    ir al estado 31
+    NUMERO  ir al estado 33
+
+
+estado 56
+
+   73 bloque_declaracion: DECVAR_T $@21 declaracion . ENDDEC_T
+   75 declaracion: declaracion . linea_declaracion
+
+    ID_T      desplazar e ir al estado 3
+    ENDDEC_T  desplazar e ir al estado 88
+
+    linea_declaracion  ir al estado 89
+    var_declaracion    ir al estado 58
+    ID_R               ir al estado 59
+
+
+estado 57
+
+   74 declaracion: linea_declaracion .
+
+    $default  reduce usando la regla 74 (declaracion)
+
+
+estado 58
+
+   76 linea_declaracion: var_declaracion . OP_AS tipo_variable SEP_LINEA
+   78 var_declaracion: var_declaracion . COMA ID_R
+
+    OP_AS  desplazar e ir al estado 90
+    COMA   desplazar e ir al estado 91
+
+
+estado 59
+
+   77 var_declaracion: ID_R .
+
+    $default  reduce usando la regla 77 (var_declaracion)
+
+
+estado 60
+
+    4 sentencia: sentencia grammar SEP_LINEA .
+
+    $default  reduce usando la regla 4 (sentencia)
+
+
+estado 61
+
+   28 asig: ID_R OP_ASIG expr .
+   61 expr: expr . OP_SUM expr
+   62     | expr . OP_MENOS expr
+
+    OP_SUM    desplazar e ir al estado 50
+    OP_MENOS  desplazar e ir al estado 51
+
+    $default  reduce usando la regla 28 (asig)
+
+
+estado 62
+
+   29 asig: ID_R OP_ASIG CONST_STRING_R .
+
+    $default  reduce usando la regla 29 (asig)
+
+
+estado 63
+
+   54 cond: expr . COMPARADOR termino
+   61 expr: expr . OP_SUM expr
+   62     | expr . OP_MENOS expr
+   69 factor: PARENT_A expr . PARENT_C
+
+    OP_DISTINTO    desplazar e ir al estado 70
+    OP_COMP        desplazar e ir al estado 71
+    OP_MAYORIGUAL  desplazar e ir al estado 72
+    OP_MAYOR       desplazar e ir al estado 73
+    OP_MENOR       desplazar e ir al estado 74
+    OP_MENORIGUAL  desplazar e ir al estado 75
+    PARENT_C       desplazar e ir al estado 81
+    OP_SUM         desplazar e ir al estado 50
+    OP_MENOS       desplazar e ir al estado 51
+
+    COMPARADOR  ir al estado 76
+
+
+estado 64
+
+   53 cond_final: PARENT_A cond_final PARENT_C .
+
+    $default  reduce usando la regla 53 (cond_final)
+
+
+estado 65
+
+   38 cond_final: PARENT_A cond_final OR_T . $@11 cond_final $@12 PARENT_C
+   44           | PARENT_A cond_final OR_T . $@15 cond $@16 PARENT_C
+
+    PARENT_A  reduce usando la regla 36 ($@11)
+    PARENT_A  [reduce usando la regla 42 ($@15)]
+    NOT_T     reduce usando la regla 36 ($@11)
+    $default  reduce usando la regla 42 ($@15)
+
+    $@11  ir al estado 92
+    $@15  ir al estado 93
+
+
+estado 66
+
+   31 cond_final: PARENT_A cond_final AND_T . cond_final $@8 PARENT_C
+   35           | PARENT_A cond_final AND_T . cond $@10 PARENT_C
+
+    CONST_INT    desplazar e ir al estado 24
+    CONST_FLOAT  desplazar e ir al estado 25
+    PARENT_A     desplazar e ir al estado 41
+    ID_T         desplazar e ir al estado 3
+    NOT_T        desplazar e ir al estado 20
+
+    cond_final  ir al estado 94
+    cond        ir al estado 95
+    expr        ir al estado 44
+    termino     ir al estado 29
+    factor      ir al estado 30
+    ID_R        ir al estado 31
+    NUMERO      ir al estado 33
+
+
+estado 67
+
+   50 cond_final: PARENT_A cond PARENT_C .
+
+    $default  reduce usando la regla 50 (cond_final)
+
+
+estado 68
+
+   41 cond_final: PARENT_A cond OR_T . $@13 cond_final $@14 PARENT_C
+   49           | PARENT_A cond OR_T . $@18 cond $@19 PARENT_C
+
+    PARENT_A  reduce usando la regla 39 ($@13)
+    PARENT_A  [reduce usando la regla 47 ($@18)]
+    NOT_T     reduce usando la regla 39 ($@13)
+    $default  reduce usando la regla 47 ($@18)
+
+    $@13  ir al estado 96
+    $@18  ir al estado 97
+
+
+estado 69
+
+   33 cond_final: PARENT_A cond AND_T . cond_final $@9 PARENT_C
+   46           | PARENT_A cond AND_T . cond $@17 PARENT_C
+
+    CONST_INT    desplazar e ir al estado 24
+    CONST_FLOAT  desplazar e ir al estado 25
+    PARENT_A     desplazar e ir al estado 41
+    ID_T         desplazar e ir al estado 3
+    NOT_T        desplazar e ir al estado 20
+
+    cond_final  ir al estado 98
+    cond        ir al estado 99
+    expr        ir al estado 44
+    termino     ir al estado 29
+    factor      ir al estado 30
+    ID_R        ir al estado 31
+    NUMERO      ir al estado 33
+
+
+estado 70
+
+   55 COMPARADOR: OP_DISTINTO .
+
+    $default  reduce usando la regla 55 (COMPARADOR)
+
+
+estado 71
+
+   56 COMPARADOR: OP_COMP .
+
+    $default  reduce usando la regla 56 (COMPARADOR)
+
+
+estado 72
+
+   57 COMPARADOR: OP_MAYORIGUAL .
+
+    $default  reduce usando la regla 57 (COMPARADOR)
+
+
+estado 73
+
+   58 COMPARADOR: OP_MAYOR .
+
+    $default  reduce usando la regla 58 (COMPARADOR)
+
+
+estado 74
+
+   59 COMPARADOR: OP_MENOR .
+
+    $default  reduce usando la regla 59 (COMPARADOR)
+
+
+estado 75
+
+   60 COMPARADOR: OP_MENORIGUAL .
+
+    $default  reduce usando la regla 60 (COMPARADOR)
+
+
+estado 76
+
+   54 cond: expr COMPARADOR . termino
+
+    CONST_INT    desplazar e ir al estado 24
+    CONST_FLOAT  desplazar e ir al estado 25
+    PARENT_A     desplazar e ir al estado 27
+    ID_T         desplazar e ir al estado 3
+
+    termino  ir al estado 100
+    factor   ir al estado 30
+    ID_R     ir al estado 31
+    NUMERO   ir al estado 33
+
+
+estado 77
+
+   52 cond_final: NOT_T $@20 cond_final .
+
+    $default  reduce usando la regla 52 (cond_final)
+
+
+estado 78
+
+    4 sentencia: sentencia . grammar SEP_LINEA
+   15 if: IF_T cond_final LLAVE_A sentencia . LLAVE_C $@2 ELSE_T LLAVE_A sentencia LLAVE_C
+   16   | IF_T cond_final LLAVE_A sentencia . LLAVE_C
+
+    IF_T     desplazar e ir al estado 1
+    LLAVE_C  desplazar e ir al estado 101
+    WHILE_T  desplazar e ir al estado 2
+    ID_T     desplazar e ir al estado 3
+    WRITE_T  desplazar e ir al estado 4
+    READ_T   desplazar e ir al estado 5
+
+    grammar         ir al estado 37
+    while           ir al estado 11
+    if              ir al estado 12
+    write           ir al estado 13
+    read            ir al estado 14
+    ciclo_especial  ir al estado 15
+    asig            ir al estado 16
+    ID_R            ir al estado 18
+
+
+estado 79
+
+   13 while: WHILE_T $@1 cond_final LLAVE_A . sentencia LLAVE_C
+
+    IF_T     desplazar e ir al estado 1
+    WHILE_T  desplazar e ir al estado 2
+    ID_T     desplazar e ir al estado 3
+    WRITE_T  desplazar e ir al estado 4
+    READ_T   desplazar e ir al estado 5
+
+    sentencia       ir al estado 102
+    grammar         ir al estado 10
+    while           ir al estado 11
+    if              ir al estado 12
+    write           ir al estado 13
+    read            ir al estado 14
+    ciclo_especial  ir al estado 15
+    asig            ir al estado 16
+    ID_R            ir al estado 18
+
+
+estado 80
+
+   23 ciclo_especial: WHILE_T $@3 ID_R $@4 . IN_T PARENT_A lista_expresion $@5 PARENT_C DO_T sentencia ENDWHILE_T
+
+    IN_T  desplazar e ir al estado 103
+
+
+estado 81
+
+   69 factor: PARENT_A expr PARENT_C .
+
+    $default  reduce usando la regla 69 (factor)
+
+
+estado 82
+
+   61 expr: expr . OP_SUM expr
+   61     | expr OP_SUM expr .
+   62     | expr . OP_MENOS expr
+
+    $default  reduce usando la regla 61 (expr)
+
+
+estado 83
+
+   61 expr: expr . OP_SUM expr
+   62     | expr . OP_MENOS expr
+   62     | expr OP_MENOS expr .
+
+    $default  reduce usando la regla 62 (expr)
+
+
+estado 84
+
+   65 termino: termino OP_DIVISION factor .
+
+    $default  reduce usando la regla 65 (termino)
+
+
+estado 85
+
+   64 termino: termino OP_MUL factor .
+
+    $default  reduce usando la regla 64 (termino)
+
+
+estado 86
+
+   66 termino: termino OP_MOD factor .
+
+    $default  reduce usando la regla 66 (termino)
+
+
+estado 87
+
+   67 termino: termino OP_DIV factor .
+
+    $default  reduce usando la regla 67 (termino)
+
+
+estado 88
+
+   73 bloque_declaracion: DECVAR_T $@21 declaracion ENDDEC_T .
+
+    $default  reduce usando la regla 73 (bloque_declaracion)
+
+
+estado 89
+
+   75 declaracion: declaracion linea_declaracion .
+
+    $default  reduce usando la regla 75 (declaracion)
+
+
+estado 90
+
+   76 linea_declaracion: var_declaracion OP_AS . tipo_variable SEP_LINEA
+
+    FLOAT_T    desplazar e ir al estado 104
+    INTEGER_T  desplazar e ir al estado 105
+    STRING_T   desplazar e ir al estado 106
+
+    tipo_variable  ir al estado 107
+
+
+estado 91
+
+   78 var_declaracion: var_declaracion COMA . ID_R
+
+    ID_T  desplazar e ir al estado 3
+
+    ID_R  ir al estado 108
+
+
+estado 92
+
+   38 cond_final: PARENT_A cond_final OR_T $@11 . cond_final $@12 PARENT_C
+
+    PARENT_A  desplazar e ir al estado 19
+    NOT_T     desplazar e ir al estado 20
+
+    cond_final  ir al estado 109
+
+
+estado 93
+
+   44 cond_final: PARENT_A cond_final OR_T $@15 . cond $@16 PARENT_C
+
+    CONST_INT    desplazar e ir al estado 24
+    CONST_FLOAT  desplazar e ir al estado 25
+    PARENT_A     desplazar e ir al estado 27
+    ID_T         desplazar e ir al estado 3
+
+    cond     ir al estado 110
+    expr     ir al estado 44
+    termino  ir al estado 29
+    factor   ir al estado 30
+    ID_R     ir al estado 31
+    NUMERO   ir al estado 33
+
+
+estado 94
+
+   31 cond_final: PARENT_A cond_final AND_T cond_final . $@8 PARENT_C
+
+    $default  reduce usando la regla 30 ($@8)
+
+    $@8  ir al estado 111
+
+
+estado 95
+
+   35 cond_final: PARENT_A cond_final AND_T cond . $@10 PARENT_C
+
+    $default  reduce usando la regla 34 ($@10)
+
+    $@10  ir al estado 112
+
+
+estado 96
+
+   41 cond_final: PARENT_A cond OR_T $@13 . cond_final $@14 PARENT_C
+
+    PARENT_A  desplazar e ir al estado 19
+    NOT_T     desplazar e ir al estado 20
+
+    cond_final  ir al estado 113
+
+
+estado 97
+
+   49 cond_final: PARENT_A cond OR_T $@18 . cond $@19 PARENT_C
+
+    CONST_INT    desplazar e ir al estado 24
+    CONST_FLOAT  desplazar e ir al estado 25
+    PARENT_A     desplazar e ir al estado 27
+    ID_T         desplazar e ir al estado 3
+
+    cond     ir al estado 114
+    expr     ir al estado 44
+    termino  ir al estado 29
+    factor   ir al estado 30
+    ID_R     ir al estado 31
+    NUMERO   ir al estado 33
+
+
+estado 98
+
+   33 cond_final: PARENT_A cond AND_T cond_final . $@9 PARENT_C
+
+    $default  reduce usando la regla 32 ($@9)
+
+    $@9  ir al estado 115
+
+
+estado 99
+
+   46 cond_final: PARENT_A cond AND_T cond . $@17 PARENT_C
+
+    $default  reduce usando la regla 45 ($@17)
+
+    $@17  ir al estado 116
+
+
+estado 100
+
+   54 cond: expr COMPARADOR termino .
+   64 termino: termino . OP_MUL factor
+   65        | termino . OP_DIVISION factor
+   66        | termino . OP_MOD factor
+   67        | termino . OP_DIV factor
+
+    OP_DIVISION  desplazar e ir al estado 52
+    OP_MUL       desplazar e ir al estado 53
+    OP_MOD       desplazar e ir al estado 54
+    OP_DIV       desplazar e ir al estado 55
+
+    $default  reduce usando la regla 54 (cond)
+
+
+estado 101
+
+   15 if: IF_T cond_final LLAVE_A sentencia LLAVE_C . $@2 ELSE_T LLAVE_A sentencia LLAVE_C
+   16   | IF_T cond_final LLAVE_A sentencia LLAVE_C .
+
+    SEP_LINEA  reduce usando la regla 16 (if)
+    $default   reduce usando la regla 14 ($@2)
+
+    $@2  ir al estado 117
+
+
+estado 102
+
+    4 sentencia: sentencia . grammar SEP_LINEA
+   13 while: WHILE_T $@1 cond_final LLAVE_A sentencia . LLAVE_C
+
+    IF_T     desplazar e ir al estado 1
+    LLAVE_C  desplazar e ir al estado 118
+    WHILE_T  desplazar e ir al estado 2
+    ID_T     desplazar e ir al estado 3
+    WRITE_T  desplazar e ir al estado 4
+    READ_T   desplazar e ir al estado 5
+
+    grammar         ir al estado 37
+    while           ir al estado 11
+    if              ir al estado 12
+    write           ir al estado 13
+    read            ir al estado 14
+    ciclo_especial  ir al estado 15
+    asig            ir al estado 16
+    ID_R            ir al estado 18
+
+
+estado 103
+
+   23 ciclo_especial: WHILE_T $@3 ID_R $@4 IN_T . PARENT_A lista_expresion $@5 PARENT_C DO_T sentencia ENDWHILE_T
+
+    PARENT_A  desplazar e ir al estado 119
+
+
+estado 104
+
+   79 tipo_variable: FLOAT_T .
+
+    $default  reduce usando la regla 79 (tipo_variable)
+
+
+estado 105
+
+   80 tipo_variable: INTEGER_T .
+
+    $default  reduce usando la regla 80 (tipo_variable)
+
+
+estado 106
+
+   81 tipo_variable: STRING_T .
+
+    $default  reduce usando la regla 81 (tipo_variable)
+
+
+estado 107
+
+   76 linea_declaracion: var_declaracion OP_AS tipo_variable . SEP_LINEA
+
+    SEP_LINEA  desplazar e ir al estado 120
+
+
+estado 108
+
+   78 var_declaracion: var_declaracion COMA ID_R .
+
+    $default  reduce usando la regla 78 (var_declaracion)
+
+
+estado 109
+
+   38 cond_final: PARENT_A cond_final OR_T $@11 cond_final . $@12 PARENT_C
+
+    $default  reduce usando la regla 37 ($@12)
+
+    $@12  ir al estado 121
+
+
+estado 110
+
+   44 cond_final: PARENT_A cond_final OR_T $@15 cond . $@16 PARENT_C
+
+    $default  reduce usando la regla 43 ($@16)
+
+    $@16  ir al estado 122
+
+
+estado 111
+
+   31 cond_final: PARENT_A cond_final AND_T cond_final $@8 . PARENT_C
+
+    PARENT_C  desplazar e ir al estado 123
+
+
+estado 112
+
+   35 cond_final: PARENT_A cond_final AND_T cond $@10 . PARENT_C
+
+    PARENT_C  desplazar e ir al estado 124
+
+
+estado 113
+
+   41 cond_final: PARENT_A cond OR_T $@13 cond_final . $@14 PARENT_C
+
+    $default  reduce usando la regla 40 ($@14)
+
+    $@14  ir al estado 125
+
+
+estado 114
+
+   49 cond_final: PARENT_A cond OR_T $@18 cond . $@19 PARENT_C
+
+    $default  reduce usando la regla 48 ($@19)
+
+    $@19  ir al estado 126
+
+
+estado 115
+
+   33 cond_final: PARENT_A cond AND_T cond_final $@9 . PARENT_C
+
+    PARENT_C  desplazar e ir al estado 127
+
+
+estado 116
+
+   46 cond_final: PARENT_A cond AND_T cond $@17 . PARENT_C
+
+    PARENT_C  desplazar e ir al estado 128
+
+
+estado 117
+
+   15 if: IF_T cond_final LLAVE_A sentencia LLAVE_C $@2 . ELSE_T LLAVE_A sentencia LLAVE_C
+
+    ELSE_T  desplazar e ir al estado 129
+
+
+estado 118
+
+   13 while: WHILE_T $@1 cond_final LLAVE_A sentencia LLAVE_C .
+
+    $default  reduce usando la regla 13 (while)
+
+
+estado 119
+
+   23 ciclo_especial: WHILE_T $@3 ID_R $@4 IN_T PARENT_A . lista_expresion $@5 PARENT_C DO_T sentencia ENDWHILE_T
+
+    $default  reduce usando la regla 24 ($@6)
+
+    lista_expresion  ir al estado 130
+    $@6              ir al estado 131
+
+
+estado 120
+
+   76 linea_declaracion: var_declaracion OP_AS tipo_variable SEP_LINEA .
+
+    $default  reduce usando la regla 76 (linea_declaracion)
+
+
+estado 121
+
+   38 cond_final: PARENT_A cond_final OR_T $@11 cond_final $@12 . PARENT_C
+
+    PARENT_C  desplazar e ir al estado 132
+
+
+estado 122
+
+   44 cond_final: PARENT_A cond_final OR_T $@15 cond $@16 . PARENT_C
+
+    PARENT_C  desplazar e ir al estado 133
+
+
+estado 123
+
+   31 cond_final: PARENT_A cond_final AND_T cond_final $@8 PARENT_C .
+
+    $default  reduce usando la regla 31 (cond_final)
+
+
+estado 124
+
+   35 cond_final: PARENT_A cond_final AND_T cond $@10 PARENT_C .
+
+    $default  reduce usando la regla 35 (cond_final)
+
+
+estado 125
+
+   41 cond_final: PARENT_A cond OR_T $@13 cond_final $@14 . PARENT_C
+
+    PARENT_C  desplazar e ir al estado 134
+
+
+estado 126
+
+   49 cond_final: PARENT_A cond OR_T $@18 cond $@19 . PARENT_C
+
+    PARENT_C  desplazar e ir al estado 135
+
+
+estado 127
+
+   33 cond_final: PARENT_A cond AND_T cond_final $@9 PARENT_C .
+
+    $default  reduce usando la regla 33 (cond_final)
+
+
+estado 128
+
+   46 cond_final: PARENT_A cond AND_T cond $@17 PARENT_C .
+
+    $default  reduce usando la regla 46 (cond_final)
+
+
+estado 129
+
+   15 if: IF_T cond_final LLAVE_A sentencia LLAVE_C $@2 ELSE_T . LLAVE_A sentencia LLAVE_C
+
+    LLAVE_A  desplazar e ir al estado 136
+
+
+estado 130
+
+   23 ciclo_especial: WHILE_T $@3 ID_R $@4 IN_T PARENT_A lista_expresion . $@5 PARENT_C DO_T sentencia ENDWHILE_T
+   27 lista_expresion: lista_expresion . COMA $@7 expr
+
+    COMA  desplazar e ir al estado 137
+
+    $default  reduce usando la regla 22 ($@5)
+
+    $@5  ir al estado 138
+
+
+estado 131
+
+   25 lista_expresion: $@6 . expr
+
+    CONST_INT    desplazar e ir al estado 24
+    CONST_FLOAT  desplazar e ir al estado 25
+    PARENT_A     desplazar e ir al estado 27
+    ID_T         desplazar e ir al estado 3
+
+    expr     ir al estado 139
+    termino  ir al estado 29
+    factor   ir al estado 30
+    ID_R     ir al estado 31
+    NUMERO   ir al estado 33
+
+
+estado 132
+
+   38 cond_final: PARENT_A cond_final OR_T $@11 cond_final $@12 PARENT_C .
+
+    $default  reduce usando la regla 38 (cond_final)
+
+
+estado 133
+
+   44 cond_final: PARENT_A cond_final OR_T $@15 cond $@16 PARENT_C .
+
+    $default  reduce usando la regla 44 (cond_final)
+
+
+estado 134
+
+   41 cond_final: PARENT_A cond OR_T $@13 cond_final $@14 PARENT_C .
+
+    $default  reduce usando la regla 41 (cond_final)
+
+
+estado 135
+
+   49 cond_final: PARENT_A cond OR_T $@18 cond $@19 PARENT_C .
+
+    $default  reduce usando la regla 49 (cond_final)
+
+
+estado 136
+
+   15 if: IF_T cond_final LLAVE_A sentencia LLAVE_C $@2 ELSE_T LLAVE_A . sentencia LLAVE_C
+
+    IF_T     desplazar e ir al estado 1
+    WHILE_T  desplazar e ir al estado 2
+    ID_T     desplazar e ir al estado 3
+    WRITE_T  desplazar e ir al estado 4
+    READ_T   desplazar e ir al estado 5
+
+    sentencia       ir al estado 140
+    grammar         ir al estado 10
+    while           ir al estado 11
+    if              ir al estado 12
+    write           ir al estado 13
+    read            ir al estado 14
+    ciclo_especial  ir al estado 15
+    asig            ir al estado 16
+    ID_R            ir al estado 18
+
+
+estado 137
+
+   27 lista_expresion: lista_expresion COMA . $@7 expr
+
+    $default  reduce usando la regla 26 ($@7)
+
+    $@7  ir al estado 141
+
+
+estado 138
+
+   23 ciclo_especial: WHILE_T $@3 ID_R $@4 IN_T PARENT_A lista_expresion $@5 . PARENT_C DO_T sentencia ENDWHILE_T
+
+    PARENT_C  desplazar e ir al estado 142
+
+
+estado 139
+
+   25 lista_expresion: $@6 expr .
+   61 expr: expr . OP_SUM expr
+   62     | expr . OP_MENOS expr
+
+    OP_SUM    desplazar e ir al estado 50
+    OP_MENOS  desplazar e ir al estado 51
+
+    $default  reduce usando la regla 25 (lista_expresion)
+
+
+estado 140
+
+    4 sentencia: sentencia . grammar SEP_LINEA
+   15 if: IF_T cond_final LLAVE_A sentencia LLAVE_C $@2 ELSE_T LLAVE_A sentencia . LLAVE_C
+
+    IF_T     desplazar e ir al estado 1
+    LLAVE_C  desplazar e ir al estado 143
+    WHILE_T  desplazar e ir al estado 2
+    ID_T     desplazar e ir al estado 3
+    WRITE_T  desplazar e ir al estado 4
+    READ_T   desplazar e ir al estado 5
+
+    grammar         ir al estado 37
+    while           ir al estado 11
+    if              ir al estado 12
+    write           ir al estado 13
+    read            ir al estado 14
+    ciclo_especial  ir al estado 15
+    asig            ir al estado 16
+    ID_R            ir al estado 18
+
+
+estado 141
+
+   27 lista_expresion: lista_expresion COMA $@7 . expr
+
+    CONST_INT    desplazar e ir al estado 24
+    CONST_FLOAT  desplazar e ir al estado 25
+    PARENT_A     desplazar e ir al estado 27
+    ID_T         desplazar e ir al estado 3
+
+    expr     ir al estado 144
+    termino  ir al estado 29
+    factor   ir al estado 30
+    ID_R     ir al estado 31
+    NUMERO   ir al estado 33
+
+
+estado 142
+
+   23 ciclo_especial: WHILE_T $@3 ID_R $@4 IN_T PARENT_A lista_expresion $@5 PARENT_C . DO_T sentencia ENDWHILE_T
+
+    DO_T  desplazar e ir al estado 145
+
+
+estado 143
+
+   15 if: IF_T cond_final LLAVE_A sentencia LLAVE_C $@2 ELSE_T LLAVE_A sentencia LLAVE_C .
+
+    $default  reduce usando la regla 15 (if)
+
+
+estado 144
+
+   27 lista_expresion: lista_expresion COMA $@7 expr .
+   61 expr: expr . OP_SUM expr
+   62     | expr . OP_MENOS expr
+
+    OP_SUM    desplazar e ir al estado 50
+    OP_MENOS  desplazar e ir al estado 51
+
+    $default  reduce usando la regla 27 (lista_expresion)
+
+
+estado 145
+
+   23 ciclo_especial: WHILE_T $@3 ID_R $@4 IN_T PARENT_A lista_expresion $@5 PARENT_C DO_T . sentencia ENDWHILE_T
+
+    IF_T     desplazar e ir al estado 1
+    WHILE_T  desplazar e ir al estado 2
+    ID_T     desplazar e ir al estado 3
+    WRITE_T  desplazar e ir al estado 4
+    READ_T   desplazar e ir al estado 5
+
+    sentencia       ir al estado 146
+    grammar         ir al estado 10
+    while           ir al estado 11
+    if              ir al estado 12
+    write           ir al estado 13
+    read            ir al estado 14
+    ciclo_especial  ir al estado 15
+    asig            ir al estado 16
+    ID_R            ir al estado 18
+
+
+estado 146
+
+    4 sentencia: sentencia . grammar SEP_LINEA
+   23 ciclo_especial: WHILE_T $@3 ID_R $@4 IN_T PARENT_A lista_expresion $@5 PARENT_C DO_T sentencia . ENDWHILE_T
+
+    IF_T        desplazar e ir al estado 1
+    WHILE_T     desplazar e ir al estado 2
+    ID_T        desplazar e ir al estado 3
+    WRITE_T     desplazar e ir al estado 4
+    READ_T      desplazar e ir al estado 5
+    ENDWHILE_T  desplazar e ir al estado 147
+
+    grammar         ir al estado 37
+    while           ir al estado 11
+    if              ir al estado 12
+    write           ir al estado 13
+    read            ir al estado 14
+    ciclo_especial  ir al estado 15
+    asig            ir al estado 16
+    ID_R            ir al estado 18
+
+
+estado 147
+
+   23 ciclo_especial: WHILE_T $@3 ID_R $@4 IN_T PARENT_A lista_expresion $@5 PARENT_C DO_T sentencia ENDWHILE_T .
+
+    $default  reduce usando la regla 23 (ciclo_especial)

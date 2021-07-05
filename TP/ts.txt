@@ -5,13 +5,13 @@ ________________________________________________________________________________
 |LEXEMA                          |TIPO    |VALOR                           |LONGITUD|
 -------------------------------------------------------------------------------------
 |_1                              |INTEGER |1                               |        |
-|_10                             |INTEGER |10                              |        |
 |_15                             |INTEGER |15                              |        |
 |_2                              |INTEGER |2                               |        |
 |_20                             |INTEGER |20                              |        |
 |_25                             |INTEGER |25                              |        |
 |_3                              |INTEGER |3                               |        |
 |_5                              |INTEGER |5                               |        |
+|_65534_50                       |FLOAT   |65534.50                        |        |
 |_7                              |INTEGER |7                               |        |
 |_8                              |INTEGER |8                               |        |
 |_Ingresevalorvalordeid2         |STRING  |Ingrese valor valor de id2      |26      |

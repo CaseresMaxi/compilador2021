@@ -8,13 +8,13 @@ include number.asm
 ;variables de la tabla de simbolos
 
 _1_esddfloat	dd	1.0	;esddfloat
-_10_esddfloat	dd	10.0	;esddfloat
 _15_esddfloat	dd	15.0	;esddfloat
 _2_esddfloat	dd	2.0	;esddfloat
 _20_esddfloat	dd	20.0	;esddfloat
 _25_esddfloat	dd	25.0	;esddfloat
 _3_esddfloat	dd	3.0	;esddfloat
 _5_esddfloat	dd	5.0	;esddfloat
+_65534_50_esddfloat	dd	65534.50	;esddfloat
 _7_esddfloat	dd	7.0	;esddfloat
 _8_esddfloat	dd	8.0	;esddfloat
 _Ingresevalorvalordeid2	db	"Ingrese valor valor de id2"	, '$' , 26 dup	(?)
@@ -54,37 +54,43 @@ MOV DS,EAX
 MOV ES,EAX
 
 
+	FLD _65534_50_esddfloat
+	FSTP _id4_esddfloat
 	displayString _Ingresevalorvalorid1 
 	newline 1
 	getFloat _id1_esddfloat
-	FLD _10_esddfloat
+	FLD _5_esddfloat
+	FLD _5_esddfloat
+	FADD
+	FSTP _@varAux1_esddfloat
+	FLD _@varAux1_esddfloat
 	FLD _id1_esddfloat
 	FCOM
 	FSTSW AX
 	SAHF
-	JB  ET17
+	JB  ET22
 	FLD _15_esddfloat
 	FLD _id1_esddfloat
 	FCOM
 	FSTSW AX
 	SAHF
-	JA  ET17
+	JA  ET22
 	displayString _id1estaentre10y15 
 	newline 1
-ET17:
+ET22:
 	FLD _20_esddfloat
 	FLD _id1_esddfloat
 	FCOM
 	FSTSW AX
 	SAHF
-	JA  ET28
+	JA  ET33
 	FLD _25_esddfloat
 	FLD _id1_esddfloat
 	FCOM
 	FSTSW AX
 	SAHF
-	JNA  ET46
-ET28:
+	JNA  ET51
+ET33:
 	displayString _id1esmayora20oa25 
 	newline 1
 	FLD _25_esddfloat
@@ -92,31 +98,31 @@ ET28:
 	FCOM
 	FSTSW AX
 	SAHF
-	JNA  ET40
+	JNA  ET45
 	displayString _id1esmayora25 
 	newline 1
-	JMP  ET43
-ET40:
+	JMP  ET48
+ET45:
 	displayString _id1esmayora20 
 	newline 1
-ET43:
-	JMP  ET49
-ET46:
+ET48:
+	JMP  ET54
+ET51:
 	displayString _id1esmenora20 
 	newline 1
-ET49:
+ET54:
 	displayString _Ingresevalorvalordeid2 
 	newline 1
 	getFloat _id2_esddfloat
 	DisplayFloat _id2_esddfloat,2
 	newline 1
-ET56:
+ET61:
 	FLD _5_esddfloat
 	FLD _id2_esddfloat
 	FCOM
 	FSTSW AX
 	SAHF
-	JAE  ET73
+	JAE  ET78
 	displayString _Valordeid2 
 	newline 1
 	DisplayFloat _id2_esddfloat,2
@@ -127,19 +133,19 @@ ET56:
 	FSTP _@varAux1_esddfloat
 	FLD _@varAux1_esddfloat
 	FSTP _id2_esddfloat
-	JMP  ET56
-ET73:
+	JMP  ET61
+ET78:
 	FLD _5_esddfloat
 	FLD _id2_esddfloat
 	FCOM
 	FSTSW AX
 	SAHF
-	JNE  ET83
+	JNE  ET88
 	displayString _Valordeid2 
 	newline 1
 	DisplayFloat _id2_esddfloat,2
 	newline 1
-ET83:
+ET88:
 	FLD _3_esddfloat
 	FLD _2_esddfloat
 	FMUL
@@ -150,21 +156,21 @@ ET83:
 	FSTP _@varAux2_esddfloat
 	FLD _@varAux2_esddfloat
 	FSTP _id3_esddfloat
-ET91:
+ET96:
 	FLD _7_esddfloat
 	FLD _id3_esddfloat
 	FCOM
 	FSTSW AX
 	SAHF
-	JE  ET104
+	JE  ET109
 	FLD _15_esddfloat
 	FLD _id3_esddfloat
 	FCOM
 	FSTSW AX
 	SAHF
-	JE  ET104
-	JMP  ET126
-ET104:
+	JE  ET109
+	JMP  ET131
+ET109:
 	FLD _3_esddfloat
 	FLD _id3_esddfloat
 	FPREM
@@ -195,8 +201,8 @@ ET104:
 	FSTP _@varAux1_esddfloat
 	FLD _@varAux1_esddfloat
 	FSTP _id3_esddfloat
-	JMP  ET91
-ET126:
+	JMP  ET96
+ET131:
 
 MOV EAX, 4c00h  ; termina la ejecucion
 INT 21h

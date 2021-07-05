@@ -78,8 +78,26 @@ ID_T			{LETRA}({LETRA}|{DIGITO})*
 					 else{
 						printf("Longitud de la cadena mayor a 30\n");
 						errorLexico();}}
-{CONST_INT}			{yylval.strVal = strdup(yytext); return CONST_INT;}
-{CONST_FLOAT}		{yylval.strVal = strdup(yytext); return CONST_FLOAT;}
+{CONST_INT}			{
+						int num = atoi(strdup(yytext));
+						if (num > 65535) {
+							printf("Valor numerico mayor a 65.535 %d\n",num);
+							errorLexico();
+						} else {
+							yylval.strVal = strdup(yytext);
+					 		return CONST_INT;
+						}
+					}
+{CONST_FLOAT}		{
+						float num = atoi(strdup(yytext));
+						if (num > 65535) {
+							printf("Valor numerico mayor a 65.535\n");
+							errorLexico();
+						} else {
+							yylval.strVal = strdup(yytext);
+					 		return CONST_FLOAT;
+						}
+					}
 {ELSE_T}			return ELSE_T;
 {IF_T}				return IF_T;
 {IN_T}				return IN_T;

@@ -479,7 +479,6 @@ int generarAssembler(t_lista* listaPolaca, tabla* listaSimbolos)
     fprintf(finalf,"MOV ES,EAX\n\n\n");
 
     while(*listaPolaca){
-        printf("Pola: %s\n",(*listaPolaca)->elemento);
         if(esOperadorBinario((*listaPolaca)->elemento) == 1) {
             if(strcmp((*listaPolaca)->elemento,"+")==0){
                 //desapilamos operando1
@@ -642,7 +641,6 @@ int generarAssembler(t_lista* listaPolaca, tabla* listaSimbolos)
             auxiliar_actual = -1;
             if(strcmp((*listaPolaca)->elemento,"WRITE")==0){
                 desapilar_asm(&pila,operando1);
-                printf("\nDesapile un %s",operando1);
                 if(strstr(operando1,"_esddfloat") != NULL){
                     fprintf(finalf,"\tDisplayFloat %s,2\n",operando1);
                     fprintf(finalf,"\tnewline 1\n");
@@ -658,7 +656,6 @@ int generarAssembler(t_lista* listaPolaca, tabla* listaSimbolos)
             fprintf(finalf,"%s:\n",(*listaPolaca)->elemento);
 
         } else{
-            printf("\nApile un %s",(*listaPolaca)->elemento);
             apilar_asm(&pila,(*listaPolaca)->elemento);
         }
         listaPolaca=&(*listaPolaca)->sig;

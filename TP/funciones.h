@@ -139,6 +139,12 @@ int insertar_numero (tabla* tabla_p, char* lexema_p, char* tipo_dato) {
 	strcpy(aux, "_");
 	strcat(aux, lexema_p);
 
+	if (tipo_dato == TIPO_FLOAT) {
+		char *ret;
+		ret = strchr(aux, '.');
+		*ret = '_';
+	}
+
 	resultado = enlistar_en_orden(tabla_p, aux,tipo_dato,lexema_p,0);
 
 	if(resultado == 0){
